@@ -1,15 +1,10 @@
-package dmon.SSHOP_springboot_backend.model;
+package dmon.SSHOP_springboot_backend.entity;
 
-import io.hypersistence.utils.hibernate.type.array.ListArrayType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.ColumnDefault;
-import org.hibernate.annotations.Type;
-
-import java.util.List;
 
 
 @Entity
@@ -20,8 +15,8 @@ import java.util.List;
 @NoArgsConstructor
 public class Account {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long accountId;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private String accountId;
 
     @OneToOne(
             mappedBy = "account",
@@ -40,13 +35,6 @@ public class Account {
     private String email;
     private String phone;
     private String password;
-
     private String refreshToken;
-
-    @Type(ListArrayType.class)
-    @Column(name = "used_tokens", columnDefinition = "text[]")
-    private List<String> usedTokens;
-
-//    @ColumnDefault("ACTIVE")
-    private String status; //ACTIVE, DISABLE //todo: migrate to soft-delete
+    //todo: impl an attribute for soft-delete or status
 }

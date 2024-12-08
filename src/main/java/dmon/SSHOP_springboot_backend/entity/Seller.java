@@ -1,11 +1,10 @@
-package dmon.SSHOP_springboot_backend.model;
+package dmon.SSHOP_springboot_backend.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.ColumnDefault;
 
 @Entity
 @Table(name = "sellers")
@@ -15,11 +14,11 @@ import org.hibernate.annotations.ColumnDefault;
 @NoArgsConstructor
 public class Seller {
     @Id
-    private Long sellerId;
+    private String sellerId;
 
+    @MapsId
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "accountId")
-    @MapsId
     private Account account;
 
     private String shopName;
@@ -29,7 +28,5 @@ public class Seller {
     private String contactPhone;
     private String businessType;
     private String sellerType;
-
-//    @ColumnDefault("CLOSE")
-    private String status; //OPEN, CLOSE //todo: migrate to soft-delete
+    //todo: impl an attribute for soft-delete or status
 }

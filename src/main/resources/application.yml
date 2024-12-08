@@ -1,11 +1,13 @@
 server:
   port: 8044
+  servlet:
+    context-path: /sshop
 
 spring:
   application:
     name: SSHOP_springboot_backend
   datasource:
-    url: jdbc:postgresql://localhost:5432/sshop
+    url: jdbc:postgresql://localhost:5433/sshop
     username: postgres
     password: 123456
   jpa:

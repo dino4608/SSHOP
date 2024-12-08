@@ -1,5 +1,6 @@
-package dmon.SSHOP_springboot_backend.model;
+package dmon.SSHOP_springboot_backend.entity;
 
+import dmon.SSHOP_springboot_backend.util.enumerate.GenderEnum;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -16,15 +17,16 @@ import java.util.Date;
 @NoArgsConstructor
 public class User {
     @Id
-    private Long userId;
+    private String userId;
 
+    @MapsId
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "accountId")
-    @MapsId
     private Account account;
 
     private String name;
     private String photo;
     private Date dob;
-    private String gender;
+    private GenderEnum gender;
+    //todo: impl an attribute for soft-delete or status
 }
