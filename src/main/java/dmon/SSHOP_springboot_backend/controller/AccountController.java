@@ -5,7 +5,6 @@ import dmon.SSHOP_springboot_backend.dto.request.AccountUpdateRequest;
 import dmon.SSHOP_springboot_backend.dto.response.AccountResponse;
 import dmon.SSHOP_springboot_backend.entity.Account;
 import dmon.SSHOP_springboot_backend.service.AccountService;
-import dmon.SSHOP_springboot_backend.util.annotation.ApiMessage;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -13,7 +12,6 @@ import lombok.experimental.FieldDefaults;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -55,9 +53,17 @@ public class AccountController {
                 .body(this.accountService.findOne(accountId));
     }
 
+    @GetMapping("/my")
+    public ResponseEntity<AccountResponse> findMyOne()  {
+        return ResponseEntity
+                .ok()
+                .body(this.accountService.findMyOne());
+    }
+
     //DELETE//
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<Void> deleteOne(@PathVariable("id") String sId) {
+    public ResponseEntity<Void> deleteOne(@PathVariable("id") String accountId) {
+        this.accountService.deleteOne(accountId);
         return ResponseEntity
                 .noContent()
                 .build();

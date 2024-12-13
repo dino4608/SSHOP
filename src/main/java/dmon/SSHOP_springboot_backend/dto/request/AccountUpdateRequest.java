@@ -1,16 +1,15 @@
 package dmon.SSHOP_springboot_backend.dto.request;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class AccountUpdateRequest {
-    private String email;
-    private String phone;
-    private String password;
+    String email;
+    String phone;
+    String password;
 }

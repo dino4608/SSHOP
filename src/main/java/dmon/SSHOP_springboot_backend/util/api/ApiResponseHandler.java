@@ -1,6 +1,5 @@
 package dmon.SSHOP_springboot_backend.util.api;
 
-import dmon.SSHOP_springboot_backend.dto.ApiResponse;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.MediaType;

@@ -15,7 +15,9 @@ spring:
       ddl-auto: update #Hibernate ddl auto options: create, create-drop, validate, update
     properties:
       hibernate:
-        #jdbc.lob.non_contextual_creation: true #doestn't use sessions to persist effectively
         dialect:  org.hibernate.dialect.PostgreSQLDialect
         format-sql: true
       show-sql: true
+
+jwt:
+  secretKey: "1TjXchw5FloESb63Kc+DFhTARvpWL4jUGCwfGWxuG5SIf/1y/LgJxHnMqaF6A/ij"

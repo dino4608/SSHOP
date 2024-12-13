@@ -28,5 +28,4 @@ public class User {
     private String photo;
     private Date dob;
     private GenderEnum gender;
-    //todo: impl an attribute for soft-delete or status
 }

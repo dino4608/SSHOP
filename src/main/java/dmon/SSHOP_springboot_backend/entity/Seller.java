@@ -28,5 +28,4 @@ public class Seller {
     private String contactPhone;
     private String businessType;
     private String sellerType;
-    //todo: impl an attribute for soft-delete or status
 }

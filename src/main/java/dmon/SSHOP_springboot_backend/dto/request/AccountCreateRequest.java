@@ -1,23 +1,26 @@
 package dmon.SSHOP_springboot_backend.dto.request;
 
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.Min;
+
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class AccountCreateRequest {
+    @Size(message = "USERNAME_INVALID", min = 4)
+    String username;
+
     @Pattern(message = "EMAIL_INVALID", regexp = "^[a-zA-Z0-9.]+@[a-zA-Z0-9.]+\\.[a-zA-Z]{2,}$")
-    private String email;
+    String email;
+
     @Pattern(message = "PHONE_INVALID", regexp = "^[0-9]{10}$")
-    private String phone;
+    String phone;
+
     @Size(message = "PASSWORD_INVALID", min = 6)
-    private String password;
+    String password;
 }
