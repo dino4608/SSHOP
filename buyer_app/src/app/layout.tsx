@@ -4,6 +4,7 @@ import "./globals.css";
 import Header from "@/components/layout/Header";
 import { getCurrentSession } from "@/actions/auth";
 import HeaderCategorySelector from "@/components/layout/HeaderCategorySelector";
+import Cart from "@/components/cart/Cart";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -25,9 +26,12 @@ const RootLayout = async ({
       <body className={`${inter.className} antialiased bg-white min-h-[125vh] text-gray-900`}>
         <Header
           user={user}
-          categorySelector={<HeaderCategorySelector />} />
+          categorySelector={<HeaderCategorySelector />}
+        />
 
         {children}
+
+        <Cart />
       </body>
     </html>
   );

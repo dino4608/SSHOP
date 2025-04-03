@@ -7,6 +7,7 @@ import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 import { useShallow } from 'zustand/shallow';
 import HeaderSearchBar from './HeaderSearchBar';
+import { useCartStore } from '@/stores/cart-store';
 
 const AnnouncementBar = () => {
     return (
@@ -34,6 +35,13 @@ const Header = ({ user, categorySelector }: HeaderProps) => {
     // unmount the component => destroy states
     const [isOpen, setIsOpen] = useState<boolean>(true);
     const [prevScrollY, setPrevScrollY] = useState<number>(0);
+
+    const { open, getTotalItems } = useCartStore(
+        useShallow((state) => ({
+            open: state.open,
+            getTotalItems: state.getTotalItems
+        }))
+    );
 
     // Note:
     // useEffect always runs when mounting
@@ -132,7 +140,7 @@ const Header = ({ user, categorySelector }: HeaderProps) => {
                                 <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} d='M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z' />
                             </svg>
                             <span className='absolute -top-1 -right-1 bg-black text-white text-[10px] sm:text-xs w-3.5 h-3.5 sm:w-4 sm:h-4 rounded-full flex items-center justify-center'>
-                                {/* {getTotalItems()} */}0
+                                {getTotalItems()}
                             </span>
                         </button>
                     </div>

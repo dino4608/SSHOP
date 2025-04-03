@@ -80,3 +80,15 @@ export const searchProducts = async (query: string): Promise<Product[]> => {
         return [];
     }
 }
+
+
+export const getProductById = async (id: string): Promise<Product | null> => {
+    try {
+        // Demo data
+        const product: Product = { id, name: 'Product 1', image: 'image1.jpg', price: 100, description: 'Description for Product 1', category: 'Category 1' };
+        return product;
+    } catch (error) {
+        console.error('Error fetching product by ID: ', error);
+        return null;
+    }
+}
