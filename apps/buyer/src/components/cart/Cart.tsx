@@ -111,17 +111,17 @@ const Cart = () => {
 
         // const checkoutUrl = await createCheckoutSession(cartId);
 
-        // try {
-        //     const anyWindow = window as any;
+        try {
+            const anyWindow = window as any;
 
-        //     if (anyWindow.umami) {
-        //         anyWindow.umami.track('proceed_to_checkout', {
-        //             cartId: cartId,
-        //             totalPrice: getTotalPrice(),
-        //             currency: 'USD',
-        //         })
-        //     }
-        // } catch (e) { }
+            if (anyWindow.umami) {
+                anyWindow.umami.track('proceed_to_checkout', {
+                    cartId: cartId,
+                    totalPrice: getTotalPrice(),
+                    currency: 'USD',
+                })
+            }
+        } catch (e) { }
 
         // window.location.href = checkoutUrl;
 

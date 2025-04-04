@@ -5,6 +5,9 @@ import Header from "@/components/layout/Header";
 import { getCurrentSession } from "@/actions/auth";
 import HeaderCategorySelector from "@/components/layout/HeaderCategorySelector";
 import Cart from "@/components/cart/Cart";
+import Script from "next/script";
+import { Suspense } from "react";
+import AnalyticsTracker from "@/components/layout/AnalyticsTracker";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -28,6 +31,18 @@ const RootLayout = async ({
           user={user}
           categorySelector={<HeaderCategorySelector />}
         />
+
+        <Script
+          src='https://cloud.umami.is/script.js'
+          data-website-id='6cd7e0bb-7072-4fd5-98c3-c5d2b7c997f6'
+          strategy='beforeInteractive'
+        />
+
+        <Suspense>
+          <AnalyticsTracker
+            user={user}
+          />
+        </Suspense>
 
         {children}
 

@@ -7,10 +7,10 @@ import { getProductsByCategorySlug } from '@/server/product/api';
 import React from 'react';
 
 type CategoryPageProps = {
-    params: { slug: string };
+    params: Promise<{ slug: string }>;
 };
 const CategoryPage = async ({ params }: CategoryPageProps) => {
-    const { slug } = params;
+    const { slug } = await params;
 
     const [productCategory, products] = await Promise.all([getProductCategoryBySlug(slug), getProductsByCategorySlug(slug)]);
 

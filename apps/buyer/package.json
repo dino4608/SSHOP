@@ -1,5 +1,5 @@
 {
-  "name": "buyer_app",
+  "name": "buyer",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -13,6 +13,7 @@
     "@oslojs/encoding": "1.1.0",
     "@prisma/client": "6.4.0",
     "@radix-ui/react-dialog": "^1.1.6",
+    "@umami/node": "0.4.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "lucide-react": "^0.483.0",
