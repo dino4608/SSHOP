@@ -9,7 +9,7 @@ const access = 'access';
 const product = 'product';
 
 export const callLogin = (username: string, password: string): Promise<IApiRes<IAccount>> => {
-    return axios.post<IApiRes<IAccount>>(`${seller}/${access}/login`, { username, password }) as any;
+    return axios.post<IApiRes<IAccount>>(`${seller}/${access}/login/username`, { username, password }) as any;
 }
 
 export const callListProducts = (): Promise<IApiRes<TPage<TProduct>>> => {
