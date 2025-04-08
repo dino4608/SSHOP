@@ -651,7 +651,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"category\": { \"id\": \"8d4c2f1a-867c-49d8-8d3e-2b9100abd348\" },\r\n    \"skus\": [\r\n        {\r\n            \"inventory\": { \"stocks\": 6000 },\r\n            \"skuCode\": \"EX41\",\r\n            \"tierName\": \"Đen, M\",\r\n            \"tierIndex\": [0, 0],\r\n            \"productCost\": 60000,\r\n            \"retailPrice\": 160000,\r\n            \"specifications\": [\r\n                { \"name\": \"height\", \"value\": \"44\" },\r\n                { \"name\": \"length\", \"value\": \"66\" },\r\n                { \"name\": \"width\", \"value\": \"88\" }\r\n            ]\r\n        },\r\n        {\r\n            \"inventory\": { \"stocks\": 7000 },\r\n            \"skuCode\": \"EX42\",\r\n            \"tierName\": \"Đen, L\",\r\n            \"tierIndex\": [0, 1],\r\n            \"productCost\": 70000,\r\n            \"retailPrice\": 170000,\r\n            \"specifications\": [\r\n                { \"name\": \"height\", \"value\": \"44\" },\r\n                { \"name\": \"length\", \"value\": \"66\" },\r\n                { \"name\": \"width\", \"value\": \"88\" }\r\n            ]\r\n        },\r\n        {\r\n            \"inventory\": { \"stocks\": 8000 },\r\n            \"skuCode\": \"EX43\",\r\n            \"tierName\": \"Trắng, M\",\r\n            \"tierIndex\": [1, 0],\r\n            \"productCost\": 80000,\r\n            \"retailPrice\": 180000,\r\n            \"specifications\": [\r\n                { \"name\": \"height\", \"value\": \"44\" },\r\n                { \"name\": \"length\", \"value\": \"66\" },\r\n                { \"name\": \"width\", \"value\": \"88\" }\r\n            ]\r\n        },\r\n        {\r\n            \"inventory\": { \"stocks\": 9000 },\r\n            \"skuCode\": \"EX44\",\r\n            \"tierName\": \"Trắng, L\",\r\n            \"tierIndex\": [1, 1],\r\n            \"productCost\": 90000,\r\n            \"retailPrice\": 190000,\r\n            \"specifications\": [\r\n                { \"name\": \"height\", \"value\": \"44\" },\r\n                { \"name\": \"length\", \"value\": \"66\" },\r\n                { \"name\": \"width\", \"value\": \"88\" }\r\n            ]\r\n        }\r\n    ],\r\n    \"name\": \"Áo khoác da cực ngầu | dino Clothing\",\r\n    \"description\": \"Da cực ngầu\",\r\n    \"thumb\": \"thumb\",\r\n    \"photos\": [\"photo\", \"photos\", \"photos\", \"photos\"],\r\n    \"video\": \"video\",\r\n    \"sizeChart\": \"sizeChart\",\r\n    \"weight\": 50,\r\n    \"location\": \"Số 46 Đường số 8, Linh Trung, Thủ Đức, TP.Hồ Chi Minh\",\r\n    \"attributes\": [\r\n        { \"name\": \"Nơi sản xuất\", \"value\": \"Việt Nam\" },\r\n        { \"name\": \"Chất liệu\", \"value\": \"Cotton\" }\r\n    ],\r\n    \"tierVariations\": [\r\n        { \"name\": \"Màu sắc\", \"options\": [\"Đen\", \"Trắng\"] },\r\n        { \"name\": \"Kích cỡ\", \"options\": [\"M\", \"L\"] }\r\n    ]\r\n}",
+									"raw": "{\r\n    \"category\": { \"id\": \"8d4c2f1a-867c-49d8-8d3e-2b9100abd348\" },\r\n    \"skus\": [\r\n        {\r\n            \"inventory\": { \"stocks\": 6000 },\r\n            \"skuCode\": \"EX41\",\r\n            \"tierName\": \"Đen, M\",\r\n            \"tierIndex\": [0, 0],\r\n            \"productCost\": 60000,\r\n            \"retailPrice\": 160000,\r\n            \"specifications\": [\r\n                { \"name\": \"height\", \"value\": \"44\" },\r\n                { \"name\": \"length\", \"value\": \"66\" },\r\n                { \"name\": \"width\", \"value\": \"88\" }\r\n            ]\r\n        },\r\n        {\r\n            \"inventory\": { \"stocks\": 7000 },\r\n            \"skuCode\": \"EX42\",\r\n            \"tierName\": \"Đen, L\",\r\n            \"tierIndex\": [0, 1],\r\n            \"productCost\": 70000,\r\n            \"retailPrice\": 170000,\r\n            \"specifications\": [\r\n                { \"name\": \"height\", \"value\": \"44\" },\r\n                { \"name\": \"length\", \"value\": \"66\" },\r\n                { \"name\": \"width\", \"value\": \"88\" }\r\n            ]\r\n        },\r\n        {\r\n            \"inventory\": { \"stocks\": 8000 },\r\n            \"skuCode\": \"EX43\",\r\n            \"tierName\": \"Trắng, M\",\r\n            \"tierIndex\": [1, 0],\r\n            \"productCost\": 80000,\r\n            \"retailPrice\": 180000,\r\n            \"specifications\": [\r\n                { \"name\": \"height\", \"value\": \"44\" },\r\n                { \"name\": \"length\", \"value\": \"66\" },\r\n                { \"name\": \"width\", \"value\": \"88\" }\r\n            ]\r\n        },\r\n        {\r\n            \"inventory\": { \"stocks\": 9000 },\r\n            \"skuCode\": \"EX44\",\r\n            \"tierName\": \"Trắng, L\",\r\n            \"tierIndex\": [1, 1],\r\n            \"productCost\": 90000,\r\n            \"retailPrice\": 190000,\r\n            \"specifications\": [\r\n                { \"name\": \"height\", \"value\": \"44\" },\r\n                { \"name\": \"length\", \"value\": \"66\" },\r\n                { \"name\": \"width\", \"value\": \"88\" }\r\n            ]\r\n        }\r\n    ],\r\n    \"name\": \"Áo khoác da cực ngầu | Dmon Clothing\",\r\n    \"description\": \"Da cực ngầu\",\r\n    \"thumb\": \"thumb\",\r\n    \"photos\": [\"photo\", \"photos\", \"photos\", \"photos\"],\r\n    \"video\": \"video\",\r\n    \"sizeChart\": \"sizeChart\",\r\n    \"weight\": 50,\r\n    \"location\": \"Số 46 Đường số 8, Linh Trung, Thủ Đức, TP.Hồ Chi Minh\",\r\n    \"attributes\": [\r\n        { \"name\": \"Nơi sản xuất\", \"value\": \"Việt Nam\" },\r\n        { \"name\": \"Chất liệu\", \"value\": \"Cotton\" }\r\n    ],\r\n    \"tierVariations\": [\r\n        { \"name\": \"Màu sắc\", \"options\": [\"Đen\", \"Trắng\"] },\r\n        { \"name\": \"Kích cỡ\", \"options\": [\"M\", \"L\"] }\r\n    ]\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -755,18 +755,64 @@
 										{
 											"key": "file",
 											"type": "file",
-											"src": "daZYfqWif/BA3BA5-NguyenTrungNhan-71AC08425-GiaHanT1N2025.jpg"
+											"src": []
 										},
 										{
 											"key": "folder",
 											"value": "product",
 											"type": "text"
+										},
+										{
+											"key": "",
+											"type": "file",
+											"src": []
 										}
 									]
 								},
 								"url": "{{buyer}}/{{media}}/upload"
 							},
 							"response": []
+						},
+						{
+							"name": "Media: upload a file",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": []
+								},
+								"url": "{{buyer}}/{{media}}/test"
+							},
+							"response": []
+						}
+					],
+					"auth": {
+						"type": "noauth"
+					},
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"packages": {},
+								"exec": [
+									""
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"packages": {},
+								"exec": [
+									""
+								]
+							}
 						}
 					]
 				},
