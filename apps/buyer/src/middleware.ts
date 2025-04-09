@@ -9,9 +9,13 @@ export default async function middleware(request: NextRequest) {
     const path = request.nextUrl.pathname
     const isPublicRoute = publicRoutes.includes(path)
 
+    // temporarily allow access to all routes
+    if (path.startsWith('/')) {
+        return NextResponse.next()
+    }
+
     // 3. Get tokens from the cookie and storage
     const ACCESS_TOKEN = (await cookies()).get('ACCESS_TOKEN')?.value // or undefined
-
     // 4. Redirect to /login if the user is not authenticated
     if (!isPublicRoute && !ACCESS_TOKEN) {
         return NextResponse.redirect(new URL('/login', request.nextUrl))
@@ -39,6 +43,6 @@ export const config = {
          * - favicon.ico, sitemap.xml, robots.txt (metadata files)
          * - files.svg (public files)
          */
-        '/((?!api|_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt|.*\\.svg$).*)',
+        '/((?!api|_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt|.*\\.svg$|.*\\.jpg$).*)',
     ],
 }
