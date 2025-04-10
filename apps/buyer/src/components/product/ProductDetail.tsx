@@ -7,6 +7,8 @@ type ProductDetailProps = {
 };
 
 const ProductDetail: React.FC<ProductDetailProps> = ({ productId }) => {
+    log(`ProductDetail rendered with productId: ${productId}`);
+
 
     const [isAtBottom, setIsAtBottom] = useState(false);
     const sentinelRef = useRef<HTMLDivElement>(null);
