@@ -1,6 +1,5 @@
 'use client';
 
-import { log } from 'console';
 import React, { useEffect, useRef, useState } from 'react';
 
 type ProductDetailProps = {
@@ -8,7 +7,7 @@ type ProductDetailProps = {
 };
 
 const ProductDetail: React.FC<ProductDetailProps> = ({ productId }) => {
-    log(`ProductDetail rendered with productId: ${productId}`);
+    console.log(`ProductDetail rendered with productId: ${productId}`);
 
 
     const [isAtBottom, setIsAtBottom] = useState(false);

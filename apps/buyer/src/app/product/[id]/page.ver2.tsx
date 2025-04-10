@@ -1,6 +1,5 @@
 'use client';
 
-import { log } from 'console';
 import React from 'react';
 
 type ProductDetailProps = {
@@ -15,7 +14,7 @@ type ProductDetailProps = {
 // A right column for actions.
 const ProductDetailPage: React.FC<ProductDetailProps> = async ({ params }) => {
     const { id } = await params;
-    log(">>> ProductDetailPage rendered with id:", id);
+    console.log(">>> ProductDetailPage rendered with id:", id);
 
     return (
         <div className="flex h-screen overflow-hidden">
