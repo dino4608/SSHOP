@@ -1,5 +1,6 @@
 'use client';
 
+import { log } from 'console';
 import React, { useEffect, useRef, useState } from 'react';
 
 type ProductDetailProps = {
