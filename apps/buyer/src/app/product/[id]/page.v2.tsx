@@ -18,7 +18,7 @@ const ProductDetailPage: React.FC<ProductDetailProps> = async ({ params }) => {
 
     return (
         <div className="flex h-screen overflow-hidden">
-            <div className='container mx-auto px-2 sm:px-8 lg:px-20 flex'>
+            <div className='container mx-auto px-2 sm:px-10 lg:px-20 flex'>
 
 
                 {/* Left Column */}

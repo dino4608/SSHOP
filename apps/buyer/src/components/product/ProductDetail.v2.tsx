@@ -9,7 +9,6 @@ type ProductDetailProps = {
 const ProductDetail: React.FC<ProductDetailProps> = ({ productId }) => {
     console.log(`ProductDetail rendered with productId: ${productId}`);
 
-
     const [isAtBottom, setIsAtBottom] = useState(false);
     // Create a ref for the sentinel element (or a transparent div at the bottom of the left column)
     // the useRef hook is a React hook that returns a mutable ref object
@@ -70,7 +69,7 @@ const ProductDetail: React.FC<ProductDetailProps> = ({ productId }) => {
 
     return (
         <div className="min-h-screen bg-white">
-            <div className="container mx-auto px-2 sm:px-8 lg:px-20 py-4 flex gap-6 relative">
+            <div className="container mx-auto px-2 sm:px-10 lg:px-20 py-4 flex gap-6 relative">
                 {/* Left Column */}
                 <div className="w-3/5 space-y-6">
                     <div className="h-72 rounded-lg bg-red-400 flex items-center justify-center text-white font-bold text-xl">Product Image</div>
