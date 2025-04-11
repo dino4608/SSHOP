@@ -9,9 +9,6 @@ type ProductDetailProps = {
 const ProductDetail: React.FC<ProductDetailProps> = ({ productId }) => {
     console.log(`ProductDetail rendered with productId: ${productId}`);
 
-
-
-
     return (
         <div className="min-h-screen bg-white">
             <div className="container mx-auto px-2 sm:px-8 lg:px-20 py-4 flex gap-6 relative">
@@ -30,7 +27,7 @@ const ProductDetail: React.FC<ProductDetailProps> = ({ productId }) => {
                 </div>
 
                 {/* Right Column */}
-                <div className="w-2/5 space-y-4 transition-all duration-300 sticky top-4 self-start">
+                <div className="w-2/5 space-y-4 transition-all duration-300 sticky top-20 self-start">
                     <h1 className="text-2xl font-bold mb-2">Awesome Wireless Earbuds</h1>
                     <div className="text-gray-500 mb-4">⭐ 4.8 | 2.3K Sold | by GadgetStore</div>
 
