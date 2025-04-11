@@ -16,7 +16,6 @@ const imageUrls = [
     '/pocket3.jpg',
 ];
 
-// todo: cover img to Image
 const ProductImages: React.FC = () => {
     const [selectedImage, setSelectedImage] = useState(imageUrls[0]);
 

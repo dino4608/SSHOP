@@ -7,7 +7,7 @@ const ProductSidebar: React.FC = () => {
     return (
         <div className="w-4/9 flex flex-col transition-all duration-300 sticky top-20 self-start">
             {/* Product price */}
-            <div className='flex flex-col gap-2 mb-4'>
+            <div className='flex flex-col gap-2 mb-3'>
                 {/* Discounted price */}
                 <div className='flex items-center text-4xl text-red-500 font-semibold tracking-tighter gap-0.5'>
                     <span className='text-xl'>₫</span>400.000
@@ -29,31 +29,33 @@ const ProductSidebar: React.FC = () => {
             </div>
 
             {/* Product name & meta */}
-            <div className='flex flex-col gap-2 mb-8'>
+            <div className='flex flex-col gap-2 mb-3 border-b border-gray-200 pb-3'>
                 <h1 className="text-xl font-medium">Awesome Wireless Earbuds, BLUETOOTH 6.0, Fingerprint Touch Headphones with Noise Reduction Microphone</h1>
-                <div className="text-sm text-gray-500">⭐ 4.8 | 🔥 2.3K sold | 🏠 by GadgetStore</div>
+                <div className="text-base text-gray-500">⭐ 4.8 | 🔥 2.3K sold | 🏠 by GadgetStore</div>
             </div>
 
             {/* Deals */}
-            <div className="flex items-center gap-2 mb-4">
-                <span className="text-base">Deals:</span>
-                <div className="inline-flex items-center justify-center px-2 bg-red-100 rounded-sm text-red-500 font-semibold">
+            <div className="flex items-center gap-2 mb-3 border-b border-gray-200 pb-3 text-base">
+                Deals:
+                <span className="inline-flex px-2 bg-red-100 rounded-sm text-red-500 font-semibold">
                     12% off, max ₫200K
-                </div>
-                <div className="inline-flex items-center justify-center px-2 bg-red-100 rounded-sm text-red-500 font-semibold">
+                </span>
+                <span className="inline-flex px-2 bg-red-100 rounded-sm text-red-500 font-semibold">
                     15% off, max ₫300K
-                </div>
+                </span>
             </div>
 
             {/* Shipping */}
-            <div className="flex items-center gap-2 mb-4">
-                <span className="text-base">Shipping fee:</span>
-                <div className="inline-flex items-center justify-center text-gray-400 line-through">
-                    ₫17.000
-                </div>
-                <div className="inline-flex items-center justify-center px-2 text-teal-500 bg-teal-100 rounded-sm font-semibold">
+            <div className="flex items-center gap-2 mb-3 border-b border-gray-200 pb-3 text-base">
+                Shipping:
+                <span className="inline-flex px-2 bg-cyan-100 rounded-sm text-cyan-500 font-semibold">
                     Free shipping
-                </div>
+                </span>
+                <span className="inline-flex text-gray-400 line-through">
+                    ₫17.000
+                </span>
+                Get by 14 -17 April
+
             </div>
 
             {/* Guarantee */}
