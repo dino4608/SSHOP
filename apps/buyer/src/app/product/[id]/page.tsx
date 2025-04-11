@@ -21,8 +21,8 @@ const ProductDetailPage: React.FC<PageProps> = async ({ params }) => {
             <Breadcrumb />
 
             {/* Product Info */}
-            <div className="container mx-auto px-2 sm:px-8 lg:px-40">
-                <div className="py-4 flex gap-15 relative">
+            <div className="container mx-auto px-2 sm:px-8 lg:px-35">
+                <div className="py-4 flex gap-10 relative">
                     {/* Left Column */}
                     <div className="w-5/9 space-y-6">
                         <ProductImages />

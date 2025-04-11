@@ -10,7 +10,7 @@ const Breadcrumb: React.FC = () => {
         <div className='bg-white border-b border-gray-200'>
             <div className="container mx-auto px-2 sm:px-8 lg:px-40">
                 <div className='flex justify-start items-center text-sm text-gray-500 space-x-2 py-3 px-3'>
-                    <Link href="/home" className="hover:text-blue-500 transition-colors flex items-center space-x-2">
+                    <Link href="/" className="hover:text-blue-500 transition-colors flex items-center space-x-2">
                         <Home className='w-4 h-4' />
                         <span>Home</span>
                     </Link>
