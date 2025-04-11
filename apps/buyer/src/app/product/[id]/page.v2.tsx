@@ -1,4 +1,4 @@
-'use client';
+'use server';
 
 import React from 'react';
 
@@ -19,8 +19,6 @@ const ProductDetailPage: React.FC<ProductDetailProps> = async ({ params }) => {
     return (
         <div className="flex h-screen overflow-hidden">
             <div className='container mx-auto px-2 sm:px-10 lg:px-20 flex'>
-
-
                 {/* Left Column */}
                 <div className="w-3/5 overflow-y-scroll bg-gray-100 p-4 space-y-6">
                     <div className="h-72 rounded-lg bg-red-400 flex items-center justify-center text-white font-bold text-xl">Product Image</div>

@@ -1,6 +1,6 @@
 'use server';
 
-import { HandCoins, Minus, TicketCheck } from 'lucide-react';
+import { TicketCheck } from 'lucide-react';
 import React from 'react';
 
 const ProductSidebar: React.FC = () => {
@@ -17,7 +17,7 @@ const ProductSidebar: React.FC = () => {
 
                 <div className='flex gap-1'>
                     {/* Discount figures */}
-                    <div className='inline-flex justify-center items-center  text-sm text-red-500 bg-red-100 rounded-sm px-1.5 py-0.5 animate-pulse'>
+                    <div className='inline-flex justify-center items-center text-sm text-red-500 bg-red-100 rounded-sm px-1.5 py-0.5 animate-pulse'>
                         <TicketCheck className='w-4 h-4 mx-0.5' />-50% | -₫600.000
                     </div>
 
@@ -33,6 +33,30 @@ const ProductSidebar: React.FC = () => {
                 <h1 className="text-xl font-medium">Awesome Wireless Earbuds, BLUETOOTH 6.0, Fingerprint Touch Headphones with Noise Reduction Microphone</h1>
                 <div className="text-sm text-gray-500">⭐ 4.8 | 🔥 2.3K sold | 🏠 by GadgetStore</div>
             </div>
+
+            {/* Deals */}
+            <div className="flex items-center gap-2 mb-4">
+                <span className="text-base">Deals:</span>
+                <div className="inline-flex items-center justify-center px-2 bg-red-100 rounded-sm text-red-500 font-semibold">
+                    12% off, max ₫200K
+                </div>
+                <div className="inline-flex items-center justify-center px-2 bg-red-100 rounded-sm text-red-500 font-semibold">
+                    15% off, max ₫300K
+                </div>
+            </div>
+
+            {/* Shipping */}
+            <div className="flex items-center gap-2 mb-4">
+                <span className="text-base">Shipping fee:</span>
+                <div className="inline-flex items-center justify-center text-gray-400 line-through">
+                    ₫17.000
+                </div>
+                <div className="inline-flex items-center justify-center px-2 text-teal-500 bg-teal-100 rounded-sm font-semibold">
+                    Free shipping
+                </div>
+            </div>
+
+            {/* Guarantee */}
 
 
 
