@@ -2,7 +2,7 @@ import { cookies } from 'next/headers';
 import { NextRequest, NextResponse } from 'next/server'
 
 // 1. Specify public routes
-const publicRoutes = ['/', '/login', '/signup',]
+const publicRoutes = ['/', '/sign-in', '/sign-up',]
 
 export default async function middleware(request: NextRequest) {
     // 2. Check if the current route is public

@@ -1,7 +1,24 @@
 'use client';
 
 import { MessageCircle, Store, TicketCheck } from 'lucide-react';
+import Image from 'next/image';
 import React, { useState } from 'react';
+
+const colors = [
+    { code: "GZR9915", image: "/images/jeans1.jpg", disabled: false },
+    { code: "GZR9916", image: "/images/jeans2.jpg", disabled: false },
+    { code: "GZR9921", image: "/images/jeans3.jpg", disabled: false },
+    { code: "GZR9923", image: "/images/jeans4.jpg", disabled: false },
+    { code: "GZR9919", image: "/images/jeans5.jpg", disabled: true },
+    { code: "GZR9918", image: "/images/jeans6.jpg", disabled: false },
+];
+
+const sizes = [
+    { label: "S (45–55kg)", value: "S" },
+    { label: "M (55–64kg)", value: "M" },
+    { label: "L (64–74kg)", value: "L" },
+    { label: "XL (74–84kg)", value: "XL" },
+];
 
 type ProductActionsProps = {
     onVariantSelect: (img: string) => void;
@@ -10,25 +27,9 @@ type ProductActionsProps = {
 // select the first variant: ${selectedColor === code ? 'border-[var(--dino-red-1)] text-black' : 'border-gray-200'}
 // hover variants: 'hover:border-black'
 const ProductActions: React.FC<ProductActionsProps> = ({ onVariantSelect }) => {
-    const [selectedColor, setSelectedColor] = useState<string | null>('GZR9916');
-    const [selectedSize, setSelectedSize] = useState<string | null>('L');
+    const [selectedColor, setSelectedColor] = useState<string | null>(null);
+    const [selectedSize, setSelectedSize] = useState<string | null>(null);
     const [quantity, setQuantity] = useState<number>(1);
-
-    const colors = [
-        { code: "GZR9915", image: "/images/jeans1.jpg", disabled: false },
-        { code: "GZR9916", image: "/images/jeans2.jpg", disabled: false },
-        { code: "GZR9921", image: "/images/jeans3.jpg", disabled: false },
-        { code: "GZR9923", image: "/images/jeans4.jpg", disabled: false },
-        { code: "GZR9919", image: "/images/jeans5.jpg", disabled: true },
-        { code: "GZR9918", image: "/images/jeans6.jpg", disabled: false },
-    ];
-
-    const sizes = [
-        { label: "S (45–55kg)", value: "S" },
-        { label: "M (55–64kg)", value: "M" },
-        { label: "L (64–74kg)", value: "L" },
-        { label: "XL (74–84kg)", value: "XL" },
-    ];
 
     const handleQuantityChange = (delta: number) => {
         setQuantity(prev => Math.max(1, prev + delta));
@@ -94,8 +95,15 @@ const ProductActions: React.FC<ProductActionsProps> = ({ onVariantSelect }) => {
                                             : ''}
                                     `}
                                 >
-
-                                    <img src={image} alt={code} className="w-8 h-8 object-cover rounded-sm" />
+                                    {/* todo: change to Image/Next */}
+                                    <div className="w-8 aspect-square relative">
+                                        <Image
+                                            src={image}
+                                            alt='A variant image'
+                                            fill
+                                            className="object-cover rounded-sm"
+                                        />
+                                    </div>
                                     <div className='py-1 px-2'>
                                         {code}
                                     </div>

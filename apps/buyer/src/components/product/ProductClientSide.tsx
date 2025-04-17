@@ -18,8 +18,6 @@ const ProductClientSide: React.FC<ProductClientSideProps> = ({ productId }) => {
 
     const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
-    console.log(selectedImage);
-
     // px-2 sm:px-8 lg:px-35
     // height = padding top = 16px (referenced)
     return (
