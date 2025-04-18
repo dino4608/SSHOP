@@ -1,5 +1,6 @@
-"use client"
-import { useEffect, useState } from "react"
+"use client";
+
+import { useEffect, useState } from "react";
 
 export function CountdownTimer() {
     const [timeLeft, setTimeLeft] = useState(18 * 60 + 45) // 13 phút 45 giây

@@ -3,7 +3,7 @@
 import { Loader2 } from 'lucide-react';
 import Form from 'next/form';
 import React, { useActionState } from 'react';
-import CountdownTimer from '../layout/CountdownTimer';
+import CountdownTimer from './sign-up/CountdownTimer';
 
 const initialState = {
     message: '',

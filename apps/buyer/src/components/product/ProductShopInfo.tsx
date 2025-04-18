@@ -108,7 +108,7 @@ const ProductShopInfo: React.FC = () => {
                             key={url}
                             className="w-26 space-y-2"
                         >
-                            {/* Product image: standard */}
+                            {/* Product image (standard) */}
                             <div className="w-26 aspect-square relative">
                                 <Image
                                     src={url}

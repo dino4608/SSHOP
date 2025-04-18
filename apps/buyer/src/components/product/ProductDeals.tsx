@@ -46,7 +46,10 @@ const ProductDeals: React.FC = () => {
                 <div className='flex gap-3 select-none'>
                     {[1, 2, 3, 4, 5].map((i) => (
                         <div
-                            className='min-w-[250px] flex justify-between items-center bg-red-100 p-2 border border-red-200 rounded-md gap-2'
+                            className='
+                                bg-red-100 min-w-[220px] p-2 rounded-sm border border-red-200
+                                flex justify-between items-center gap-2
+                                relative'
                             key={i}
                         >
                             <div className='flex flex-col'>
@@ -56,13 +59,22 @@ const ProductDeals: React.FC = () => {
                                         5% off
                                     </div>
                                 </div>
-                                <div className='text-sm'>
+                                <div className='text-xs'>
                                     On orders over ₫200K
                                 </div>
                             </div>
-                            <div className='bg-[var(--dino-red-1)] text-white text-sm px-4 py-0.5 flex justify-center items-center rounded-sm'>
+
+                            <div className='
+                                bg-[var(--dino-red-1)] text-white text-sm px-3.5 py-0.5 rounded-sm
+                                flex justify-center items-center'
+                            >
                                 Claim
                             </div>
+
+                            {/* a dashed divider */}
+                            {/* <div className='
+                                absolute left-[calc(100%-65px-8px*2)] top-1 bottom-1
+                                border-l border-dashed border-red-300'/> */}
                         </div>
                     ))}
                 </div>
