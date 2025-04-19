@@ -18,7 +18,7 @@ const RightNav: React.FC = () => {
             </NavLinkItem>
 
             <NavLinkItem href='/coupons' icon={<SquareMenu />}>
-                Order
+                Orders
             </NavLinkItem>
         </NavGroup>
     );
