@@ -27,5 +27,3 @@ export function CountdownTimer() {
         </p>
     )
 }
-
-export default CountdownTimer;

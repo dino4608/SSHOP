@@ -1,9 +1,9 @@
 'use client';
 
+import useCountdown from '@/hooks/useCountDown';
 import { Loader2 } from 'lucide-react';
 import Form from 'next/form';
 import React, { useActionState } from 'react';
-import CountdownTimer from './sign-up/CountdownTimer';
 
 const initialState = {
     message: '',
@@ -15,6 +15,8 @@ interface SignUpProps {
 
 const SignUp: React.FC<SignUpProps> = ({ action }: SignUpProps) => {
     const [_state, formAction, isPending] = useActionState(action, initialState); //it only work at the client side
+
+    const { formattedTime } = useCountdown(60 * (60 * 6 + 18) + 45); // 6h 18m 45s
 
     return (
         <Form action={formAction} className='max-w-md mx-auto my-16 p-8 bg-white border border-gray-200 rounded-lg shadow-md'>
@@ -67,7 +69,9 @@ const SignUp: React.FC<SignUpProps> = ({ action }: SignUpProps) => {
                     <p className='text-xs text-gray-500 mb-2'>
                         ⚡️ Only 146 welcome bonus packages remaining!
                     </p>
-                    <CountdownTimer />
+                    <p className='text-xs text-gray-500 mb-4'>
+                        🕒 Offer expires in: {formattedTime}
+                    </p>
                 </div>
 
                 {/* Submit Button */}
