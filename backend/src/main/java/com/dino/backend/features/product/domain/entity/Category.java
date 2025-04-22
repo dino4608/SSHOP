@@ -1,6 +1,6 @@
-package com.dino.sshop._domain.product.model.entity;
+package com.dino.backend.features.product.domain.entity;
 
-import com.dino.sshop._domain.common.base.BaseEntity;
+import com.dino.backend.shared.model.BaseEntity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;

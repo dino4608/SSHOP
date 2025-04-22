@@ -1,0 +1,5 @@
+#priority level: 4th
+#layer: _start
+spring:
+  profiles:
+    active: dev
