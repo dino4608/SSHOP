@@ -1,7 +1,7 @@
 'use client';
 
 import React from "react";
-import { Product } from "@/types/product-domain.type";
+import { Product } from "@/types/product.types";
 import ProductItem from "./product-grid/ProductItem";
 import HomeContainer from "./HomeContainer";
 
@@ -27,7 +27,7 @@ type Props = {
     selectedCategory: string | null;
 }
 
-const ProductGridSection: React.FC<Props> = ({ selectedCategory }) => {
+const ProductGridSection = ({ selectedCategory }: Props) => {
     const filteredProducts = !selectedCategory || selectedCategory === "All"
         ? allProducts
         : allProducts.filter((p) => p.category === selectedCategory);

@@ -1,3 +1,6 @@
+### Customize ####
+/server/ngrok/ngrok.yml
+
 ### IntelliJ IDEA ###
 .idea/
 *.iws

@@ -20,13 +20,13 @@ const sizes = [
     { label: "XL (74–84kg)", value: "XL" },
 ];
 
-type ProductActionsProps = {
+type Props = {
     onVariantSelect: (img: string) => void;
 };
 
 // select the first variant: ${selectedColor === code ? 'border-[var(--dino-red-1)] text-black' : 'border-gray-200'}
 // hover variants: 'hover:border-black'
-const ProductActions: React.FC<ProductActionsProps> = ({ onVariantSelect }) => {
+const ProductActions = ({ onVariantSelect }: Props) => {
     const [selectedColor, setSelectedColor] = useState<string | null>(null);
     const [selectedSize, setSelectedSize] = useState<string | null>(null);
     const [quantity, setQuantity] = useState<number>(1);

@@ -1,7 +1,7 @@
 "use server";
 
-import Session from "@/types/session.type";
-import User from "@/types/identity-domain.type";
+import { XTUser } from "@/types/user.type";
+import XTSession from "@/types/session.type";
 import { cookies } from "next/headers";
 import { cache } from "react";
 
@@ -12,9 +12,9 @@ export async function generateSessionToken(): Promise<string> {
     return token;
 }
 
-export async function createSession(_token: string, userId: number): Promise<Session> {
+export async function createSession(_token: string, userId: number): Promise<XTSession> {
     const sessionId = "" // encodeHexLowerCase(sha256(new TextEncoder().encode(token)));
-    const session: Session = {
+    const session: XTSession = {
         id: sessionId,
         userId,
         expiresAt: new Date(Date.now() + 1000 * 60 * 60 * 24 * 30)
@@ -69,7 +69,7 @@ export async function invalidateSession(_sessionId: string): Promise<void> {
 }
 
 export type SessionValidationResult =
-    | { session: Session; user: Omit<User, "passwordHash"> }
+    | { session: XTSession; user: Omit<XTUser, "passwordHash"> }
     | { session: null; user: null };
 
 

@@ -1,6 +1,6 @@
 'use client';
 
-import { Product } from "@/types/product-domain.type";
+import { Product } from "@/types/product.types";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
@@ -9,7 +9,7 @@ type Props = {
     product: Product;
 }
 
-const ProductItem: React.FC<Props> = ({ product }) => {
+const ProductItem = ({ product }: Props) => {
     return (
         <Link href="/product/1">
             <div className="w-full overflow-hidden rounded-lg bg-white shadow">

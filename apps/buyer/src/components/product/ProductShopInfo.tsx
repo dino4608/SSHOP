@@ -18,7 +18,7 @@ const imageUrls = [
 ];
 
 
-const ProductShopInfo: React.FC = () => {
+const ProductShopInfo = () => {
     const scrollRef = useRef<HTMLDivElement>(null);
     const [isDragging, setIsDragging] = useState(false);
     const [startX, setStartX] = useState(0);
@@ -108,7 +108,8 @@ const ProductShopInfo: React.FC = () => {
                             key={url}
                             className="w-26 space-y-2"
                         >
-                            {/* Product image (standard) */}
+                            {/* STANDARD: use the Next Image */}
+                            {/* Product image */}
                             <div className="w-26 aspect-square relative">
                                 <Image
                                     src={url}

@@ -1,9 +1,7 @@
-'use client';
-
 import { ShoppingCart } from "lucide-react";
 import Link from "next/link";
 
-const Cart: React.FC = () => {
+const Cart = () => {
     return (
         <Link
             href={'/cart'}

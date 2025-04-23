@@ -1,0 +1,22 @@
+package com.dino.backend.features.identity.domain.repository;
+
+import com.dino.backend.features.identity.domain.User;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import java.util.Optional;
+
+public interface IUserDomainRepository extends JpaRepository<User, String> {
+    // QUERY //
+    boolean existsByUsername(String username);
+
+    boolean existsByEmail(String email);
+
+    boolean existsByUsernameOrEmail(String username, String email); // value is NULL, database exists NULL, return true: X (dangerous)
+
+    // COMMAND //
+    Optional<User> findByUsername(String username); // value is NULL, database exists NULL, return EMPTY: O (safe)
+
+    Optional<User> findByEmail(String email);
+
+    Optional<User> findByPhone(String phone);
+}

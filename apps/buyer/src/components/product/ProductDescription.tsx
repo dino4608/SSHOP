@@ -1,6 +1,6 @@
 import { Dot } from "lucide-react";
 
-const ProductDescription: React.FC = () => {
+const ProductDescription = () => {
 
     return (
         <div className="p-4 rounded-lg border border-gray-200 space-y-4">

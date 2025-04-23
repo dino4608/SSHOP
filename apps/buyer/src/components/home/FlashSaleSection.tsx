@@ -123,7 +123,7 @@ const flashSaleProducts = [
 
 const ITEMS_PER_PAGE = 6;
 
-const FlashSaleSection: React.FC = () => {
+const FlashSaleSection = () => {
     const [startIndex, setStartIndex] = useState(0);
     const maxIndex = flashSaleProducts.length - ITEMS_PER_PAGE;
 

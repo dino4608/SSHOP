@@ -1,15 +1,13 @@
-'use client';
-
-import { app } from "@/app/utils";
+import { APP } from "@/app/layout";
 import Link from "next/link";
 
-const Logo: React.FC = () => {
+const Logo = () => {
     return (
         <Link
             href={'/'}
             className='text-[var(--dino-red-1)] text-xl sm:text-2xl font-bold tracking-tight'
         >
-            {app.name}
+            {APP.name}
         </Link>
     );
 };

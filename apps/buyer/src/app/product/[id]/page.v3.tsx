@@ -2,11 +2,11 @@
 
 import React, { useEffect, useRef, useState } from 'react';
 
-type ProductDetailProps = {
+type Props = {
     productId: string;
 };
 
-const ProductDetail: React.FC<ProductDetailProps> = ({ productId }) => {
+const ProductDetail = ({ productId }: Props) => {
     console.log(`ProductDetail rendered with productId: ${productId}`);
 
     const [isAtBottom, setIsAtBottom] = useState(false);

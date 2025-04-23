@@ -10,6 +10,8 @@ import { useState } from "react";
 const HomePage = () => {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
 
+  console.log("HomePage render");
+
   return (
     <div className="py-10 space-y-10">
       <HeroImageSection />

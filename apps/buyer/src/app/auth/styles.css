@@ -1,0 +1,21 @@
+@import "tailwindcss";
+
+.btn-primary {
+  @apply w-full bg-[var(--dino-red-1)] text-white hover:bg-rose-600 transition-colors;
+}
+
+.btn-second {
+  @apply w-full;
+}
+
+.text-or {
+  @apply text-center text-sm text-gray-500;
+}
+
+.text-caption {
+  @apply text-sm
+}
+
+.component-step {
+  @apply space-y-4
+}

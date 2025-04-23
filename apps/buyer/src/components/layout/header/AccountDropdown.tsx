@@ -1,4 +1,3 @@
-'use client';
 import { ListItem } from "@/components/ui/navigation-menu";
 
 const categoryMenu: {
@@ -43,7 +42,7 @@ const categoryMenu: {
         },
     ]
 
-const AccountDropdown: React.FC = () => {
+const AccountDropdown = () => {
     return (
         <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px] ">
             {categoryMenu.map((item) => (

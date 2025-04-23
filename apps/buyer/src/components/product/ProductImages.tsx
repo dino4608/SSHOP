@@ -16,19 +16,19 @@ const imageUrls = [
     '/pocket3.jpg',
 ];
 
-type ProductImagesProps = {
+type Props = {
     selectedImage: string | null;
     setSelectedImage: (img: string) => void;
 };
 
-const ProductImages: React.FC<ProductImagesProps> = ({ selectedImage, setSelectedImage }) => {
+const ProductImages = ({ selectedImage, setSelectedImage }: Props) => {
     // const [selectedImage, setSelectedImage] = useState(imageUrls[0]); // todo: default image dùng useEffect
 
     return (
         <div className="flex gap-4">
             {/* Thumbnails */}
             <div className="flex flex-col gap-2 max-h-full overflow-y-auto scrollbar-hidden">
-                {/* Note: aspect-* h-full: tạo ra một ratio tính toán theo height
+                {/* EXP: aspect-* h-full: tạo ra một ratio tính toán theo height
                 height lại kế thừa từ parent
                 parent height: có dãn, tính theo cột phải
                 parent width: tính toán một cách tự nhiên, bằng 64px

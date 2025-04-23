@@ -3,7 +3,7 @@
 import { Ticket } from "lucide-react";
 import React, { useRef, useState } from 'react';
 
-const ProductDeals: React.FC = () => {
+const ProductDeals = () => {
     const scrollRef = useRef<HTMLDivElement>(null);
     const [isDragging, setIsDragging] = useState(false);
     const [startX, setStartX] = useState(0);

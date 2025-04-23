@@ -4,7 +4,7 @@ import React from "react";
 import HomeContainer from "./HomeContainer";
 import Image from "next/image";
 
-const HeroImageSection: React.FC = () => {
+const HeroImageSection = () => {
     return (
         <HomeContainer>
             <div className='

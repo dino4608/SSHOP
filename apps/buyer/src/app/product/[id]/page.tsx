@@ -9,7 +9,7 @@ type PageProps = {
     }>;
 };
 
-const ProductDetailPage: React.FC<PageProps> = async ({ params }) => {
+const ProductDetailPage = async ({ params }: PageProps) => {
     const { id } = await params;
 
     return (

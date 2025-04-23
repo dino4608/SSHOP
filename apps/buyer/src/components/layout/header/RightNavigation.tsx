@@ -1,5 +1,4 @@
 'use client';
-
 import { NavigationMenu, NavigationMenuList } from "@/components/ui/navigation-menu";
 import { MessageCircleMore, SquareMenu, UserRound } from "lucide-react";
 import NavigationLinkItem from "./NavigationLinkItem";
@@ -45,7 +44,7 @@ const accountMenu: { title: string; href: string; description: string }[] = [
     },
 ]
 
-const RightNavigation: React.FC = () => {
+const RightNavigation = () => {
     const [isAuth, setIsAuth] = useState(false);
 
     return (

@@ -1,13 +1,11 @@
-'use client';
-
 import { NavigationMenu, NavigationMenuList } from "@/components/ui/navigation-menu";
 import { Gem, Ticket, Zap } from "lucide-react";
 import NavigationDropdownItem from "./NavigationDropdownItem";
 import NavigationLinkItem from "./NavigationLinkItem";
 import CategoryDropdown from "./CategoryDropdown";
-import React, { ReactElement } from "react";
+import React from "react";
 
-const LeftNavigation: React.FC = () => {
+const LeftNavigation = () => {
     return (
         <NavigationMenu>
             <NavigationMenuList className="gap-0">

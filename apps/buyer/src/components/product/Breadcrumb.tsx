@@ -4,8 +4,8 @@ import { ChevronRight, Home } from 'lucide-react';
 import Link from 'next/link';
 import React from 'react';
 
-const Breadcrumb: React.FC = () => {
-    // height = padding y + text + border = 8*2 + 16 + 0.8 = 32.8px (referenced)
+const Breadcrumb = () => {
+    // REFERENCED: height = padding y + text + border = 8*2 + 16 + 0.8 = 32.8px
     // px-2 sm:px-10 lg:px-35
     return (
         <div className='px-2 sm:px-10 lg:px-35 py-2 bg-white border-b border-gray-200'>

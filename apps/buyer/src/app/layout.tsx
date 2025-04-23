@@ -1,8 +1,14 @@
+import Footer from "@/components/layout/Footer";
+import Header from "@/components/layout/Header";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
+import { Toaster } from "sonner";
 import "./globals.css";
-import Header from "@/components/layout/Header";
-import Footer from "@/components/layout/Footer";
+
+// Set up APP variable
+export const APP = {
+  name: "DEAL",
+}
 
 // Set up font variables
 const inter = Inter({
@@ -28,11 +34,12 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${inter.className} antialiased bg-white text-gray-900 dark:bg-gray-900 dark:text-gray-100`}>
-        <Header />
-
-        {children}
-
-        <Footer />
+        <main>
+          <Header />
+          {children}
+          <Footer />
+        </main>
+        <Toaster />
       </body>
     </html>
   );

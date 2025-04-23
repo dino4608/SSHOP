@@ -1,7 +1,6 @@
 'use client';
 
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
-import React from "react";
 import HomeContainer from "./HomeContainer";
 
 // Giả lập dữ liệu category
@@ -23,13 +22,16 @@ type Props = {
     setSelectCategory: (cat: string) => void;
 }
 
-const CategoryListSection: React.FC<Props> = ({ selectedCategory, setSelectCategory }) => {
+const CategoryListSection = ({ selectedCategory, setSelectCategory }: Props) => {
     const groupedCategories = chunkArray(categories, 5);
 
     return (
         <>
             {/* Danh mục sản phẩm với Carousel */}
-            <div className="bg-white mt-15 border-b sticky top-[65px] z-10 shadow-sm backdrop-blur-sm">
+            <div className="
+                bg-white mt-15 border-b border-gray-200 shadow-sm backdrop-blur-sm
+                sticky top-[65px] z-10"
+            >
                 <HomeContainer>
                     <Carousel className="w-full relative">
                         <CarouselContent className="mx-2">

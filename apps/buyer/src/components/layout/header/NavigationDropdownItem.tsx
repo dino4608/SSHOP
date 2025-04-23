@@ -1,5 +1,3 @@
-'use client';
-
 import { NavigationMenuContent, NavigationMenuItem, NavigationMenuTrigger } from '@/components/ui/navigation-menu';
 import React, { ReactElement } from 'react';
 
@@ -8,7 +6,7 @@ type Props = {
     children: React.ReactNode;
 }
 
-const NavigationDropdownItem: React.FC<Props> = ({ dropdown, children }) => {
+const NavigationDropdownItem = ({ dropdown, children }: Props) => {
     return (
         <NavigationMenuItem>
             <NavigationMenuTrigger>

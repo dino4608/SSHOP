@@ -9,17 +9,17 @@ import ProductDescription from "./ProductDescription";
 import ProductImages from "./ProductImages";
 import ProductShopInfo from "./ProductShopInfo";
 
-type ProductClientSideProps = {
+type Props = {
     productId: string;
 };
 
-const ProductClientSide: React.FC<ProductClientSideProps> = ({ productId }) => {
+const ProductClientSide = ({ productId }: Props) => {
     console.log(productId);
 
     const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
     // px-2 sm:px-8 lg:px-35
-    // height = padding top = 16px (referenced)
+    // REFERENCED: height = padding top = 16px
     return (
         <>
             <Breadcrumb />

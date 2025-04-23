@@ -1,20 +1,22 @@
 'use client';
 
 import { Button } from "@/components/ui/button";
+import ButtonAuthGoogle from "./ButtonAuthGoogle";
 
 type Props = {
-    username: string;
-    onUsernameChange: () => void;
+    email: string;
+    onEmailChange: () => void;
 };
 
-export default function GoogleOnlyStep({ username, onUsernameChange }: Props) {
+export default function GoogleOnlyStep({ email, onEmailChange }: Props) {
+
     return (
-        <div className="space-y-4 text-center">
+        <div className="component-step">
             <div className="text-sm">
-                Tài khoản <strong>{username}</strong> chưa có mật khẩu. Vui lòng đăng nhập bằng Google.
+                Tài khoản <strong>{email}</strong> chưa có mật khẩu. Vui lòng đăng nhập bằng Google.
             </div>
-            <Button variant="outline" className="w-full">Continue with Google</Button>
-            <Button variant="ghost" className="w-full" onClick={onUsernameChange}>← Thay đổi username</Button>
+            <ButtonAuthGoogle className='btn-primary' >Đăng nhập với Google</ButtonAuthGoogle>
+            <Button variant="ghost" className='btn-second' onClick={onEmailChange}>← Thay đổi email</Button>
         </div>
     );
 }

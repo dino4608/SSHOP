@@ -12,7 +12,7 @@ type ProductDetailProps = {
 // It uses a dependent-scrolled two-column layout
 // A left column for product details
 // A right column for actions.
-const ProductDetailPage: React.FC<ProductDetailProps> = async ({ params }) => {
+const ProductDetailPage = async ({ params }: ProductDetailProps) => {
     const { id } = await params;
     console.log(">>> ProductDetailPage rendered with id:", id);
 

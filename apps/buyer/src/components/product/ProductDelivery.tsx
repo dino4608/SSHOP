@@ -1,6 +1,6 @@
 import { Dot, MapPin, ShieldCheck, Truck } from "lucide-react";
 
-const ProductDelivery: React.FC = () => {
+const ProductDelivery = () => {
     return (
         <div className="p-4 border border-gray-200 rounded-lg bg-white flex flex-col gap-4">
             {/* header */}

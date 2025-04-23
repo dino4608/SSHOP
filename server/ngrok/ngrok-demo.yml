@@ -1,0 +1,8 @@
+version: 3
+agent:
+    authtoken: ADD_YOUR_TOKEN
+endpoints:
+  - name: backend
+    url: cheetah-dear-mutt.ngrok-free.app
+    upstream:
+      url: 8080
