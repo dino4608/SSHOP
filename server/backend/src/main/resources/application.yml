@@ -1,9 +1,0 @@
-#priority level: 4th
-
-#spring:
-#  profiles:
-#    active: dev
-
-spring:
-  profiles:
-    active: prod
