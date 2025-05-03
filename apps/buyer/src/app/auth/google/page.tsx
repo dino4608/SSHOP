@@ -1,7 +1,7 @@
 'use client';
 
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import action from '@/server-actions';
+import serverActions from '@/server-actions';
 import { initActionState } from '@/server-actions/utils';
 import { AlertCircle, Loader2 } from 'lucide-react';
 import Link from 'next/link';
@@ -20,7 +20,7 @@ const GoogleAuthPage = () => {
 
         if (code) {
             startTransition(async () => {
-                const result = await action.auth.logInOrSignUpWithGoogle({ code });
+                const result = await serverActions.auth.loginOrSignupWithGoogle({ code });
 
                 if (!result.success) {
                     setError(result);

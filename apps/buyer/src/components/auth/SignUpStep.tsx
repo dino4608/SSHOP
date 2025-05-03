@@ -8,7 +8,7 @@ import {
     FormMessage
 } from "@/components/ui/form";
 import { Input } from '@/components/ui/input';
-import action from '@/server-actions';
+import serverActions from '@/server-actions';
 import { initActionState } from '@/server-actions/utils';
 import { logInFormSchema, TLogInFormData } from "@/validations/auth.validations";
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -41,7 +41,7 @@ export default function SignUpStep({ email, onEmailChange }: Props) {
 
     const onSubmit = ({ password }: TLogInFormData) => {
         startTransition(async () => {
-            const result = await action.auth.signUpWithPassword({ email, password });
+            const result = await serverActions.auth.signupWithPassword({ email, password });
 
             if (!result.success) {
                 setError(result);

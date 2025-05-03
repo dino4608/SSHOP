@@ -7,7 +7,7 @@ import SignUpStep from '@/components/auth/SignUpStep';
 import React, { useState } from 'react';
 import './styles.css';
 import { TLookUpFormData } from '@/validations/auth.validations';
-import action from '@/server-actions';
+import serverActions from '@/server-actions';
 
 const AuthPage = () => {
 
@@ -15,7 +15,7 @@ const AuthPage = () => {
     const [step, setStep] = useState<'look-up' | 'log-in' | 'sign-up' | 'google-only'>('look-up');
 
     const onSubmit = async ({ email }: TLookUpFormData) => {
-        const { success, message, data } = await action.auth.lookupIdentifier({ email });
+        const { success, message, data } = await serverActions.auth.lookupIdentifier({ email });
 
         if (!success) {
             return { success, message, data: undefined };

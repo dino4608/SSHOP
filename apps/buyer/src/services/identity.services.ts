@@ -10,19 +10,19 @@ export const lookupIdentifier = async (query: TLookupQuery) => await apiClient.g
     withAuth: false,
 });
 
-export const logInWithPassword = async (body: TLogInWithPasswordBody) => await apiClient.post<TAuthResponse>({
+export const loginWithPassword = async (body: TLogInWithPasswordBody) => await apiClient.post<TAuthResponse>({
     endpoint: `${AUTH_RESOURCE}/login/password`,
     body,
     withAuth: false,
 });
 
-export const signUpWithPassword = async (body: TLogInWithPasswordBody) => await apiClient.post<TAuthResponse>({
+export const signupWithPassword = async (body: TLogInWithPasswordBody) => await apiClient.post<TAuthResponse>({
     endpoint: `${AUTH_RESOURCE}/signup/password`,
     body,
     withAuth: false,
 });
 
-export const logInOrSignUpWithGoogle = async (body: TLogInOrSignUpWithGoogleQuery) => await apiClient.post<TAuthResponse>({
+export const loginOrSignupWithGoogle = async (body: TLogInOrSignUpWithGoogleQuery) => await apiClient.post<TAuthResponse>({
     endpoint: `${AUTH_RESOURCE}/oauth2/google`,
     body,
     withAuth: false,
