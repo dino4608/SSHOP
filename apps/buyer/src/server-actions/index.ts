@@ -1,14 +1,12 @@
-import { logInOrSignUpWithGoogle, logInWithPassword, lookupIdentifier, signUpWithPassword } from "./auth.actions";
+import { loginOrSignupWithGoogle, loginWithPassword, lookupIdentifier, signupWithPassword } from "./auth.actions";
 
 // TODO: import lazily
 
-const action = {
+export const serverActions = {
     auth: {
         lookupIdentifier,
-        logInWithPassword,
-        signUpWithPassword,
-        logInOrSignUpWithGoogle,
+        loginWithPassword,
+        signupWithPassword,
+        loginOrSignupWithGoogle,
     },
 };
-
-export default action;

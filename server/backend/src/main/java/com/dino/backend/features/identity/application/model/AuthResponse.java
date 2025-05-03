@@ -13,7 +13,7 @@ import lombok.experimental.FieldDefaults;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class AuthResponse {
 
-    boolean authenticated;
+    Boolean isAuthenticated;
 
     String accessToken;
 

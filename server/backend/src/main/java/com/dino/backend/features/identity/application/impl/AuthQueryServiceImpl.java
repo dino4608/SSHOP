@@ -1,7 +1,7 @@
 package com.dino.backend.features.identity.application.impl;
 
 import com.dino.backend.features.identity.application.IAuthQueryService;
-import com.dino.backend.features.identity.application.model.LookupIdentifierRequest;
+import com.dino.backend.features.identity.application.model.LookupIdentifierResponse;
 import com.dino.backend.features.identity.domain.User;
 import com.dino.backend.features.identity.domain.repository.IUserDomainRepository;
 import lombok.AccessLevel;
@@ -20,10 +20,10 @@ public class AuthQueryServiceImpl implements IAuthQueryService {
 
     IUserDomainRepository userDomainRepository;
 
-    public LookupIdentifierRequest lookupIdentifier(String email) {
+    public LookupIdentifierResponse lookupIdentifier(String email) {
         Optional<User> userOpt = this.findUserByIdentifier(email);
 
-        return LookupIdentifierRequest.builder()
+        return LookupIdentifierResponse.builder()
                 .isEmailProvided(userOpt.isPresent())
                 .isPasswordProvided(userOpt.isPresent() && userOpt.get().getPassword() != null)
                 .build();

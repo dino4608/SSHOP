@@ -1,29 +1,29 @@
 'use client';
 
 import GoogleOnlyStep from '@/components/auth/GoogleOnlyStep';
-import LookUpStep from '@/components/auth/LookUpStep';
 import LogInStep from '@/components/auth/LogInStep';
+import LookUpStep from '@/components/auth/LookUpStep';
 import SignUpStep from '@/components/auth/SignUpStep';
-import React, { useState } from 'react';
-import './styles.css';
+import { serverActions } from '@/server-actions';
 import { TLookUpFormData } from '@/validations/auth.validations';
-import action from '@/server-actions';
+import { useState } from 'react';
+import './styles.css';
 
 const AuthPage = () => {
 
     const [email, setEmail] = useState('');
     const [step, setStep] = useState<'look-up' | 'log-in' | 'sign-up' | 'google-only'>('look-up');
 
-    const onSubmit = async ({ email }: TLookUpFormData) => {
-        const { success, message, data } = await action.auth.lookupIdentifier({ email });
+    const onLookup = async ({ email }: TLookUpFormData) => {
+        const result = await serverActions.auth.lookupIdentifier({ email })
 
-        if (!success) {
-            return { success, message, data: undefined };
+        if (!result.success) {
+            return result;
         }
 
         setEmail(email);
-        if (data.isEmailProvided) {
-            setStep(data.isPasswordProvided ? 'log-in' : 'google-only');
+        if (result.data.isEmailProvided) {
+            setStep(result.data.isPasswordProvided ? 'log-in' : 'google-only');
         } else {
             setStep('sign-up');
         }
@@ -49,7 +49,7 @@ const AuthPage = () => {
             </div>
 
             {step === 'look-up' && (
-                <LookUpStep onSubmit={onSubmit} />
+                <LookUpStep lookupIdentifier={onLookup} />
             )}
             {step === 'log-in' && (
                 <LogInStep email={email} onEmailChange={onReset} />
@@ -63,5 +63,13 @@ const AuthPage = () => {
         </div>
     );
 }
+
+// const WrappedAuthPage = () => {
+//     return (
+//         <ReduxProvider>
+//             <AuthPage />
+//         </ReduxProvider>
+//     )
+// }
 
 export default AuthPage;

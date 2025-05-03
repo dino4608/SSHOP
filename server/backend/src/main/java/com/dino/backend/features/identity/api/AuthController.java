@@ -24,7 +24,7 @@ public class AuthController {
 
         // lookupIdentifier //
         @GetMapping("/lookup")
-        public ResponseEntity<LookupIdentifierRequest> lookupIdentifier(
+        public ResponseEntity<LookupIdentifierResponse> lookupIdentifier(
                 @RequestParam("email") String email
         ) {
             return ResponseEntity.ok(authQueryService.lookupIdentifier(email));
@@ -39,11 +39,12 @@ public class AuthController {
                 @Valid  @RequestBody PasswordLoginRequest request
         ) {
             HttpHeaders headers = new HttpHeaders();
+            AuthResponse body = this.authAppService.login(request, headers);
 
             return ResponseEntity
                     .ok()
                     .headers(headers)
-                    .body(this.authAppService.login(request, headers));
+                    .body(body);
         }
 
         // signupWithPassword //
@@ -52,11 +53,12 @@ public class AuthController {
                 @Valid @RequestBody PasswordLoginRequest request
         ) {
             HttpHeaders headers = new HttpHeaders();
+            AuthResponse body = this.authAppService.signup(request, headers);
 
             return ResponseEntity
                     .ok()
                     .headers(headers)
-                    .body(this.authAppService.signup(request, headers));
+                    .body(body);
         }
 
         // loginOrSignupWithGoogle //
@@ -65,11 +67,12 @@ public class AuthController {
                 @RequestBody GoogleOauth2Request request
         ) {
             HttpHeaders headers = new HttpHeaders();
+            AuthResponse body = this.authAppService.loginOrSignup(request, headers);
 
             return ResponseEntity
                     .ok()
                     .headers(headers)
-                    .body(this.authAppService.loginOrSignup(request, headers));
+                    .body(body);
         }
     }
 }

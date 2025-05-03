@@ -1,6 +1,5 @@
 import { ListItem } from "@/components/ui/navigation-menu";
 import { api } from "@/services";
-import React from "react";
 
 const CategoryDropdown = async () => {
     const categories = (await api.category.getTree()).data;

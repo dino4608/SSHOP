@@ -8,13 +8,13 @@ import {
     FormMessage
 } from "@/components/ui/form";
 import { Input } from '@/components/ui/input';
-import action from '@/server-actions';
-import { initActionState } from '@/server-actions/utils';
+import { api } from '@/services';
+import { useAppDispatch } from '@/store/hooks';
+import { authActions } from '@/store/slices/auth.slice';
 import { logInFormSchema, TLogInFormData } from "@/validations/auth.validations";
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Loader2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import React, { useState, useTransition } from 'react';
+import { useState, useTransition } from 'react';
 import { useForm } from 'react-hook-form';
 import FormButtonSubmit, { FormError } from '../ui/custom/form';
 import ButtonAuthGoogle from './ButtonAuthGoogle';
@@ -32,20 +32,20 @@ export default function SignUpStep({ email, onEmailChange }: Props) {
         resolver: zodResolver(logInFormSchema),
         defaultValues: { password: '' },
     });
+    const router = useRouter();
+    const dispatch = useAppDispatch();
 
     const [isPending, startTransition] = useTransition();
-
-    const [error, setError] = useState(initActionState);
-
-    const router = useRouter();
+    const [error, setError] = useState('');
 
     const onSubmit = ({ password }: TLogInFormData) => {
         startTransition(async () => {
-            const result = await action.auth.signUpWithPassword({ email, password });
+            const result = await api.auth.signupWithPassword({ email, password })
 
             if (!result.success) {
-                setError(result);
+                setError(result.error);
             } else {
+                dispatch(authActions.setCredentials(result.data));
                 router.push('/');
             }
         });
@@ -77,7 +77,7 @@ export default function SignUpStep({ email, onEmailChange }: Props) {
 
             </form>
 
-            <FormError message={error?.message} />
+            <FormError message={error} />
         </Form>
     );
 }

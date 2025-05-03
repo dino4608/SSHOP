@@ -1,9 +1,9 @@
 // Base apiFetch() – xử lý token, retry
 
-import { TApiResponse } from "@/types/base.type";
+import { TApiResponse } from "@/types/base.types";
 import { clearTokens, getAccessToken, getRefreshToken, setAccessToken } from "./token";
 
-const API_BASE_URL = process.env.API_BASE_URL;
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 let isRefreshing = false;
 
@@ -20,6 +20,7 @@ async function refreshToken(): Promise<boolean> {
             headers: {
                 'Content-Type': 'application/json',
             },
+            credentials: 'include',
             body: JSON.stringify({ refresh_token: refreshToken }),
         });
 
@@ -37,16 +38,16 @@ async function refreshToken(): Promise<boolean> {
     return false;
 }
 
-export async function apiFetch<T = any>(
+export async function httpFetch<T = any>(
     endpoint: string,
     options: RequestInit = {},
     withAuth: boolean = true
 ): Promise<TApiResponse<T>> {
+
     const headers: Record<string, string> = {
         'Content-Type': 'application/json',
         ...(options.headers as Record<string, string>),
     };
-
 
     if (withAuth) {
         const token = getAccessToken();
@@ -54,18 +55,20 @@ export async function apiFetch<T = any>(
     }
 
     try {
-        let fetchResponse = await fetch(`${API_BASE_URL}${endpoint}`, {
+        let fetchRes = await fetch(`${API_BASE_URL}${endpoint}`, {
             ...options,
+            credentials: 'include',
             headers: headers as HeadersInit,
         });
 
-        if (fetchResponse.status === 401 && withAuth) {
+        if (fetchRes.status === 401 && withAuth) {
             const refreshed = await refreshToken();
             if (refreshed) {
                 const retryToken = getAccessToken();
                 headers['Authorization'] = `Bearer ${retryToken}`;
-                fetchResponse = await fetch(`${API_BASE_URL}${endpoint}`, {
+                fetchRes = await fetch(`${API_BASE_URL}${endpoint}`, {
                     ...options,
+                    credentials: 'include',
                     headers,
                 });
             } else {
@@ -75,17 +78,26 @@ export async function apiFetch<T = any>(
             }
         }
 
-        // Chuyển đổi phản hồi thành JSON
-        const apiResponse: TApiResponse<T> = await fetchResponse.json();
+        const jsonRes = await fetchRes.json() as TApiResponse<T>;
+        console.log('>>> json res: ' + jsonRes);
+        console.log('>>> cookies res: ' + fetchRes.headers.get('set-cookie'));
 
-        if (!apiResponse.success) {
-            throw new Error(apiResponse.error || 'Lỗi không xác định');
+
+
+        if (!jsonRes.success) {
+            console.error(`>>> Http client error: ${jsonRes.error}`);
         }
 
-        return apiResponse;
+        return jsonRes;
+
     } catch (error: any) {
-        // Bắt và xử lý lỗi: Lỗi mã trạng thái, lỗi mạng, hoặc lỗi khi chuyển đổi JSON
-        console.error('Error fetching API:', error.message);
-        throw error;  // Ném lại lỗi để caller có thể xử lý tiếp
+        console.error(`>>> Http client error: ${error.message || 'Lỗi không xác định'}`);
+
+        return {
+            success: false,
+            code: 0,
+            error: 'Lỗi không xác định',
+            data: {} as T
+        }
     }
 }

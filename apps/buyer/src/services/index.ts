@@ -1,4 +1,4 @@
-import { logInOrSignUpWithGoogle, logInWithPassword, lookupIdentifier, signUpWithPassword } from "./identity.services";
+import { loginOrSignupWithGoogle, loginWithPassword, lookupIdentifier, signupWithPassword } from "./identity.services";
 import { getTree } from "./product.services";
 
 export const api = {
@@ -7,8 +7,8 @@ export const api = {
     },
     auth: {
         lookupIdentifier,
-        logInWithPassword,
-        signUpWithPassword,
-        logInOrSignUpWithGoogle,
+        loginWithPassword,
+        signupWithPassword,
+        loginOrSignupWithGoogle,
     },
 }

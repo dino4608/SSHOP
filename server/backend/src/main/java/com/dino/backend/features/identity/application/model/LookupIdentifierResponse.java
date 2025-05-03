@@ -10,7 +10,7 @@ import lombok.experimental.FieldDefaults;
 @Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class LookupIdentifierRequest {
+public class LookupIdentifierResponse {
 
     Boolean isEmailProvided;
 

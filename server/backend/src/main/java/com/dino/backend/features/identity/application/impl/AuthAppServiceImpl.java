@@ -145,7 +145,7 @@ public class AuthAppServiceImpl implements IAuthAppService {
         headers.add(HttpHeaders.SET_COOKIE, cookie.toString());
 
         return AuthResponse.builder()
-                .authenticated(true)
+                .isAuthenticated(true)
                 .accessToken(ACCESS_TOKEN)
                 .user(User.responseUser(user))
                 .build();

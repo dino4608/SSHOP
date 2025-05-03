@@ -7,8 +7,8 @@ import {
     Form as FormUI
 } from "@/components/ui/form";
 import { Input } from '@/components/ui/input';
-import { initActionState } from '@/server-actions/utils';
-import { TActionState } from '@/types/base.type';
+import { TApiResponse } from '@/types/base.types';
+import { TLookupIdentifierResponse } from "@/types/identity.types";
 import { lookUpFormSchema, TLookUpFormData } from '@/validations/auth.validations';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useState, useTransition } from 'react';
@@ -17,10 +17,10 @@ import FormButtonSubmit, { FormError } from '../ui/custom/form';
 import ButtonAuthGoogle from './ButtonAuthGoogle';
 
 type TProps = {
-    onSubmit: (data: TLookUpFormData) => Promise<TActionState<undefined> | undefined>;
+    lookupIdentifier: (data: TLookUpFormData) => Promise<TApiResponse<TLookupIdentifierResponse> | undefined>;
 }
 
-const LookUpStep = ({ onSubmit: submit }: TProps) => {
+const LookUpStep = ({ lookupIdentifier }: TProps) => {
     // TODO:
     // create a custom hook - useFormSubmitToast
     // that associates useForm, useState, useTransition, onSubmit, useToast
@@ -29,17 +29,15 @@ const LookUpStep = ({ onSubmit: submit }: TProps) => {
         resolver: zodResolver(lookUpFormSchema),
         defaultValues: { email: '' },
     });
-
-    const [error, setError] = useState(initActionState);
-
+    const [error, setError] = useState('');
     const [isPending, startTransition] = useTransition();
 
     const onSubmit = async ({ email }: TLookUpFormData) => {
         startTransition(async () => {
-            const result = await submit({ email });
+            const result = await lookupIdentifier({ email });
 
-            if (result && !result.success) {
-                setError(result);
+            if (result && !result.error) {
+                setError(result.error);
             }
         });
     };
@@ -69,7 +67,7 @@ const LookUpStep = ({ onSubmit: submit }: TProps) => {
                 <ButtonAuthGoogle className='btn-second' >Tiếp tục với Google</ButtonAuthGoogle>
             </form>
 
-            <FormError message={error?.message} />
+            <FormError message={error} />
         </FormUI >
     );
 }
