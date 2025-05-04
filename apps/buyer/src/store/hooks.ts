@@ -1,14 +1,8 @@
 import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
-import type { store } from "./index";
-
-// NOTE:
-// Types of dispatch and state of Store
-// RootState: Nó đại diện cho toàn bộ kiểu của Redux store, được tạo tự động từ các reducer bạn đã cấu hình.
-// typeof store.getState: lấy Type của hàm
-// ReturnType: lấy Type trả về của hàm
-export type RootState = ReturnType<typeof store.getState>;
-export type AppDispatch = typeof store.dispatch;
+import type { TAppDispatch, TRootState } from "./index";
 
 // Custom hooks + ts type
-export const useAppDispatch: () => AppDispatch = useDispatch;
-export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;
+// useAppDispatch() sẽ trả về hàm dispatch có kiểu chuẩn từ store (ko có đầu vào).
+// useAppDispatch() sẽ trả về biến state có kiểu chuẩn từ store (đầu vào là 1 selector function).
+export const useAppDispatch: () => TAppDispatch = useDispatch;
+export const useAppSelector: TypedUseSelectorHook<TRootState> = useSelector;

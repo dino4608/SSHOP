@@ -46,6 +46,8 @@
 
 3. REFERENCED
 
+4. EXP (EXPLAIN)
+
 <br></br>
 ## 🧠 **Git Management & Commit Rules**
 

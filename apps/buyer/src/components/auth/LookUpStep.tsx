@@ -7,20 +7,21 @@ import {
     Form as FormUI
 } from "@/components/ui/form";
 import { Input } from '@/components/ui/input';
-import { initActionState } from '@/server-actions/utils';
-import { TActionState } from '@/types/base.type';
+import { initialServerActionError } from '@/server-actions';
+import { TServerActionResult } from '@/types/base.types';
 import { lookUpFormSchema, TLookUpFormData } from '@/validations/auth.validations';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useState, useTransition } from 'react';
 import { useForm } from 'react-hook-form';
 import FormButtonSubmit, { FormError } from '../ui/custom/form';
 import ButtonAuthGoogle from './ButtonAuthGoogle';
+import { TLookupIdentifierResponse } from "@/types/identity.types";
 
 type TProps = {
-    onSubmit: (data: TLookUpFormData) => Promise<TActionState<undefined> | undefined>;
+    lookupIdentifier: (data: TLookUpFormData) => Promise<TServerActionResult<TLookupIdentifierResponse> | undefined>;
 }
 
-const LookUpStep = ({ onSubmit: submit }: TProps) => {
+const LookUpStep = ({ lookupIdentifier }: TProps) => {
     // TODO:
     // create a custom hook - useFormSubmitToast
     // that associates useForm, useState, useTransition, onSubmit, useToast
@@ -30,13 +31,12 @@ const LookUpStep = ({ onSubmit: submit }: TProps) => {
         defaultValues: { email: '' },
     });
 
-    const [error, setError] = useState(initActionState);
-
+    const [error, setError] = useState(initialServerActionError);
     const [isPending, startTransition] = useTransition();
 
     const onSubmit = async ({ email }: TLookUpFormData) => {
         startTransition(async () => {
-            const result = await submit({ email });
+            const result = await lookupIdentifier({ email });
 
             if (result && !result.success) {
                 setError(result);

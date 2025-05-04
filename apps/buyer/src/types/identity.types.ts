@@ -22,28 +22,29 @@ export type TUser = {
 }
 
 // Query //
-export type TLookupQuery = {
+export type TLookupIdentifierQuery = {
     email: string;
 }
 
-export type TLogInOrSignUpWithGoogleQuery = {
-    code: string;
-}
-
 // Body //
-export type TLogInWithPasswordBody = {
+export type TLoginWithPasswordBody = {
     email: string,
     password: string,
 }
 
+export type TLoginOrSignUpWithGoogleBody = {
+    code: string;
+}
+
+
 // Response //
-export type TLookupResponse = {
+export type TLookupIdentifierResponse = {
     isEmailProvided: boolean;
     isPasswordProvided: boolean;
 }
 
 export type TAuthResponse = {
-    authenticated: boolean;
+    isAuthenticated: boolean;
     accessToken: string;
     user: TUser,
 }

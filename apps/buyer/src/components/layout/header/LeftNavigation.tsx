@@ -1,9 +1,8 @@
 import { NavigationMenu, NavigationMenuList } from "@/components/ui/navigation-menu";
 import { Gem, Ticket, Zap } from "lucide-react";
-import NavigationDropdownItem from "./NavigationDropdownItem";
-import NavigationLinkItem from "./NavigationLinkItem";
 import CategoryDropdown from "./CategoryDropdown";
 import React from "react";
+import { NavigationDropdownItem, NavigationLinkItem } from "@/components/ui/custom/navigation-menu";
 
 const LeftNavigation = () => {
     return (

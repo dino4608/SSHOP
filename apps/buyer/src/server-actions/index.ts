@@ -1,8 +1,15 @@
+import { TServerActionResult } from "@/types/base.types";
 import { loginOrSignupWithGoogle, loginWithPassword, lookupIdentifier, signupWithPassword } from "./auth.actions";
 
 // TODO: import lazily
 
-const serverActions = {
+export const initialServerActionError: TServerActionResult<any> = {
+    success: true,
+    message: '',
+    data: {} as any,
+}
+
+export const serverActions = {
     auth: {
         lookupIdentifier,
         loginWithPassword,
@@ -10,5 +17,3 @@ const serverActions = {
         loginOrSignupWithGoogle,
     },
 };
-
-export default serverActions;

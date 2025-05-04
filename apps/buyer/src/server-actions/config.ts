@@ -1,14 +1,8 @@
-import { TActionState, TApiResponse } from "@/types/base.type";
+import { TServerActionResult, TApiResponse } from "@/types/base.types";
 
-export const initActionState: TActionState<any> = {
-    success: true,
-    message: '',
-    data: {} as any,
-}
-
-export const wrap = async <T>(
+export const normalizeResult = async <T>(
     action: () => Promise<TApiResponse<T>>
-): Promise<TActionState<T>> => {
+): Promise<TServerActionResult<T>> => {
     try {
         const { success, error, data } = await action();
         return { success, message: error, data };

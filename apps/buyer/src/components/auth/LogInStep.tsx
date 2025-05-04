@@ -8,14 +8,15 @@ import {
     FormMessage
 } from "@/components/ui/form";
 import { Input } from '@/components/ui/input';
-import serverActions from '@/server-actions';
-import { initActionState } from '@/server-actions/utils';
+import { initialServerActionError, serverActions } from '@/server-actions';
 import { logInFormSchema, TLogInFormData } from "@/validations/auth.validations";
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'next/navigation';
 import { useState, useTransition } from 'react';
 import { useForm } from 'react-hook-form';
 import FormButtonSubmit, { FormError } from '../ui/custom/form';
+import { useAppDispatch } from '@/store/hooks';
+import { authActions } from '@/store/slices/auth.slice';
 
 type Props = {
     email: string;
@@ -30,12 +31,13 @@ const LogInStep = ({ email, onEmailChange }: Props) => {
         resolver: zodResolver(logInFormSchema),
         defaultValues: { password: '' },
     });
+    const router = useRouter();
+    const dispatch = useAppDispatch();
 
     const [isPending, startTransition] = useTransition();
+    const [error, setError] = useState(initialServerActionError);
 
-    const [error, setError] = useState(initActionState);
 
-    const router = useRouter();
 
     const onSubmit = ({ password }: TLogInFormData) => {
         startTransition(async () => {
@@ -44,6 +46,7 @@ const LogInStep = ({ email, onEmailChange }: Props) => {
             if (!result.success) {
                 setError(result);
             } else {
+                dispatch(authActions.setCredentials(result.data));
                 router.push('/');
             }
         });

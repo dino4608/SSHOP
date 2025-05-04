@@ -4,7 +4,6 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { Toaster } from "sonner";
 import "./globals.css";
-import { ReduxProvider } from "@/store/provider";
 
 // Set up APP variable
 export const APP = {
@@ -35,17 +34,15 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${inter.className} antialiased bg-white text-gray-900 dark:bg-gray-900 dark:text-gray-100`}>
-        <ReduxProvider>
-          <main>
-            <Header />
+        <main>
+          <Header />
 
-            {children}
+          {children}
 
-            <Footer />
-          </main>
+          <Footer />
+        </main>
 
-          <Toaster />
-        </ReduxProvider>
+        <Toaster />
       </body>
     </html>
   );

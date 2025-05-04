@@ -10,7 +10,7 @@
 //     },
 // });
 
-import { combineReducers, configureStore } from "@reduxjs/toolkit";
+import { configureStore } from "@reduxjs/toolkit";
 import {
     FLUSH,
     PAUSE,
@@ -22,11 +22,7 @@ import {
     REHYDRATE,
 } from "redux-persist";
 import storage from "redux-persist/lib/storage"; // localStorage
-import { authReducer } from "./slices/auth.slice";
-
-const rootReducer = combineReducers({
-    auth: authReducer,
-});
+import rootReducer from "./reducers";
 
 const persistConfig = {
     key: "root",
@@ -40,6 +36,7 @@ const persistConfig = {
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 
 // Redux store chuẩn dùng cho ứng dụng
+// Redux là một singleton store được tạo ra duy nhất một lần và truyền qua ReduxProvider
 export const store = configureStore({
     reducer: persistedReducer,
     middleware: (getDefaultMiddleware) => getDefaultMiddleware({
@@ -52,3 +49,11 @@ export const store = configureStore({
 
 // EXP: Dùng để theo dõi việc lưu và khôi phục state từ storage (localStorage)
 export const persistor = persistStore(store);
+
+// NOTE:
+// Types of dispatch and state of Store
+// RootState: Nó đại diện cho toàn bộ kiểu của Redux store, được tạo tự động từ các reducer bạn đã cấu hình.
+// typeof store.getState: lấy Type của hàm
+// ReturnType: lấy Type trả về của hàm
+export type TRootState = ReturnType<typeof store.getState>;
+export type TAppDispatch = typeof store.dispatch;

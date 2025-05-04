@@ -1,10 +1,10 @@
 'use client';
-import React, { ReactElement } from 'react';
-import Link from 'next/link';
 import { NavigationMenuItem, navigationMenuItemStyle, navigationMenuLongItemStyle } from '@/components/ui/navigation-menu';
 import { cn } from '@/lib/utils';
+import Link from 'next/link';
+import React, { ReactElement } from 'react';
 
-type Props = {
+type NavigationLinkItemProps = {
     href: string;
     icon?: ReactElement<any>
     iconClassName?: string;
@@ -12,7 +12,10 @@ type Props = {
     children: React.ReactNode
 }
 
-const NavigationLinkItem = ({ href, icon, children, iconClassName = 'w-5', longStyle = false }: Props) => {
+export const NavigationLinkItem = ({
+    href, icon, children, iconClassName = 'w-5', longStyle = false
+}: NavigationLinkItemProps) => {
+
     const styledIcon = icon ? React.cloneElement(icon, { className: iconClassName, }) : null;
 
     return (
@@ -33,4 +36,26 @@ const NavigationLinkItem = ({ href, icon, children, iconClassName = 'w-5', longS
     );
 };
 
-export default NavigationLinkItem;
+import { NavigationMenuContent, NavigationMenuTrigger } from '@/components/ui/navigation-menu';
+
+type NavigationDropdownItemProps = {
+    dropdown: ReactElement;
+    children: React.ReactNode;
+}
+
+export const NavigationDropdownItem = ({ dropdown, children }: NavigationDropdownItemProps) => {
+
+    return (
+        <NavigationMenuItem>
+            <NavigationMenuTrigger>
+                {children}
+            </NavigationMenuTrigger>
+            <NavigationMenuContent>
+                {dropdown}
+            </NavigationMenuContent>
+        </NavigationMenuItem>
+    );
+};
+
+
+

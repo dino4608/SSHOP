@@ -1,28 +1,28 @@
 import { apiClient } from "@/lib/api";
-import { TAuthResponse, TLogInOrSignUpWithGoogleQuery, TLogInWithPasswordBody, TLookupQuery, TLookupResponse } from "../types/identity.types";
+import { TAuthResponse, TLoginOrSignUpWithGoogleBody, TLoginWithPasswordBody, TLookupIdentifierQuery, TLookupIdentifierResponse } from "../types/identity.types";
 
 // AUTH_RESOURCE //
 const AUTH_RESOURCE = '/auth';
 
-export const lookupIdentifier = async (query: TLookupQuery) => await apiClient.get<TLookupResponse>({
+export const lookupIdentifier = async (query: TLookupIdentifierQuery) => await apiClient.get<TLookupIdentifierResponse>({
     endpoint: `${AUTH_RESOURCE}/lookup`,
     query,
     withAuth: false,
 });
 
-export const loginWithPassword = async (body: TLogInWithPasswordBody) => await apiClient.post<TAuthResponse>({
+export const loginWithPassword = async (body: TLoginWithPasswordBody) => await apiClient.post<TAuthResponse>({
     endpoint: `${AUTH_RESOURCE}/login/password`,
     body,
     withAuth: false,
 });
 
-export const signupWithPassword = async (body: TLogInWithPasswordBody) => await apiClient.post<TAuthResponse>({
+export const signupWithPassword = async (body: TLoginWithPasswordBody) => await apiClient.post<TAuthResponse>({
     endpoint: `${AUTH_RESOURCE}/signup/password`,
     body,
     withAuth: false,
 });
 
-export const loginOrSignupWithGoogle = async (body: TLogInOrSignUpWithGoogleQuery) => await apiClient.post<TAuthResponse>({
+export const loginOrSignupWithGoogle = async (body: TLoginOrSignUpWithGoogleBody) => await apiClient.post<TAuthResponse>({
     endpoint: `${AUTH_RESOURCE}/oauth2/google`,
     body,
     withAuth: false,

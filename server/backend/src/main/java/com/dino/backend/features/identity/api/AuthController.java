@@ -24,7 +24,7 @@ public class AuthController {
 
         // lookupIdentifier //
         @GetMapping("/lookup")
-        public ResponseEntity<LookupIdentifierRequest> lookupIdentifier(
+        public ResponseEntity<LookupIdentifierResponse> lookupIdentifier(
                 @RequestParam("email") String email
         ) {
             return ResponseEntity.ok(authQueryService.lookupIdentifier(email));

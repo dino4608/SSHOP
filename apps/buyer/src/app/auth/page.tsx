@@ -7,23 +7,24 @@ import SignUpStep from '@/components/auth/SignUpStep';
 import React, { useState } from 'react';
 import './styles.css';
 import { TLookUpFormData } from '@/validations/auth.validations';
-import serverActions from '@/server-actions';
+import { serverActions } from '@/server-actions';
+import { ReduxProvider } from '@/store/provider';
 
 const AuthPage = () => {
 
     const [email, setEmail] = useState('');
     const [step, setStep] = useState<'look-up' | 'log-in' | 'sign-up' | 'google-only'>('look-up');
 
-    const onSubmit = async ({ email }: TLookUpFormData) => {
-        const { success, message, data } = await serverActions.auth.lookupIdentifier({ email });
+    const onLookup = async ({ email }: TLookUpFormData) => {
+        const result = await serverActions.auth.lookupIdentifier({ email });
 
-        if (!success) {
-            return { success, message, data: undefined };
+        if (!result.success) {
+            return result;
         }
 
         setEmail(email);
-        if (data.isEmailProvided) {
-            setStep(data.isPasswordProvided ? 'log-in' : 'google-only');
+        if (result.data.isEmailProvided) {
+            setStep(result.data.isPasswordProvided ? 'log-in' : 'google-only');
         } else {
             setStep('sign-up');
         }
@@ -49,7 +50,7 @@ const AuthPage = () => {
             </div>
 
             {step === 'look-up' && (
-                <LookUpStep onSubmit={onSubmit} />
+                <LookUpStep lookupIdentifier={onLookup} />
             )}
             {step === 'log-in' && (
                 <LogInStep email={email} onEmailChange={onReset} />
@@ -64,4 +65,12 @@ const AuthPage = () => {
     );
 }
 
-export default AuthPage;
+const WrappedAuthPage = () => {
+    return (
+        <ReduxProvider>
+            <AuthPage />
+        </ReduxProvider>
+    )
+}
+
+export default WrappedAuthPage;

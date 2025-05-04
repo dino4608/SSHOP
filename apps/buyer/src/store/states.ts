@@ -1,9 +1,9 @@
-import { RootState } from "./hooks";
+import { TRootState } from ".";
 
-const globalState = {
-    // authStates
-    user: (state: RootState) => state.auth.user,
-    accessToken: (state: RootState) => state.auth.accessToken,
+const globalStates = {
+    auth: (state: TRootState) => state.auth,
+    currentUser: (state: TRootState) => state.auth.user,
+    accessToken: (state: TRootState) => state.auth.accessToken,
 }
 
-export default globalState;
+export default globalStates;

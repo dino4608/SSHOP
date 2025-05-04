@@ -1,6 +1,6 @@
 // Base apiFetch() – xử lý token, retry
 
-import { TApiResponse } from "@/types/base.type";
+import { TApiResponse } from "@/types/base.types";
 import { clearTokens, getAccessToken, getRefreshToken, setAccessToken } from "./token";
 
 const API_BASE_URL = process.env.API_BASE_URL;
