@@ -34,6 +34,7 @@ const persistConfig = {
     storage,
 };
 
+// EXP
 // persistReducer là wrap lại rootReducer để tích hợp lưu trữ.
 // Nó thêm logic tự động: load from localStorage → inject vào store khi app mở lại
 const persistedReducer = persistReducer(persistConfig, rootReducer);
@@ -42,12 +43,12 @@ const persistedReducer = persistReducer(persistConfig, rootReducer);
 export const store = configureStore({
     reducer: persistedReducer,
     middleware: (getDefaultMiddleware) => getDefaultMiddleware({
-        // Mục đích: Bỏ qua warning "non-serializable data" của redux-persist.
+        // EXP: Mục đích: Bỏ qua warning "non-serializable data" của redux-persist.
         serializableCheck: {
             ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
         },
     }),
 });
 
-// Dùng để theo dõi việc lưu và khôi phục state từ storage (localStorage)
+// EXP: Dùng để theo dõi việc lưu và khôi phục state từ storage (localStorage)
 export const persistor = persistStore(store);

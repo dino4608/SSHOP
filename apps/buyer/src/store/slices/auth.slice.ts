@@ -24,7 +24,7 @@ const initialState: AuthState = {
 * - Step: create Slide => create Reducer => add to Store.
 * - Actions: don't need to create, they auto created by Slide.
 * - Action name format: slideName/reducerName. Ex: auth/setCredentials.
-* - Mutation style: is allowed to write, Redux Toolkit attached Immer convert them to Immutability style
+* - Mutable style: is allowed to write, Redux Toolkit attached Immer will convert them to Immutable style
 */
 const authSlice = createSlice({
     name: "auth",
@@ -34,10 +34,9 @@ const authSlice = createSlice({
             state,
             action: PayloadAction<{ user: User; accessToken: string }>
         ) => {
-            // mutation style
             state.user = action.payload.user;
             state.accessToken = action.payload.accessToken;
-        }, // => Action creator: { type: 'auth/setCredentials' }
+        },
         logout: (state) => {
             state.user = null;
             state.accessToken = null;
