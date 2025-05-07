@@ -1,14 +1,13 @@
 'use client';
 
 import GoogleOnlyStep from '@/components/auth/GoogleOnlyStep';
-import LookUpStep from '@/components/auth/LookUpStep';
 import LogInStep from '@/components/auth/LogInStep';
+import LookUpStep from '@/components/auth/LookUpStep';
 import SignUpStep from '@/components/auth/SignUpStep';
-import React, { useState } from 'react';
-import './styles.css';
-import { TLookUpFormData } from '@/validations/auth.validations';
 import { serverActions } from '@/server-actions';
-import { ReduxProvider } from '@/store/provider';
+import { TLookUpFormData } from '@/validations/auth.validations';
+import { useState } from 'react';
+import './styles.css';
 
 const AuthPage = () => {
 
@@ -16,7 +15,7 @@ const AuthPage = () => {
     const [step, setStep] = useState<'look-up' | 'log-in' | 'sign-up' | 'google-only'>('look-up');
 
     const onLookup = async ({ email }: TLookUpFormData) => {
-        const result = await serverActions.auth.lookupIdentifier({ email });
+        const result = await serverActions.auth.lookupIdentifier({ email })
 
         if (!result.success) {
             return result;
@@ -65,12 +64,12 @@ const AuthPage = () => {
     );
 }
 
-const WrappedAuthPage = () => {
-    return (
-        <ReduxProvider>
-            <AuthPage />
-        </ReduxProvider>
-    )
-}
+// const WrappedAuthPage = () => {
+//     return (
+//         <ReduxProvider>
+//             <AuthPage />
+//         </ReduxProvider>
+//     )
+// }
 
-export default WrappedAuthPage;
+export default AuthPage;

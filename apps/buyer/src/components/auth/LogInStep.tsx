@@ -8,15 +8,15 @@ import {
     FormMessage
 } from "@/components/ui/form";
 import { Input } from '@/components/ui/input';
-import { initialServerActionError, serverActions } from '@/server-actions';
+import { api } from '@/services';
+import { useAppDispatch } from '@/store/hooks';
+import { authActions } from '@/store/slices/auth.slice';
 import { logInFormSchema, TLogInFormData } from "@/validations/auth.validations";
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'next/navigation';
 import { useState, useTransition } from 'react';
 import { useForm } from 'react-hook-form';
 import FormButtonSubmit, { FormError } from '../ui/custom/form';
-import { useAppDispatch } from '@/store/hooks';
-import { authActions } from '@/store/slices/auth.slice';
 
 type Props = {
     email: string;
@@ -35,16 +35,14 @@ const LogInStep = ({ email, onEmailChange }: Props) => {
     const dispatch = useAppDispatch();
 
     const [isPending, startTransition] = useTransition();
-    const [error, setError] = useState(initialServerActionError);
-
-
+    const [error, setError] = useState('');
 
     const onSubmit = ({ password }: TLogInFormData) => {
         startTransition(async () => {
-            const result = await serverActions.auth.loginWithPassword({ email, password });
+            const result = await api.auth.loginWithPassword({ email, password });
 
             if (!result.success) {
-                setError(result);
+                setError(result.error);
             } else {
                 dispatch(authActions.setCredentials(result.data));
                 router.push('/');
@@ -76,7 +74,7 @@ const LogInStep = ({ email, onEmailChange }: Props) => {
                 <Button variant="ghost" className="btn-second" onClick={onEmailChange}>← Thay đổi email</Button>
             </form>
 
-            <FormError message={error?.message} />
+            <FormError message={error} />
         </Form>
     );
 }

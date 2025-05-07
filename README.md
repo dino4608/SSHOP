@@ -153,5 +153,6 @@ Branches should follow the format: `<type>/<scope>`
 |------------------------------------------------------|---------------------------------------------------------------------------------|
 | **GET requests should not have a body**              | Technically, GET requests should not send data in the body. Use query params.   |
 | **Postman: POST should use raw**                     | POST should use raw, instead of form-data                                       |
+| **Nullish coalescing operator**                      | ??                                       |
 
 

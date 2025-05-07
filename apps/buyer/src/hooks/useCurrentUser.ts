@@ -1,5 +1,5 @@
+import clientLocalStorage from "@/lib/utils/clientLocalStorage";
 import { useAppSelector } from "@/store/hooks";
-import globalStates from "@/store/states";
 
 /* NOTE:
  * Rất nên tạo hook useAuth như bạn đang làm, dù logic có vẻ đơn giản — vì:
@@ -7,14 +7,15 @@ import globalStates from "@/store/states";
  * bạn chỉ cần sửa trong useAuth, không cần đi sửa khắp nơi.
  * -  Tăng khả năng tái sử dụng và đọc code dễ hơn, tên chuẩn hóa
  */
-const useAuth = () => {
+const useCurrentUser = () => {
 
-    const { isAuthenticated, user: currentUser } = useAppSelector(globalStates.auth);
+    let currentUser = useAppSelector(state => state.auth.currentUser);
 
-    return {
-        isAuthenticated,
-        currentUser,
-    };
+    if (!currentUser) {
+        currentUser = clientLocalStorage.get('currentUser');
+    }
+
+    return currentUser;
 }
 
-export default useAuth;
+export default useCurrentUser;

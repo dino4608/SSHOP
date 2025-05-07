@@ -2,15 +2,13 @@
 
 import LoadingSuspense from '@/components/layout/LoadingSuspense';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { initialServerActionError, serverActions } from '@/server-actions';
-import { store } from '@/store';
+import { api } from '@/services';
 import { useAppDispatch } from '@/store/hooks';
-import { ReduxProvider } from '@/store/provider';
 import { authActions } from '@/store/slices/auth.slice';
 import { AlertCircle, Loader2 } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { Suspense, useEffect, useState, useTransition } from 'react';
+import { useEffect, useState, useTransition } from 'react';
 
 const GoogleAuthPage = () => {
     const searchParams = useSearchParams();
@@ -18,25 +16,24 @@ const GoogleAuthPage = () => {
     const dispatch = useAppDispatch();
 
     const [isPending, startTransition] = useTransition();
-    const [error, setError] = useState(initialServerActionError);
+    const [error, setError] = useState('');
 
     useEffect(() => {
         const code = searchParams.get('code');
 
         if (code) {
             startTransition(async () => {
-                const result = await serverActions.auth.loginOrSignupWithGoogle({ code });
+                const result = await api.auth.loginOrSignupWithGoogle({ code })
 
                 if (!result.success) {
-                    setError(result);
-                    console.error(result.message);
+                    setError(result.error);
                 } else {
                     dispatch(authActions.setCredentials(result.data));
                     router.push('/');
                 }
             });
         } else {
-            setError({ success: false, message: 'Không tìm thấy mã xác thực từ Google.', data: {} });
+            setError('Không tìm thấy mã xác thực từ Google.');
         }
     }, [searchParams, router]);
 
@@ -49,12 +46,12 @@ const GoogleAuthPage = () => {
                         <h2 className="text-lg font-semibold">Đang xác thực với Google...</h2>
                         <p className="text-sm text-gray-500">Vui lòng đợi trong giây lát.</p>
                     </>
-                ) : error.message && (
+                ) : error && (
                     <Alert variant="destructive">
                         <AlertCircle className="h-4 w-4" />
                         <AlertTitle>Lỗi xác thực với Google</AlertTitle>
                         <AlertDescription>
-                            <p>{error.message}</p>
+                            <p>{error}</p>
                             <p>
                                 <Link
                                     href="/auth"
@@ -73,11 +70,9 @@ const GoogleAuthPage = () => {
 
 const WrappedGoogleAuthPage = () => {
     return (
-        <ReduxProvider>
-            <LoadingSuspense>
-                <GoogleAuthPage />
-            </LoadingSuspense>
-        </ReduxProvider>
+        <LoadingSuspense>
+            <GoogleAuthPage />
+        </LoadingSuspense>
     );
 }
 

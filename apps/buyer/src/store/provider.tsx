@@ -1,20 +1,16 @@
 // src/store/provider.tsx
 "use client";
 
-import { Provider } from "react-redux";
-import { store, persistor } from "./index";
-import { PersistGate } from "redux-persist/integration/react";
 import React from "react";
+import { Provider } from "react-redux";
+import { store } from ".";
 
-export function ReduxProvider({ children }: { children: React.ReactNode }) {
-    // EXP: PersistGate:
-    // - Chặn render children cho đến khi persistor (localStorage) load xong.
-    // - Khi đang rehydrate, nếu bạn đặt loading={null}, nó không hiển thị gì cả (trống rỗng).
+const StoreProvider = ({ children }: { children: React.ReactNode }) => {
     return (
         <Provider store={store}>
-            <PersistGate loading={null} persistor={persistor}>
-                {children}
-            </PersistGate>
+            {children}
         </Provider>
     );
 }
+
+export default StoreProvider

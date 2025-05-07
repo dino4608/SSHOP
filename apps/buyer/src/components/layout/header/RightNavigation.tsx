@@ -3,18 +3,17 @@ import { NavigationMenu, NavigationMenuList } from "@/components/ui/navigation-m
 import { MessageCircleMore, SquareMenu, UserRound } from "lucide-react";
 import AccountDropdown from "./AccountDropdown";
 import { NavigationDropdownItem, NavigationLinkItem } from "@/components/ui/custom/navigation-menu";
-import useAuth from "@/hooks/useAuth";
-import { ReduxProvider } from "@/store/provider";
+import useCurrentUser from "@/hooks/useCurrentUser";
 
 const RightNavigation = () => {
-    const { isAuthenticated, currentUser } = useAuth();
+    const currentUser = useCurrentUser();
 
     return (
         <NavigationMenu>
             <NavigationMenuList className="gap-0">
-                {isAuthenticated
+                {currentUser
                     ? (<NavigationDropdownItem dropdown={<AccountDropdown />}>
-                        {`Hi ${currentUser?.name}`}
+                        {`Hi ${currentUser.name ?? currentUser.email}`}
                     </NavigationDropdownItem>)
                     : (<NavigationLinkItem href='/auth' icon={<UserRound />}>
                         Sign up / in
@@ -32,12 +31,4 @@ const RightNavigation = () => {
     );
 };
 
-const WrappedRightNavigation = () => {
-    return (
-        <ReduxProvider>
-            <RightNavigation />
-        </ReduxProvider>
-    )
-}
-
-export default WrappedRightNavigation;
+export default RightNavigation;

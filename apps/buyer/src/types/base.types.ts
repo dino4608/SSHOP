@@ -12,9 +12,3 @@ export type TApiResponse<T> = {
     error: string;
     data: T;
 }
-
-export type TServerActionResult<T> = {
-    success: boolean;
-    message: string;
-    data: T
-}
