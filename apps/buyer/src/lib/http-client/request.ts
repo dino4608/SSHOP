@@ -1,6 +1,19 @@
 // lib/httpClient/httpRequest.ts: middleware core
-// đây là tầng thấp, có thể chứa logic như retry, refresh token, log
-// tải file, gửi form-data... không cần qua httpClient.
+
+// EXP:
+// Nên tạo httpRequest là Wrapper cho fetchSafely, khớp chuẩn REST API Client (GET/POST/...)
+// là alias mỏng của fetchSafely, là tầng thấp httpClient, là interceptors
+// dành cho UC đặc biệt, như: tải file, gửi form-data... không cần qua httpClient.
+// được khuyến khích trong dự án dài hơi, mục tiêu  sạch, dễ bảo trì, chuyên nghiệp
+// điều tiết data/headers và mềm hóa phụ thuộc giữa high-level API (httpClient) và low-level fetch (fetchSafely)
+// thêm logic chung toàn hệ thống sau này mà không chạm vào core fetch
+
+// Interceptors:
+// Log mọi request trước khi gửi
+// Thêm timeout, retry, circuit breaker
+// Gắn trace ID
+// Ghi metrics cho Prometheus
+// Inject request ID...
 
 import { TApiResponse } from "@/types/base.types";
 import { fetchSafely } from "./fetch";

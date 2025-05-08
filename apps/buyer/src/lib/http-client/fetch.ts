@@ -1,4 +1,11 @@
-// serverFetch.ts (Next.js App Router)
+// fetchSafely.ts (Next.js App Router)
+
+// EXP:
+// Gửi request
+// Gắn token/cookie
+// Sentry error
+// Parse JSON
+
 import { TApiResponse } from "@/types/base.types";
 import { BACKEND_URL } from "../constants";
 import clientCookies from "../utils/clientCookies";
