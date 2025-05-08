@@ -1,10 +1,10 @@
+import AppProvider from "@/components/layout/AppProvider";
 import Footer from "@/components/layout/Footer";
 import Header from "@/components/layout/Header";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { Toaster } from "sonner";
 import "./globals.css";
-import StoreProvider from "@/store/provider";
 
 // Set up APP variable
 export const APP = {
@@ -34,8 +34,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${inter.className} antialiased bg-white text-gray-900 dark:bg-gray-900 dark:text-gray-100`}>
-        <StoreProvider>
+      <body className={`${inter.className}
+        antialiased bg-white text-gray-900 dark:bg-gray-900 dark:text-gray-100`
+      }>
+        <AppProvider>
+
           <main>
             <Header />
 
@@ -45,7 +48,8 @@ export default function RootLayout({
           </main>
 
           <Toaster />
-        </StoreProvider>
+
+        </AppProvider>
       </body>
     </html>
   );

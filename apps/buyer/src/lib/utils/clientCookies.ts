@@ -2,7 +2,10 @@ const isBrowser = typeof window !== 'undefined';
 
 const clientCookies = {
     set: (key: string, value: string, options: { days?: number; path?: string } = {}) => {
-        if (!isBrowser) return;
+        if (!isBrowser) {
+            throw new Error(`clientCookies cannot be used outside the browser`);
+        }
+
         const { days = 7, path = '/' } = options;
         const expires = new Date();
         expires.setTime(expires.getTime() + days * 24 * 60 * 60 * 1000);
@@ -10,7 +13,10 @@ const clientCookies = {
     },
 
     get: (key: string): string | null => {
-        if (!isBrowser) return null;
+        if (!isBrowser) {
+            throw new Error(`clientCookies cannot be used outside the browser`);
+        }
+
         const nameEQ = `${key}=`;
         const ca = document.cookie.split(';');
         for (let i = 0; i < ca.length; i++) {
@@ -22,7 +28,10 @@ const clientCookies = {
     },
 
     remove: (key: string, path: string = '/') => {
-        if (!isBrowser) return;
+        if (!isBrowser) {
+            throw new Error(`clientCookies cannot be used outside the browser`);
+        }
+
         document.cookie = `${key}=; Max-Age=0; path=${path}`;
     },
 };
