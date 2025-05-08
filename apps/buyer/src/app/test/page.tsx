@@ -1,5 +1,5 @@
 
-import { api } from "@/services";
+import { api } from "@/api";
 import { Category } from "@/types/product.types"
 
 export default async function Page() {

@@ -1,6 +1,6 @@
 'use server';
 
-import { api } from "@/services";
+import { api } from "@/api";
 import { TLoginOrSignUpWithGoogleBody, TLoginWithPasswordBody, TLookupIdentifierQuery } from "@/types/identity.types";
 
 export const lookupIdentifier = async (data: TLookupIdentifierQuery) => {
