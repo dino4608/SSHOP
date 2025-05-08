@@ -1,4 +1,4 @@
-export const isBrowser = typeof window !== 'undefined';
+const isBrowser = typeof window !== 'undefined';
 
 const clientLocalStorage = {
     set: <T = string>(key: string, value: T): T | undefined => {

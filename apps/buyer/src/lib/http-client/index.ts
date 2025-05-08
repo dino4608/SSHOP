@@ -1,7 +1,18 @@
-// Tạo hàm get, post, put, delete chuẩn REST
+// lib/httpClient/index.ts: Tạo hàm get, post, put, delete chuẩn REST: là lớp API tiện dụng
 
-import { fetchApi } from './fetchApi';
-import { httpFetch } from './request';
+import { httpRequest } from './request';
+
+type TGetRequestParams<T> = {
+    endpoint: string;
+    query?: T;
+    withAuth?: boolean;
+};
+
+type TPostRequestParams<T> = {
+    endpoint: string;
+    body?: T;
+    withAuth?: boolean;
+};
 
 function buildUrl(endpoint: string, query?: any) {
     if (!query) return endpoint;
@@ -10,44 +21,32 @@ function buildUrl(endpoint: string, query?: any) {
     return `${endpoint}?${q}`;
 }
 
-type TGetRequestParams<T> = {
-    endpoint: string;
-    query?: any;
-    withAuth?: boolean;
-};
-
-type TPostRequestParams<T> = {
-    endpoint: string;
-    body?: any;
-    withAuth?: boolean;
-};
-
 export const httpClient = {
     get: <T>({ endpoint, query, withAuth = true }: TGetRequestParams<T>) =>
-        fetchApi<T>(buildUrl(endpoint, query), {
+        httpRequest<T>(buildUrl(endpoint, query), {
             method: 'GET'
         }, withAuth),
 
     post: <T>({ endpoint, body, withAuth }: TPostRequestParams<T>) =>
-        fetchApi<T>(endpoint, {
+        httpRequest<T>(endpoint, {
             method: 'POST',
             body: body ? JSON.stringify(body) : undefined,
         }, withAuth),
 
     put: <T>(endpoint: string, body?: any, withAuth = true) =>
-        fetchApi<T>(endpoint, {
+        httpRequest<T>(endpoint, {
             method: 'PUT',
             body: body ? JSON.stringify(body) : undefined,
         }, withAuth),
 
     patch: <T>(endpoint: string, body?: any, withAuth = true) =>
-        fetchApi<T>(endpoint, {
+        httpRequest<T>(endpoint, {
             method: 'PATCH',
             body: body ? JSON.stringify(body) : undefined,
         }, withAuth),
 
     delete: <T>(endpoint: string, query?: any, withAuth = true) =>
-        fetchApi<T>(buildUrl(endpoint, query), {
+        httpRequest<T>(buildUrl(endpoint, query), {
             method: 'DELETE'
         }, withAuth),
 };

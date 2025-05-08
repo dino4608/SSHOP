@@ -12,3 +12,5 @@ export const timeout = async (seconds: number) => {
 export * from './clientLocalStorage';
 
 export * from './clientCookies';
+
+export const isBrowser = typeof window !== "undefined";
