@@ -2,15 +2,33 @@
 
 import { httpRequest } from './request';
 
-type TGetRequestParams<T> = {
+type TGetRequestParams = {
     endpoint: string;
-    query?: T;
+    query?: any;
     withAuth?: boolean;
 };
 
-type TPostRequestParams<T> = {
+type TPostRequestParams = {
     endpoint: string;
-    body?: T;
+    body?: any;
+    withAuth?: boolean;
+};
+
+type TPutRequestParams = {
+    endpoint: string;
+    body?: any;
+    withAuth?: boolean;
+};
+
+type TPatchRequestParams = {
+    endpoint: string;
+    body?: any;
+    withAuth?: boolean;
+};
+
+type TDeleteRequestParams = {
+    endpoint: string;
+    query?: any;
     withAuth?: boolean;
 };
 
@@ -21,31 +39,36 @@ function buildUrl(endpoint: string, query?: any) {
     return `${endpoint}?${q}`;
 }
 
+function buildBody(body?: any) {
+    if (!body) return undefined;
+    return JSON.stringify(body);
+}
+
 export const httpClient = {
-    get: <T>({ endpoint, query, withAuth = true }: TGetRequestParams<T>) =>
+    get: <T>({ endpoint, query, withAuth = true }: TGetRequestParams) =>
         httpRequest<T>(buildUrl(endpoint, query), {
             method: 'GET'
         }, withAuth),
 
-    post: <T>({ endpoint, body, withAuth }: TPostRequestParams<T>) =>
+    post: <T>({ endpoint, body, withAuth }: TPostRequestParams) =>
         httpRequest<T>(endpoint, {
             method: 'POST',
-            body: body ? JSON.stringify(body) : undefined,
+            body: buildBody(body),
         }, withAuth),
 
-    put: <T>(endpoint: string, body?: any, withAuth = true) =>
+    put: <T>({ endpoint, body, withAuth = true }: TPutRequestParams) =>
         httpRequest<T>(endpoint, {
             method: 'PUT',
-            body: body ? JSON.stringify(body) : undefined,
+            body: buildBody(body),
         }, withAuth),
 
-    patch: <T>(endpoint: string, body?: any, withAuth = true) =>
+    patch: <T>({ endpoint, body, withAuth = true }: TPatchRequestParams) =>
         httpRequest<T>(endpoint, {
             method: 'PATCH',
-            body: body ? JSON.stringify(body) : undefined,
+            body: buildBody(body),
         }, withAuth),
 
-    delete: <T>(endpoint: string, query?: any, withAuth = true) =>
+    delete: <T>({ endpoint, query, withAuth = true }: TDeleteRequestParams) =>
         httpRequest<T>(buildUrl(endpoint, query), {
             method: 'DELETE'
         }, withAuth),
