@@ -1,4 +1,4 @@
-import { httpClient } from "@/lib/httpclient";
+import { httpClient } from "@/lib/http-client";
 import { Category } from "@/types/product.types";
 
 // CATEGORY_RESOURCE

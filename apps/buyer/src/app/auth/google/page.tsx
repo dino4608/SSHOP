@@ -2,7 +2,7 @@
 
 import LoadingSuspense from '@/components/layout/LoadingSuspense';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { api } from '@/services';
+import { api } from '@/api';
 import { useAppDispatch } from '@/store/hooks';
 import { authActions } from '@/store/slices/auth.slice';
 import { AlertCircle, Loader2 } from 'lucide-react';

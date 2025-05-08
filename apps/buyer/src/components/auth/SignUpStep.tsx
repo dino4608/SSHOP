@@ -8,7 +8,7 @@ import {
     FormMessage
 } from "@/components/ui/form";
 import { Input } from '@/components/ui/input';
-import { api } from '@/services';
+import { api } from '@/api';
 import { useAppDispatch } from '@/store/hooks';
 import { authActions } from '@/store/slices/auth.slice';
 import { logInFormSchema, TLogInFormData } from "@/validations/auth.validations";

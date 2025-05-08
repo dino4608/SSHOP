@@ -1,8 +1,11 @@
-export const isBrowser = typeof window !== 'undefined';
+const isBrowser = typeof window !== 'undefined';
 
 const clientLocalStorage = {
-    set: <T = string>(key: string, value: T): T | undefined => {
-        if (!isBrowser) return;
+    set: <T = string>(key: string, value: T) => {
+        if (!isBrowser) {
+            throw new Error(`clientLocalStorage cannot be used outside the browser`);
+        }
+
         const stringified = typeof value === 'string'
             ? value
             : JSON.stringify(value);
@@ -10,7 +13,10 @@ const clientLocalStorage = {
     },
 
     get: <T = string>(key: string): T | null => {
-        if (!isBrowser) return null;
+        if (!isBrowser) {
+            throw new Error(`clientLocalStorage cannot be used outside the browser`);
+        }
+
         const value = localStorage.getItem(key);
         if (value === null) return null;
 
@@ -22,7 +28,10 @@ const clientLocalStorage = {
     },
 
     remove: (key: string) => {
-        if (!isBrowser) return;
+        if (!isBrowser) {
+            throw new Error(`clientLocalStorage cannot be used outside the browser`);
+        }
+
         localStorage.removeItem(key);
     },
 };
