@@ -1,5 +1,5 @@
-import { loginOrSignupWithGoogle, loginWithPassword, lookupIdentifier, signupWithPassword } from "./identity.services";
-import { getTree } from "./product.services";
+import { loginOrSignupWithGoogle, loginWithPassword, lookupIdentifier, signupWithPassword } from "./identity.api";
+import { getTree } from "./product.api";
 
 export const api = {
     category: {
