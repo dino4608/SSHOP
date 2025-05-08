@@ -6,3 +6,5 @@ export const initialApiResponse: TApiResponse<any> = {
     error: '',
     data: {} as any,
 }
+
+export const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;

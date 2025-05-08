@@ -1,4 +1,4 @@
-import { httpClient } from "@/lib/httpclient";
+import { httpClient } from "@/lib/http-client";
 import { TAuthResponse, TLoginOrSignUpWithGoogleBody, TLoginWithPasswordBody, TLookupIdentifierQuery, TLookupIdentifierResponse } from "../types/identity.types";
 
 // AUTH_RESOURCE //

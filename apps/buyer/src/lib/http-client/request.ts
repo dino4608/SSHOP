@@ -2,8 +2,7 @@
 
 import { TApiResponse } from "@/types/base.types";
 import { clearTokens, getAccessToken, getRefreshToken, setAccessToken } from "./token";
-
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
+import { BACKEND_URL } from "../constants";
 
 let isRefreshing = false;
 
@@ -15,7 +14,7 @@ async function refreshToken(): Promise<boolean> {
     if (!refreshToken) return false;
 
     try {
-        const res = await fetch(`${API_BASE_URL}/auth/refresh`, {
+        const res = await fetch(`${BACKEND_URL}/auth/refresh`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -39,7 +38,7 @@ async function refreshToken(): Promise<boolean> {
 }
 
 export async function httpFetch<T = any>(
-    endpoint: string,
+    endpoint: RequestInfo,
     options: RequestInit = {},
     withAuth: boolean = true
 ): Promise<TApiResponse<T>> {
@@ -55,7 +54,7 @@ export async function httpFetch<T = any>(
     }
 
     try {
-        let fetchRes = await fetch(`${API_BASE_URL}${endpoint}`, {
+        let fetchRes = await fetch(`${BACKEND_URL}${endpoint}`, {
             ...options,
             credentials: 'include',
             headers: headers as HeadersInit,
@@ -66,7 +65,7 @@ export async function httpFetch<T = any>(
             if (refreshed) {
                 const retryToken = getAccessToken();
                 headers['Authorization'] = `Bearer ${retryToken}`;
-                fetchRes = await fetch(`${API_BASE_URL}${endpoint}`, {
+                fetchRes = await fetch(`${BACKEND_URL}${endpoint}`, {
                     ...options,
                     credentials: 'include',
                     headers,
