@@ -28,6 +28,7 @@ export const TokenGate = async ({ children }: { children: React.ReactNode }) => 
     }
 
     // Token hợp lệ, render children bình thường
+    // TODO #1: update Redux store
     const userData = await res.json();
     return (
         <Fragment>

@@ -1,5 +1,5 @@
 import { TokenGate } from "./TokenGate"
-import { TokenRefresher } from "./TokenRefresher"
+import { TokenAutoRefresher } from "./TokenAutoRefresher"
 
 
 export const TokenAuthProvider = ({ children }: { children: React.ReactNode }) => {
@@ -9,7 +9,7 @@ export const TokenAuthProvider = ({ children }: { children: React.ReactNode }) =
 
             {children}
 
-            <TokenRefresher />
+            <TokenAutoRefresher />
 
         </TokenGate>
     )

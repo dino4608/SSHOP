@@ -8,7 +8,7 @@ import { useEffect } from 'react';
 
 const TOKEN_REFRESH_INTERVAL_MIN = REFRESH_TOKEN_TTL - ms('15m');
 
-export function TokenRefresher() {
+export function TokenAutoRefresher() {
     useEffect(() => {
         const interval = setInterval(async () => {
             const tokenExp = parseJwtExp(clientCookies.get(ACCESS_TOKEN) || '');

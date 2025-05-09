@@ -13,8 +13,8 @@ export function TokenRestorer() {
             });
 
             if (refreshRes.ok) {
-                // Nếu refresh thành công, reload lại trang hoặc chuyển hướng
-                router.refresh(); // Sử dụng Next.js 13+ để reload lại route hiện tại
+                // reload lại route hiện tại (Next.js 13+)
+                router.refresh();
             } else {
                 // Xử lý khi không refresh được
                 console.error('Refresh token không thành công');
