@@ -4,6 +4,8 @@ import com.dino.backend.features.identity.application.ITokenAppService;
 import com.dino.backend.features.identity.application.ITokenQueryService;
 import com.dino.backend.features.identity.domain.Token;
 import com.dino.backend.features.identity.domain.repository.ITokenDomainRepository;
+import com.dino.backend.infrastructure.aop.AppException;
+import com.dino.backend.infrastructure.aop.ErrorCode;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -23,12 +25,19 @@ public class TokenAppServiceImpl implements ITokenAppService {
     ITokenQueryService tokenQueryService;
 
     @Override
-    public void updateRefreshToken(String REFRESH_TOKEN, Instant refreshExpDate, String userId) {
+    public void updateRefreshToken(String refreshToken, Instant refreshTokenExpiry, String userId) {
         Token token = this.tokenQueryService.getById(userId);
 
-        token = Token.updateRefreshToken(token, REFRESH_TOKEN, refreshExpDate);
+        token = Token.updateRefreshToken(token, refreshToken, refreshTokenExpiry);
 
         this.tokenDomainRepository.save(token);
+    }
+
+    @Override
+    public boolean isValidRefreshToken(String refreshToken, String userId) {
+        Token token = this.tokenQueryService.getById(userId);
+
+        return refreshToken.equals(token.getRefreshToken());
     }
 }
 

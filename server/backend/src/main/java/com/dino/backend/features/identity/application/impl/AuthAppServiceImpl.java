@@ -3,6 +3,7 @@ package com.dino.backend.features.identity.application.impl;
 import com.dino.backend.features.identity.application.IAuthAppService;
 import com.dino.backend.features.identity.application.IAuthQueryService;
 import com.dino.backend.features.identity.application.ITokenAppService;
+import com.dino.backend.features.identity.application.IUserQueryService;
 import com.dino.backend.features.identity.application.mapper.IUserMapper;
 import com.dino.backend.features.identity.application.model.AuthResponse;
 import com.dino.backend.features.identity.application.model.GoogleOauth2Request;
@@ -35,17 +36,47 @@ import java.util.Optional;
 @Slf4j
 public class AuthAppServiceImpl implements IAuthAppService {
 
+    ITokenAppService tokenAppService;
+
+    IAuthQueryService authQueryService;
+
+    IUserQueryService userQueryService;
+
     IUserDomainRepository userDomainRepository;
 
     IUserMapper userMapper;
 
-    IAuthQueryService authQueryService;
-
-    ITokenAppService tokenAppService;
-
     ISecurityInfraProvider securityInfraProvider;
 
     IOauth2InfraProvider oauth2InfraProvider;
+
+    // licenseToken //
+    private AuthResponse licenseToken(User user, HttpHeaders headers) {
+        // get tokens
+        String accessToken = this.securityInfraProvider.genToken(user, JwtType.ACCESS_TOKEN);
+        String refreshToken = this.securityInfraProvider.genToken(user, JwtType.REFRESH_TOKEN);
+        Duration refreshTokenTtl = this.securityInfraProvider.getTtl(JwtType.REFRESH_TOKEN);
+        Instant refreshTokenExpiry = this.securityInfraProvider.getExpiry(JwtType.REFRESH_TOKEN);
+
+        // update refresh token to database
+        this.tokenAppService.updateRefreshToken(refreshToken, refreshTokenExpiry, user.getId());
+
+        // set refresh token to cookie
+        HttpCookie cookie = ResponseCookie.from(JwtType.REFRESH_TOKEN.name(), refreshToken)
+                .httpOnly(true)
+                .sameSite("None")
+                .secure(true)
+                .path("/")
+                .maxAge(refreshTokenTtl)
+                .build();
+        headers.add(HttpHeaders.SET_COOKIE, cookie.toString());
+
+        return AuthResponse.builder()
+                .isAuthenticated(true)
+                .accessToken(accessToken)
+                .user(User.responseUser(user))
+                .build();
+    }
 
     // login + PasswordLoginRequest //
     @Override
@@ -123,32 +154,27 @@ public class AuthAppServiceImpl implements IAuthAppService {
         return authResponse;
     }
 
-    // licenseToken //
-    private AuthResponse licenseToken(User user, HttpHeaders headers) {
-        // get tokens
-        String ACCESS_TOKEN = this.securityInfraProvider.genToken(user, JwtType.ACCESS_TOKEN);
-        String REFRESH_TOKEN = this.securityInfraProvider.genToken(user, JwtType.REFRESH_TOKEN);
-        Duration refreshDuration = this.securityInfraProvider.getValidDuration(JwtType.REFRESH_TOKEN);
-        Instant refreshExpDate = this.securityInfraProvider.getExpirationDate(JwtType.REFRESH_TOKEN);
+    @Override
+    public AuthResponse refresh(Optional<String> refreshToken, HttpHeaders headers) {
+        // 1. Check null or empty
+        if (refreshToken.isEmpty() || refreshToken.get().isBlank()) {
+            throw new AppException(ErrorCode.AUTH__REFRESH_TOKEN_INVALID);
+        }
 
-        // update refresh token to database
-        this.tokenAppService.updateRefreshToken(REFRESH_TOKEN, refreshExpDate, user.getId());
+        // 2. Verify & extract user ID
+        String userId = this.securityInfraProvider.verifyToken(refreshToken.get(), JwtType.REFRESH_TOKEN)
+                .orElseThrow(() -> new AppException(ErrorCode.AUTH__REFRESH_TOKEN_INVALID));
 
-        // set refresh token to cookie
-        HttpCookie cookie = ResponseCookie.from("REFRESH_TOKEN", REFRESH_TOKEN)
-                .httpOnly(true)
-                .sameSite("None")
-                .secure(true)
-                .path("/")
-                .maxAge(refreshDuration)
-                .build();
-        headers.add(HttpHeaders.SET_COOKIE, cookie.toString());
+        // 3. Check if refresh token matches DB (to prevent reuse)
+        if (!this.tokenAppService.isValidRefreshToken(refreshToken.get(), userId)) {
+            throw new AppException(ErrorCode.AUTH__REFRESH_TOKEN_INVALID);
+        }
 
-        return AuthResponse.builder()
-                .isAuthenticated(true)
-                .accessToken(ACCESS_TOKEN)
-                .user(User.responseUser(user))
-                .build();
+        // 4. Get user
+        User user = this.userQueryService.getUserById(userId);
+
+        // 5. License new tokens (also update DB & set cookie)
+        return this.licenseToken(user, headers);
     }
 }
 

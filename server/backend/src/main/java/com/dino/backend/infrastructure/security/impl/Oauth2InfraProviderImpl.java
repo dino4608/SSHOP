@@ -62,8 +62,8 @@ public class Oauth2InfraProviderImpl implements IOauth2InfraProvider {
             return googleTokenResponse;
 
         } catch (Exception e) {
-            log.error(e.getMessage(), e);
-            throw new AppException(ErrorCode.OAUTH2__EXCHANGE_WITH_GOOGLE_FAILED);
+            log.error(">>> INTERNAL: getGoogleToken: {}", e.getMessage());
+            throw new AppException(ErrorCode.OAUTH2__GET_GOOGLE_TOKEN_FAILED);
         }
     }
 
@@ -80,7 +80,7 @@ public class Oauth2InfraProviderImpl implements IOauth2InfraProvider {
             return  googleUserResponse;
 
         } catch (Exception e) {
-            log.error(e.getMessage(), e);
+            log.error(">>> INTERNAL: getGoogleUser: {}", e.getMessage());
             throw new AppException(ErrorCode.OAUTH2__GET_GOOGLE_USER_FAILED);
         }
     }

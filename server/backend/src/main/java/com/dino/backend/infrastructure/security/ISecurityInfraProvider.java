@@ -2,10 +2,10 @@ package com.dino.backend.infrastructure.security;
 
 import com.dino.backend.features.identity.domain.User;
 import com.dino.backend.infrastructure.security.model.JwtType;
-import org.springframework.security.oauth2.jwt.Jwt;
 
 import java.time.Duration;
 import java.time.Instant;
+import java.util.Optional;
 
 public interface ISecurityInfraProvider {
     //PASSWORD//
@@ -14,15 +14,13 @@ public interface ISecurityInfraProvider {
     boolean matchPassword(String plain, String hash);
 
     //JWT//
-    String genToken(User account, JwtType tokenType);
+    byte[] getSecretKey(JwtType jwtType);
 
-    Jwt decodeToken(String token, JwtType tokenType);
+    Duration getTtl(JwtType jwtType);
 
-    Duration getValidDuration(JwtType tokenType);
+    Instant getExpiry(JwtType jwtType);
 
-    Instant getExpirationDate(JwtType tokenType);
+    String genToken(User account, JwtType jwtType);
 
-    String getSecretKey(JwtType tokenType);
-
-    String getAccountId();
+    Optional<String> verifyToken(String token, JwtType jwtType);
 }

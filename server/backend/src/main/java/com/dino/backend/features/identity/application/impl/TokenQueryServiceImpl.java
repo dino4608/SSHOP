@@ -22,7 +22,7 @@ public class TokenQueryServiceImpl implements ITokenQueryService {
     @Override
     public Token getById(String userId) {
         Token token = this.tokenDomainRepository.findById(userId)
-                .orElseThrow(() -> new AppException(ErrorCode.TOKEN__NOT_FOUND));
+                .orElseThrow(() -> new AppException(ErrorCode.TOKEN__FIND_FAILED));
 
         return token;
     }

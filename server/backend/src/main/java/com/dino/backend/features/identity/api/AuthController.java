@@ -11,6 +11,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Optional;
+
 @RestController
 public class AuthController {
     // BUYER //
@@ -74,5 +76,20 @@ public class AuthController {
                     .headers(headers)
                     .body(body);
         }
+
+        // refreshToken //
+        @PostMapping("/refresh")
+        public ResponseEntity<AuthResponse> refresh(
+                @CookieValue(name = "REFRESH_TOKEN", required = false) String refreshToken
+        ) {
+            HttpHeaders headers = new HttpHeaders();
+            AuthResponse authResponse = authAppService.refresh(Optional.ofNullable(refreshToken), headers);
+
+            return ResponseEntity
+                    .ok()
+                    .headers(headers)
+                    .body(authResponse);
+        }
+
     }
 }

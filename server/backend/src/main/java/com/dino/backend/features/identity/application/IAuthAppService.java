@@ -5,6 +5,8 @@ import com.dino.backend.features.identity.application.model.AuthResponse;
 import com.dino.backend.features.identity.application.model.PasswordLoginRequest;
 import org.springframework.http.HttpHeaders;
 
+import java.util.Optional;
+
 public interface IAuthAppService {
 
     AuthResponse login(PasswordLoginRequest request, HttpHeaders headers);
@@ -12,4 +14,7 @@ public interface IAuthAppService {
     AuthResponse signup(PasswordLoginRequest request, HttpHeaders headers);
 
     AuthResponse loginOrSignup(GoogleOauth2Request request, HttpHeaders headers);
+
+    AuthResponse refresh(Optional<String> refreshToken, HttpHeaders headers);
+
 }

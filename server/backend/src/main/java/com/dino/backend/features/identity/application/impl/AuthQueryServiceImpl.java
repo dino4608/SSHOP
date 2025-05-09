@@ -31,10 +31,6 @@ public class AuthQueryServiceImpl implements IAuthQueryService {
 
     @Override
     public Optional<User> findUserByIdentifier(String email) {
-        if (email == null) {
-            return Optional.empty();
-        }
-
         return this.userDomainRepository.findByEmail(email);
     }
 }

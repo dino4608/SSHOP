@@ -4,5 +4,7 @@ import java.time.Instant;
 
 public interface ITokenAppService {
 
-    void updateRefreshToken(String REFRESH_TOKEN, Instant refreshExpDate, String userId);
+    void updateRefreshToken(String refreshToken, Instant refreshTokenExpiry, String userId);
+
+    boolean isValidRefreshToken(String refreshToken, String userId);
 }
