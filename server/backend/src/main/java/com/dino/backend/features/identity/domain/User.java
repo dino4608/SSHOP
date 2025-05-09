@@ -2,15 +2,16 @@ package com.dino.backend.features.identity.domain;
 
 import com.dino.backend.features.identity.domain.model.UserRoleType;
 import com.dino.backend.features.identity.domain.model.UserStatusType;
-import com.dino.backend.shared.model.BaseEntity;
 import com.dino.backend.features.shopping.domain.entity.Address;
 import com.dino.backend.features.shopping.domain.entity.Cart;
 import com.dino.backend.features.shopping.domain.entity.Order;
+import com.dino.backend.shared.model.BaseEntity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.SQLDelete;
@@ -22,15 +23,14 @@ import java.util.*;
 @Table(name = "users")
 @DynamicInsert // ignore null-value attributes
 @DynamicUpdate
-@SQLDelete(sql = "UPDATE users SET deleted = true WHERE user_id=?")
-@SQLRestriction("deleted = false")
+@SQLDelete(sql = "UPDATE users SET is_deleted = true WHERE user_id=?")
+@SQLRestriction("is_deleted = false")
+@SuperBuilder
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@JsonInclude(JsonInclude.Include.NON_NULL)
 public class User extends BaseEntity {
 
     @Id
@@ -92,29 +92,25 @@ public class User extends BaseEntity {
     String gender;
 
     public static User createSignupUser(User user, String hashPassword) {
-        user.setToken(Token.createToken(new Token(), user));
-        user.setCart(Cart.createCart(new Cart(), user));
-
-        user.setUsername("user" + System.currentTimeMillis());
-        user.setIsEmailVerified(false);
-        user.setPassword(hashPassword);
-        user.setRoles(new HashSet<>(Collections.singletonList(UserRoleType.BUYER.toString())));
-        user.setStatus(UserStatusType.LACK_INFO.toString()); // EXP LACK_INFO: lack of dob and gender
-
-        // EXP the validation layer
+        // EXP: the validation layer ensured:
         // - email: ensure the format
         // - password: ensure the size of 6
+        User newUser = User.builder()
+                .status(UserStatusType.LACK_INFO.toString())
+                .roles(new HashSet<>(Collections.singletonList(UserRoleType.BUYER.toString())))
+                .username("user" + System.currentTimeMillis())
+                .password(hashPassword)
+                .email(user.getEmail())
+                .isEmailVerified(false)
+                .name(user.getName())
+                .build();
 
-        return user;
-    }
+        Token newToken = Token.createToken(newUser);
+        newUser.setToken(newToken);
 
-    public static User responseUser(User user) {
-        user.setId(null);
-        user.setPassword(null);
-        user.setRoles(null);
-        user.setCreatedAt(null);
-        user.setUpdatedAt(null);
+        Cart newCart = Cart.createCart(newUser);
+        newUser.setCart(newCart);
 
-        return user;
+        return newUser;
     }
 }

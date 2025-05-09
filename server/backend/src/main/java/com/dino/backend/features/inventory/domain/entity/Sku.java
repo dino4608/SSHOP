@@ -11,6 +11,7 @@ import jakarta.persistence.Table;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.*;
 
 import java.util.ArrayList;
@@ -20,13 +21,13 @@ import java.util.List;
 @Table(name = "skus")
 @DynamicInsert
 @DynamicUpdate
-@SQLDelete(sql = "UPDATE skus SET deleted = true WHERE sku_id=?")
-@SQLRestriction("deleted = false")
+@SQLDelete(sql = "UPDATE skus SET is_deleted = true WHERE sku_id=?")
+@SQLRestriction("is_deleted = false")
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
+@SuperBuilder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Sku extends BaseEntity {
     @Id

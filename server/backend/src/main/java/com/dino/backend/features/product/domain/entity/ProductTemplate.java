@@ -7,19 +7,20 @@ import jakarta.persistence.Table;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.*;
 
 @Entity
 @Table(name = "ProductTemplates")
 @DynamicInsert
 @DynamicUpdate
-@SQLDelete(sql = "UPDATE product_templates SET deleted = true WHERE category_id=?")
-@SQLRestriction("deleted = false")
+@SQLDelete(sql = "UPDATE product_templates SET is_deleted = true WHERE category_id=?")
+@SQLRestriction("is_deleted = false")
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
+@SuperBuilder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ProductTemplate extends BaseEntity {
     @Id

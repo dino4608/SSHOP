@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.SQLDelete;
@@ -18,13 +19,13 @@ import java.util.List;
 @Table(name = "carts")
 @DynamicInsert
 @DynamicUpdate
-@SQLDelete(sql = "UPDATE carts SET deleted = true WHERE cart_id=?")
-@SQLRestriction("deleted = false")
+@SQLDelete(sql = "UPDATE carts SET is_deleted = true WHERE cart_id=?")
+@SQLRestriction("is_deleted = false")
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
+@SuperBuilder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Cart extends BaseEntity {
     @Id
@@ -41,10 +42,11 @@ public class Cart extends BaseEntity {
 
     int count;
 
-    public static Cart createCart(Cart cart, User buyer) {
-        cart.setItems(new ArrayList<>());
-        cart.setCount(0);
-        cart.setBuyer(buyer);
-        return cart;
+    public static Cart createCart(User buyer) {
+        return Cart.builder()
+                .buyer(buyer)
+                .items(new ArrayList<>())
+                .count(0)
+                .build();
     }
 }

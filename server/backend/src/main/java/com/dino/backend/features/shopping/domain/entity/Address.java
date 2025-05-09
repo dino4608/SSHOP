@@ -16,8 +16,8 @@ import java.util.List;
 @Table(name = "addresses")
 @DynamicInsert
 @DynamicUpdate
-@SQLDelete(sql = "UPDATE addresses SET deleted = true WHERE address_id=?")
-@SQLRestriction("deleted = false")
+@SQLDelete(sql = "UPDATE addresses SET is_deleted = true WHERE address_id=?")
+@SQLRestriction("is_deleted = false")
 @Getter
 @Setter
 @AllArgsConstructor

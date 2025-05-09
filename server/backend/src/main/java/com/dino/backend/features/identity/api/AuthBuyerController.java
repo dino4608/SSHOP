@@ -2,7 +2,8 @@ package com.dino.backend.features.identity.api;
 
 import com.dino.backend.features.identity.application.IAuthAppService;
 import com.dino.backend.features.identity.application.model.*;
-import com.dino.backend.features.identity.application.IAuthQueryService;
+import com.dino.backend.infrastructure.web.annotation.AuthUser;
+import com.dino.backend.infrastructure.web.model.CurrentUser;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -12,31 +13,32 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-public class AuthController {
-    // BUYER //
+public class AuthBuyerController {
+    // PublicAuthBuyerController //
     @RestController
-    @RequestMapping("/api/v1/auth")
+    @RequestMapping("/api/v1/public/auth")
     @AllArgsConstructor
     @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-    public static class AuthBuyerController {
+    public static class PublicAuthBuyerController {
+
+        IAuthAppService authAppService;
+
         // QUERY //
-        IAuthQueryService authQueryService;
 
         // lookupIdentifier //
         @GetMapping("/lookup")
         public ResponseEntity<LookupIdentifierResponse> lookupIdentifier(
                 @RequestParam("email") String email
         ) {
-            return ResponseEntity.ok(authQueryService.lookupIdentifier(email));
+            return ResponseEntity.ok(this.authAppService.lookupIdentifier(email));
         }
 
         // COMMAND //
-        IAuthAppService authAppService;
 
         // loginWithPassword //
         @PostMapping("/login/password")
         public ResponseEntity<AuthResponse> loginWithPassword(
-                @Valid  @RequestBody PasswordLoginRequest request
+                @Valid @RequestBody PasswordLoginRequest request
         ) {
             HttpHeaders headers = new HttpHeaders();
             AuthResponse body = this.authAppService.login(request, headers);
@@ -74,5 +76,54 @@ public class AuthController {
                     .headers(headers)
                     .body(body);
         }
+
+        // refreshToken //
+        @PostMapping("/refresh")
+        public ResponseEntity<AuthResponse> refresh(
+                @CookieValue(name = "REFRESH_TOKEN", required = false) String refreshToken
+        ) {
+            HttpHeaders headers = new HttpHeaders();
+            AuthResponse authResponse = authAppService.refresh(refreshToken, headers);
+
+            return ResponseEntity
+                    .ok()
+                    .headers(headers)
+                    .body(authResponse);
+        }
+
+    }
+
+    // PrivateAuthBuyerController //
+    @RestController
+    @RequestMapping("/api/v1/auth")
+    @AllArgsConstructor
+    @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+    public static class PrivateAuthBuyerController {
+
+        IAuthAppService authAppService;
+
+        // QUERY //
+
+        // getCurrentUser //
+        @GetMapping("/me")
+        public ResponseEntity<CurrentUserResponse> getCurrentUser(@AuthUser CurrentUser currentUser) {
+            return ResponseEntity.ok(this.authAppService.getCurrentUser(currentUser));
+        }
+
+        // COMMAND //
+
+        @PostMapping("/logout")
+        public ResponseEntity<Void> logout(
+                @CookieValue(name = "REFRESH_TOKEN", required = false) String refreshToken
+        ) {
+            HttpHeaders headers = new HttpHeaders();
+            this.authAppService.logout(refreshToken, headers);
+
+            return ResponseEntity
+                    .ok()
+                    .headers(headers)
+                    .body(null);
+        }
+
     }
 }
