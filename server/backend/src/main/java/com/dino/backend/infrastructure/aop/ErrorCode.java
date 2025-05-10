@@ -13,7 +13,7 @@ import org.springframework.http.HttpStatusCode;
 public enum ErrorCode {
     //SUCCESS CODE: 1//
     //SYSTEM 1000+//
-    SYSTEM__UNHANDLED_EXCEPTION(1000, "An unhandled error.", HttpStatus.INTERNAL_SERVER_ERROR),
+    SYSTEM__UNHANDLED_EXCEPTION(1000, "Lỗi chưa được xử lý.", HttpStatus.INTERNAL_SERVER_ERROR),
     SYSTEM__DEVELOPING_FEATURE(1001, "The feature is still developing.", HttpStatus.INTERNAL_SERVER_ERROR),
     SYSTEM__UNIMPLEMENTED_FEATURE(1002, "The feature is still developing.", HttpStatus.INTERNAL_SERVER_ERROR),
     SYSTEM__KEY_UNSUPPORTED(1003, "The key is unsupported.", HttpStatus.INTERNAL_SERVER_ERROR),
@@ -38,7 +38,8 @@ public enum ErrorCode {
     AUTH__REFRESH_TOKEN_INVALID(1217, "Refresh token thì rỗng, trái phép, hoặc bị đánh cấp.", HttpStatus.BAD_REQUEST),
     //TOKEN 1300+//
     TOKEN__FIND_FAILED(1300, "Lấy token thất bại.", HttpStatus.INTERNAL_SERVER_ERROR),
-    TOKEN__LACK_ID(1300, "Token không nên thiếu ID.", HttpStatus.INTERNAL_SERVER_ERROR),
+    TOKEN__CREATE_FAILED(1301, "Tạo mới token thất bại.", HttpStatus.INTERNAL_SERVER_ERROR),
+    TOKEN__UPDATE_FAILED(1302, "Cập nhật token thất bại.", HttpStatus.INTERNAL_SERVER_ERROR),
     //SHOP 1400+//
     SHOP__NOT_FOUND(1401, "Shop is not found.", HttpStatus.BAD_REQUEST),
     SHOP__LACK_INFO(1402, "Shop is lack of required information.", HttpStatus.INTERNAL_SERVER_ERROR),

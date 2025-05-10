@@ -1,8 +1,10 @@
 package com.dino.backend.features.identity.api;
 
 import com.dino.backend.features.identity.application.IAuthAppService;
-import com.dino.backend.features.identity.application.model.*;
-import com.dino.backend.features.identity.application.IAuthQueryService;
+import com.dino.backend.features.identity.application.model.AuthResponse;
+import com.dino.backend.features.identity.application.model.GoogleOauth2Request;
+import com.dino.backend.features.identity.application.model.LookupIdentifierResponse;
+import com.dino.backend.features.identity.application.model.PasswordLoginRequest;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -21,24 +23,26 @@ public class AuthController {
     @AllArgsConstructor
     @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
     public static class AuthBuyerController {
+
+        IAuthAppService authAppService;
+
         // QUERY //
-        IAuthQueryService authQueryService;
 
         // lookupIdentifier //
         @GetMapping("/lookup")
         public ResponseEntity<LookupIdentifierResponse> lookupIdentifier(
                 @RequestParam("email") String email
         ) {
-            return ResponseEntity.ok(authQueryService.lookupIdentifier(email));
+            return ResponseEntity.ok(this.authAppService.lookupIdentifier(email));
         }
 
         // COMMAND //
-        IAuthAppService authAppService;
+
 
         // loginWithPassword //
         @PostMapping("/login/password")
         public ResponseEntity<AuthResponse> loginWithPassword(
-                @Valid  @RequestBody PasswordLoginRequest request
+                @Valid @RequestBody PasswordLoginRequest request
         ) {
             HttpHeaders headers = new HttpHeaders();
             AuthResponse body = this.authAppService.login(request, headers);

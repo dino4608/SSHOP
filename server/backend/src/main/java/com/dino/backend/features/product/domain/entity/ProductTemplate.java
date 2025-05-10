@@ -7,6 +7,7 @@ import jakarta.persistence.Table;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.*;
 
 @Entity
@@ -19,7 +20,7 @@ import org.hibernate.annotations.*;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
+@SuperBuilder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ProductTemplate extends BaseEntity {
     @Id

@@ -85,9 +85,8 @@ public class SecurityInfraProviderImpl implements ISecurityInfraProvider {
 
         Payload payload = new Payload(jwtClaimsSet.toJSONObject());
 
-        JWSObject jwsObject = new JWSObject(header, payload);
-
         try {
+            JWSObject jwsObject = new JWSObject(header, payload);
             jwsObject.sign(new MACSigner(this.getSecretKey(tokenType).getBytes()));
             return jwsObject.serialize();
         } catch (JOSEException e) {

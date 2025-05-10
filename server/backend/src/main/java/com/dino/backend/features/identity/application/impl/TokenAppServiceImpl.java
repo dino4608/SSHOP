@@ -1,7 +1,6 @@
 package com.dino.backend.features.identity.application.impl;
 
 import com.dino.backend.features.identity.application.ITokenAppService;
-import com.dino.backend.features.identity.application.ITokenQueryService;
 import com.dino.backend.features.identity.domain.Token;
 import com.dino.backend.features.identity.domain.repository.ITokenDomainRepository;
 import com.dino.backend.infrastructure.aop.AppException;
@@ -22,20 +21,31 @@ public class TokenAppServiceImpl implements ITokenAppService {
 
     ITokenDomainRepository tokenDomainRepository;
 
-    ITokenQueryService tokenQueryService;
+    // QUERY //
 
+    // getById //
+    @Override
+    public Token getById(String userId) {
+        return this.tokenDomainRepository.findById(userId)
+                .orElseThrow(() -> new AppException(ErrorCode.TOKEN__FIND_FAILED));
+    }
+
+    // COMMAND //
+
+    // updateRefreshToken //
     @Override
     public void updateRefreshToken(String refreshToken, Instant refreshTokenExpiry, String userId) {
-        Token token = this.tokenQueryService.getById(userId);
+        Token token = this.getById(userId);
 
         token = Token.updateRefreshToken(token, refreshToken, refreshTokenExpiry);
 
         this.tokenDomainRepository.save(token);
     }
 
+    // isValidRefreshToken //
     @Override
-    public boolean isValidRefreshToken(String refreshToken, String userId) {
-        Token token = this.tokenQueryService.getById(userId);
+    public boolean isRefreshTokenValid(String refreshToken, String userId) {
+        Token token = this.getById(userId);
 
         return refreshToken.equals(token.getRefreshToken());
     }

@@ -1,6 +1,6 @@
 package com.dino.backend.infrastructure.security.config;
 
-import com.dino.backend.infrastructure.shared.components.Props;
+import com.dino.backend.infrastructure.common.components.Props;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
@@ -24,7 +24,12 @@ import javax.crypto.spec.SecretKeySpec;
 @EnableMethodSecurity
 public class SecurityConfig {
 
-    private Props props;
+    private final Props props;
+
+    // Constructor Injection for Props
+    public SecurityConfig(Props props) {
+        this.props = props;
+    }
 
     private final String[] PUBLIC_ENDPOINTS = {
             //SWAGGER//

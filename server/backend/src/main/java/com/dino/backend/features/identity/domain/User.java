@@ -11,6 +11,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.SQLDelete;
@@ -24,11 +25,11 @@ import java.util.*;
 @DynamicUpdate
 @SQLDelete(sql = "UPDATE users SET deleted = true WHERE user_id=?")
 @SQLRestriction("deleted = false")
+@SuperBuilder
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class User extends BaseEntity {

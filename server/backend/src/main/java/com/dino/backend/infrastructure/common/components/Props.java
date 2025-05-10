@@ -1,4 +1,4 @@
-package com.dino.backend.infrastructure.shared.components;
+package com.dino.backend.infrastructure.common.components;
 
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;

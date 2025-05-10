@@ -3,9 +3,11 @@ package com.dino.backend.features.identity.domain;
 import com.dino.backend.infrastructure.aop.AppException;
 import com.dino.backend.infrastructure.aop.ErrorCode;
 import com.dino.backend.shared.model.BaseEntity;
+import com.dino.backend.shared.utils.Required;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.SQLDelete;
@@ -19,11 +21,11 @@ import java.time.Instant;
 @DynamicUpdate
 @SQLDelete(sql = "UPDATE tokens SET deleted = true WHERE user_id=?")
 @SQLRestriction("deleted = false")
+@SuperBuilder
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
 public class Token extends BaseEntity {
 
     @Id
@@ -38,21 +40,40 @@ public class Token extends BaseEntity {
     @Column(columnDefinition = "VARCHAR(1000)")
     String refreshToken;
 
-    Instant refreshExpDate;
+    Instant refreshTokenExpiry;
 
     public static Token createToken(Token token, User user) {
-        token.setUser(user);
-        return token;
+        try {
+            Required.notNull(token.getId());
+
+            return Token.builder()
+                    .id(null)
+                    .user(user)
+                    .refreshToken(null)
+                    .refreshTokenExpiry(null)
+                    .build();
+
+        } catch (Exception e) {
+            throw new AppException(ErrorCode.TOKEN__CREATE_FAILED);
+        }
     }
 
-    public static Token updateRefreshToken(Token token, String REFRESH_TOKEN, Instant refreshExpDate) {
-        if (token.getId() == null) {
-            throw new AppException(ErrorCode.TOKEN__LACK_ID);
+    // NOTE:
+    // Should set each property, because it changes clearly, doesn't depend on old state, is proper to DDD
+    public static Token updateRefreshToken(Token token, String refreshToken, Instant refreshTokenExpiry) {
+        try {
+            Required.notNull(token.getId());
+
+            return Token.builder()
+                    .id(Required.notNull(token.getId()))
+                    .user(token.user)
+                    .refreshToken(refreshToken)
+                    .refreshTokenExpiry(refreshTokenExpiry)
+                    .createdAt(token.getCreatedAt())
+                    .build();
+
+        } catch (Exception e) {
+            throw new AppException(ErrorCode.TOKEN__CREATE_FAILED);
         }
-
-        token.setRefreshToken(REFRESH_TOKEN);
-        token.setRefreshExpDate(refreshExpDate);
-
-        return token;
     }
 }

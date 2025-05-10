@@ -1,12 +1,12 @@
 package com.dino.backend.features.identity.application.impl;
 
 import com.dino.backend.features.identity.application.IAuthAppService;
-import com.dino.backend.features.identity.application.IAuthQueryService;
 import com.dino.backend.features.identity.application.ITokenAppService;
-import com.dino.backend.features.identity.application.IUserQueryService;
+import com.dino.backend.features.identity.application.IUserAppService;
 import com.dino.backend.features.identity.application.mapper.IUserMapper;
 import com.dino.backend.features.identity.application.model.AuthResponse;
 import com.dino.backend.features.identity.application.model.GoogleOauth2Request;
+import com.dino.backend.features.identity.application.model.LookupIdentifierResponse;
 import com.dino.backend.features.identity.application.model.PasswordLoginRequest;
 import com.dino.backend.features.identity.domain.User;
 import com.dino.backend.features.identity.domain.repository.IUserDomainRepository;
@@ -38,9 +38,7 @@ public class AuthAppServiceImpl implements IAuthAppService {
 
     ITokenAppService tokenAppService;
 
-    IAuthQueryService authQueryService;
-
-    IUserQueryService userQueryService;
+    IUserAppService userAppService;
 
     IUserDomainRepository userDomainRepository;
 
@@ -49,6 +47,26 @@ public class AuthAppServiceImpl implements IAuthAppService {
     ISecurityInfraProvider securityInfraProvider;
 
     IOauth2InfraProvider oauth2InfraProvider;
+
+    // QUERY //
+
+    // findUserByIdentifier //
+    private Optional<User> findUserByIdentifier(String email) {
+        return this.userDomainRepository.findByEmail(email);
+    }
+
+    // LookupIdentifierResponse //
+    @Override
+    public LookupIdentifierResponse lookupIdentifier(String email) {
+        Optional<User> userOpt = this.findUserByIdentifier(email);
+
+        return LookupIdentifierResponse.builder()
+                .isEmailProvided(userOpt.isPresent())
+                .isPasswordProvided(userOpt.isPresent() && userOpt.get().getPassword() != null)
+                .build();
+    }
+
+    // COMMAND //
 
     // licenseToken //
     private AuthResponse licenseToken(User user, HttpHeaders headers) {
@@ -82,7 +100,7 @@ public class AuthAppServiceImpl implements IAuthAppService {
     @Override
     public AuthResponse login(PasswordLoginRequest request, HttpHeaders headers) {
         // get user
-        User user = authQueryService.findUserByIdentifier(request.getEmail())
+        User user = this.findUserByIdentifier(request.getEmail())
                 .orElseThrow(() -> new AppException(ErrorCode.AUTH__IDENTIFIER_NOT_FOUND));
 
         // match password
@@ -90,7 +108,7 @@ public class AuthAppServiceImpl implements IAuthAppService {
             throw new AppException(ErrorCode.AUTH__PASSWORD_INVALID);
         }
 
-        //  license token
+        // license token
         AuthResponse authResponse = this.licenseToken(user, headers);
 
         return authResponse;
@@ -100,7 +118,7 @@ public class AuthAppServiceImpl implements IAuthAppService {
     @Override
     public AuthResponse signup(PasswordLoginRequest request, HttpHeaders headers) {
         // don't exist user
-        if (this.authQueryService.findUserByIdentifier(request.getEmail()).isPresent()) {
+        if (this.findUserByIdentifier(request.getEmail()).isPresent()) {
             throw new AppException(ErrorCode.AUTH__IDENTIFIER_EXISTED);
         }
 
@@ -125,7 +143,7 @@ public class AuthAppServiceImpl implements IAuthAppService {
 
         // get user //
         GoogleUserResponse googleUserResponse = this.oauth2InfraProvider.getGoogleUser(googleTokenResponse.getAccessToken());
-        var userOpt = authQueryService.findUserByIdentifier(googleUserResponse.getEmail());
+        var userOpt = this.findUserByIdentifier(googleUserResponse.getEmail());
 
         // signup or login //
         AuthResponse authResponse;
@@ -154,6 +172,7 @@ public class AuthAppServiceImpl implements IAuthAppService {
         return authResponse;
     }
 
+    // refresh //
     @Override
     public AuthResponse refresh(Optional<String> refreshToken, HttpHeaders headers) {
         // 1. Check null or empty
@@ -166,12 +185,12 @@ public class AuthAppServiceImpl implements IAuthAppService {
                 .orElseThrow(() -> new AppException(ErrorCode.AUTH__REFRESH_TOKEN_INVALID));
 
         // 3. Check if refresh token matches DB (to prevent reuse)
-        if (!this.tokenAppService.isValidRefreshToken(refreshToken.get(), userId)) {
+        if (!this.tokenAppService.isRefreshTokenValid(refreshToken.get(), userId)) {
             throw new AppException(ErrorCode.AUTH__REFRESH_TOKEN_INVALID);
         }
 
         // 4. Get user
-        User user = this.userQueryService.getUserById(userId);
+        User user = this.userAppService.getUserById(userId);
 
         // 5. License new tokens (also update DB & set cookie)
         return this.licenseToken(user, headers);

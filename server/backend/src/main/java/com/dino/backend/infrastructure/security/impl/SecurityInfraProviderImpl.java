@@ -5,7 +5,7 @@ import com.dino.backend.infrastructure.aop.AppException;
 import com.dino.backend.infrastructure.aop.ErrorCode;
 import com.dino.backend.infrastructure.security.ISecurityInfraProvider;
 import com.dino.backend.infrastructure.security.model.JwtType;
-import com.dino.backend.infrastructure.shared.components.Props;
+import com.dino.backend.infrastructure.common.components.Props;
 import com.nimbusds.jose.*;
 import com.nimbusds.jose.crypto.MACSigner;
 import com.nimbusds.jwt.JWTClaimsSet;
@@ -131,7 +131,7 @@ public class SecurityInfraProviderImpl implements ISecurityInfraProvider {
             return jwsObject.serialize();
 
         } catch (JOSEException e) {
-            log.error(">>> INTERNAL: genToken: {}", e.getMessage());
+            log.error(">>> INTERNAL: genToken 1: {}", e.getMessage());
             throw new AppException(ErrorCode.SECURITY__GEN_TOKEN_FAILED);
         }
     }

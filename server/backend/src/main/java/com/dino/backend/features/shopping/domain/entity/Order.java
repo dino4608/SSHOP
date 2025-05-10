@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.SQLDelete;
@@ -25,7 +26,7 @@ import java.util.ArrayList;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
+@SuperBuilder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Order extends BaseEntity {
 
