@@ -37,7 +37,7 @@ public class ApiErrorHandler {
      */
     @ExceptionHandler(value = RuntimeException.class)
     ResponseEntity<ApiResponse<Object>> handleException(RuntimeException exception) {
-        log.error(">>> Unhandled exception occurred: {}", exception.getMessage());
+        log.error(">>> INTERNAL: unhandled exception occurred", exception);
         ErrorCode error = ErrorCode.SYSTEM__UNHANDLED_EXCEPTION;
         return ResponseEntity
                 .status(error.getStatus())

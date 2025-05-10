@@ -114,7 +114,7 @@ public class SecurityInfraProviderImpl implements ISecurityInfraProvider {
         Payload payload = new Payload(
                 new JWTClaimsSet.Builder()
                         .subject(account.getId())
-                        .issuer("sshop.dino.com")
+                        .issuer("deal.dino.com")
                         .issueTime(new Date())
                         .expirationTime(new Date(this.getExpiry(jwtType).toEpochMilli()))
                         .claim("scope", this.buildScope(account.getRoles()))

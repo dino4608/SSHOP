@@ -40,8 +40,8 @@ public class SecurityConfig {
             "/api/v1/media/**",
             //CATEGORY//
             "/api/v1/category/**",
-            // AUTH //
-            "/api/v1/auth/**",
+            // BUYER PUBLIC (AUTH) //
+            "/api/v1/public/**",
     };
 
     @Bean

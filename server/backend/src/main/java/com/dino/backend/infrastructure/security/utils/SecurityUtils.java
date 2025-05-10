@@ -12,14 +12,12 @@ import java.util.Optional;
 public final class SecurityUtils {
     private SecurityUtils() {}
 
-    // PRIVATE //
-
     /**
      * extract the subject, a claim of jwt payload, from jwt principal
      * @param authentication: Authentication
      * @return String
      */
-    private String extractPrincipal(Authentication authentication) {
+    private static String extractPrincipal(Authentication authentication) {
         //Code: authentication.getPrincipal() instanceof Jwt jwt
         //Mean: if authentication.getPrincipal() has the Jwt type, assign it to the jwt variable
         if (authentication == null) {
@@ -34,12 +32,11 @@ public final class SecurityUtils {
         return null;
     }
 
-    // PUBLIC //
     /**
      * Get the subject, a claim of jwt payload
      * @return the current user.
      */
-    public String extractCurrentUserId() {
+    public static String getCurrentUserId() {
         // 1. get Security Context
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 

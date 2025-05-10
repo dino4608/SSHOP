@@ -117,9 +117,13 @@ public class User extends BaseEntity {
     }
 
     public static User responseUser(User user) {
-        user.setId(null);
-        user.setRoles(null);
-        user.setPassword(null);
-        return user;
+        return User.builder()
+                .status(user.getStatus())
+                .username(user.getUsername())
+                .email(user.getEmail())
+                .isEmailVerified(user.getIsEmailVerified())
+                .name(user.getName())
+                .photo(user.getPhoto())
+                .build();
     }
 }

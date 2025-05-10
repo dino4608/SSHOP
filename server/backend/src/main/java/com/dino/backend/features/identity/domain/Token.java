@@ -63,6 +63,7 @@ public class Token extends BaseEntity {
                     .refreshToken(refreshToken)
                     .refreshTokenExpiry(refreshTokenExpiry)
                     .createdAt(token.getCreatedAt())
+                    .isDeleted(token.getIsDeleted())
                     .build();
 
         } catch (Exception e) {

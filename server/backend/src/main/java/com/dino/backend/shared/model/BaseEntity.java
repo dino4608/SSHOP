@@ -25,10 +25,11 @@ public class BaseEntity {
     @UpdateTimestamp
     Instant updatedAt;
 
-    boolean deleted = Boolean.FALSE;
+    Boolean isDeleted;
 
     @PrePersist
     public void beforeCreate() {
+        this.isDeleted = Boolean.FALSE;
     }
 
     @PreUpdate

@@ -1,6 +1,5 @@
 package com.dino.backend.features.identity.application.model;
 
-import com.dino.backend.features.identity.domain.User;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -10,12 +9,22 @@ import lombok.experimental.FieldDefaults;
 @Setter
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@JsonInclude(JsonInclude.Include.NON_NULL)
-public class AuthResponse {
+@JsonInclude(JsonInclude.Include.ALWAYS)
+public class CurrentUserResponse {
 
-    Boolean isAuthenticated;
+    String status;
 
-    String accessToken;
+    String username;
 
-    CurrentUserResponse currentUser;
+    String email;
+
+    String phone;
+
+    Boolean isEmailVerified;
+
+    Boolean isPhoneVerified;
+
+    String name;
+
+    String photo;
 }

@@ -4,10 +4,7 @@ import com.dino.backend.features.identity.application.IAuthAppService;
 import com.dino.backend.features.identity.application.ITokenAppService;
 import com.dino.backend.features.identity.application.IUserAppService;
 import com.dino.backend.features.identity.application.mapper.IUserMapper;
-import com.dino.backend.features.identity.application.model.AuthResponse;
-import com.dino.backend.features.identity.application.model.GoogleOauth2Request;
-import com.dino.backend.features.identity.application.model.LookupIdentifierResponse;
-import com.dino.backend.features.identity.application.model.PasswordLoginRequest;
+import com.dino.backend.features.identity.application.model.*;
 import com.dino.backend.features.identity.domain.User;
 import com.dino.backend.features.identity.domain.repository.IUserDomainRepository;
 import com.dino.backend.infrastructure.aop.AppException;
@@ -17,6 +14,7 @@ import com.dino.backend.infrastructure.security.ISecurityInfraProvider;
 import com.dino.backend.infrastructure.security.model.GoogleTokenResponse;
 import com.dino.backend.infrastructure.security.model.GoogleUserResponse;
 import com.dino.backend.infrastructure.security.model.JwtType;
+import com.dino.backend.infrastructure.web.model.CurrentUser;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -66,6 +64,15 @@ public class AuthAppServiceImpl implements IAuthAppService {
                 .build();
     }
 
+    @Override
+    public CurrentUserResponse getCurrentUser(CurrentUser currentUser) {
+        // 1. Retrieve user from database based on the current user's ID.
+        User user = this.userAppService.getUserById(currentUser.getId());
+
+        // 2. Return the user object after processing sensitive information (password, roles, etc.).
+        return this.userMapper.toCurrentUserResponse(user);
+    }
+
     // COMMAND //
 
     // licenseToken //
@@ -92,7 +99,7 @@ public class AuthAppServiceImpl implements IAuthAppService {
         return AuthResponse.builder()
                 .isAuthenticated(true)
                 .accessToken(accessToken)
-                .user(User.responseUser(user))
+                .currentUser(this.userMapper.toCurrentUserResponse(user))
                 .build();
     }
 
@@ -109,9 +116,8 @@ public class AuthAppServiceImpl implements IAuthAppService {
         }
 
         // license token
-        AuthResponse authResponse = this.licenseToken(user, headers);
 
-        return authResponse;
+        return this.licenseToken(user, headers);
     }
 
     // signup + PasswordLoginRequest //
@@ -130,9 +136,8 @@ public class AuthAppServiceImpl implements IAuthAppService {
         user = this.userDomainRepository.save(user);
 
         // license token
-        AuthResponse authResponse = this.licenseToken(user, headers);
 
-        return authResponse;
+        return this.licenseToken(user, headers);
     }
 
     // loginOrSignup + GoogleOauth2Request //
@@ -167,25 +172,23 @@ public class AuthAppServiceImpl implements IAuthAppService {
         );
         user = this.userDomainRepository.save(user);
 
-        var authResponse = this.licenseToken(user, headers);
-
-        return authResponse;
+        return this.licenseToken(user, headers);
     }
 
     // refresh //
     @Override
-    public AuthResponse refresh(Optional<String> refreshToken, HttpHeaders headers) {
+    public AuthResponse refresh(String refreshToken, HttpHeaders headers) {
         // 1. Check null or empty
-        if (refreshToken.isEmpty() || refreshToken.get().isBlank()) {
+        if (refreshToken == null || refreshToken.isBlank()) {
             throw new AppException(ErrorCode.AUTH__REFRESH_TOKEN_INVALID);
         }
 
         // 2. Verify & extract user ID
-        String userId = this.securityInfraProvider.verifyToken(refreshToken.get(), JwtType.REFRESH_TOKEN)
+        String userId = this.securityInfraProvider.verifyToken(refreshToken, JwtType.REFRESH_TOKEN)
                 .orElseThrow(() -> new AppException(ErrorCode.AUTH__REFRESH_TOKEN_INVALID));
 
         // 3. Check if refresh token matches DB (to prevent reuse)
-        if (!this.tokenAppService.isRefreshTokenValid(refreshToken.get(), userId)) {
+        if (!this.tokenAppService.isRefreshTokenValid(refreshToken, userId)) {
             throw new AppException(ErrorCode.AUTH__REFRESH_TOKEN_INVALID);
         }
 
