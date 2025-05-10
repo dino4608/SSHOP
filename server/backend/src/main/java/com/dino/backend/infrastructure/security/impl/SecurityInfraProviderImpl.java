@@ -5,7 +5,7 @@ import com.dino.backend.infrastructure.aop.AppException;
 import com.dino.backend.infrastructure.aop.ErrorCode;
 import com.dino.backend.infrastructure.security.ISecurityInfraProvider;
 import com.dino.backend.infrastructure.security.model.JwtType;
-import com.dino.backend.infrastructure.common.components.Props;
+import com.dino.backend.infrastructure.common.Env;
 import com.nimbusds.jose.*;
 import com.nimbusds.jose.crypto.MACSigner;
 import com.nimbusds.jwt.JWTClaimsSet;
@@ -37,17 +37,15 @@ import java.util.StringJoiner;
 @Slf4j
 public class SecurityInfraProviderImpl implements ISecurityInfraProvider {
 
-    Props props;
+    Env env;
 
     PasswordEncoder passwordEncoder;
 
-    // buildScope (build roles) //
-
     /**
-     * build scope, a claim of jwt payload
-     *
+     * // buildScope //
+     * @des It means to build roles. Scope is a claim of jwt payload
      * @param roles: Set<String>
-     * @return String: example "ADMIN_SELLER_USER"
+     * @return scope: String. Example "ADMIN_SELLER_USER"
      */
     private String buildScope(Set<String> roles) {
         StringJoiner stringJoiner = new StringJoiner(" ");
@@ -74,8 +72,8 @@ public class SecurityInfraProviderImpl implements ISecurityInfraProvider {
     @Override
     public byte[] getSecretKey(JwtType jwtType) {
         return switch (jwtType) {
-            case REFRESH_TOKEN -> this.props.REFRESH_SECRET_KEY.getBytes();
-            case ACCESS_TOKEN -> this.props.ACCESS_SECRET_KEY.getBytes();
+            case REFRESH_TOKEN -> this.env.REFRESH_SECRET_KEY.getBytes();
+            case ACCESS_TOKEN -> this.env.ACCESS_SECRET_KEY.getBytes();
         };
     }
 
@@ -83,8 +81,8 @@ public class SecurityInfraProviderImpl implements ISecurityInfraProvider {
     @Override
     public Duration getTtl(JwtType jwtType) {
         return switch (jwtType) {
-            case REFRESH_TOKEN -> Duration.ofDays(this.props.REFRESH_TTL_DAYS);
-            case ACCESS_TOKEN -> Duration.ofMinutes(this.props.ACCESS_TTL_MIN);
+            case REFRESH_TOKEN -> Duration.ofDays(this.env.REFRESH_TTL_DAYS);
+            case ACCESS_TOKEN -> Duration.ofMinutes(this.env.ACCESS_TTL_MIN);
         };
     }
 
@@ -92,8 +90,8 @@ public class SecurityInfraProviderImpl implements ISecurityInfraProvider {
     @Override
     public Instant getExpiry(JwtType jwtType) {
         return switch (jwtType) {
-            case REFRESH_TOKEN -> Instant.now().plus(this.props.REFRESH_TTL_DAYS, ChronoUnit.DAYS);
-            case ACCESS_TOKEN -> Instant.now().plus(this.props.ACCESS_TTL_MIN, ChronoUnit.MINUTES);
+            case REFRESH_TOKEN -> Instant.now().plus(this.env.REFRESH_TTL_DAYS, ChronoUnit.DAYS);
+            case ACCESS_TOKEN -> Instant.now().plus(this.env.ACCESS_TTL_MIN, ChronoUnit.MINUTES);
         };
     }
 

@@ -1,6 +1,6 @@
 package com.dino.backend.infrastructure.security.config;
 
-import com.dino.backend.infrastructure.common.components.Props;
+import com.dino.backend.infrastructure.common.Env;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
@@ -24,11 +24,10 @@ import javax.crypto.spec.SecretKeySpec;
 @EnableMethodSecurity
 public class SecurityConfig {
 
-    private final Props props;
+    private final Env env;
 
-    // Constructor Injection for Props
-    public SecurityConfig(Props props) {
-        this.props = props;
+    public SecurityConfig(Env env) {
+        this.env = env;
     }
 
     private final String[] PUBLIC_ENDPOINTS = {
@@ -99,7 +98,7 @@ public class SecurityConfig {
     @Bean
     JwtDecoder jwtDecoder() {
         SecretKeySpec secretKeySpec = new SecretKeySpec(
-                this.props.ACCESS_SECRET_KEY.getBytes(),
+                this.env.ACCESS_SECRET_KEY.getBytes(),
                 MacAlgorithm.HS512.getName());
 
         return NimbusJwtDecoder

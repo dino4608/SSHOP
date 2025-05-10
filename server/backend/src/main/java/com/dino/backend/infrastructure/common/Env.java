@@ -1,4 +1,4 @@
-package com.dino.backend.infrastructure.common.components;
+package com.dino.backend.infrastructure.common;
 
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -12,8 +12,7 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor //create a constructor for final and @NonNull fields
 @FieldDefaults(level = AccessLevel.PUBLIC, makeFinal = true)
 @Slf4j
-public class Props {
-
+public class Env {
     // JWT //
     @NonFinal
     @Value("${jwt.access.secret-key}")
@@ -30,5 +29,22 @@ public class Props {
     @NonFinal
     @Value("${jwt.refresh.ttl-days}")
     Long REFRESH_TTL_DAYS;
+
+    // OAUTH2 GOOGLE //
+    @NonFinal
+    @Value("${oauth2.google.client-id}")
+    String CLIENT_ID;
+
+    @NonFinal
+    @Value("${oauth2.google.client-secret}")
+    String CLIENT_SECRET;
+
+    @NonFinal
+    @Value("${oauth2.google.redirect-uri}")
+    String REDIRECT_URI;
+
+    @NonFinal
+    @Value("${oauth2.google.grant-type}")
+    String GRANT_TYPE;
 
 }

@@ -23,10 +23,9 @@ public class CorsConfig {
         CorsConfiguration corsConfig = new CorsConfiguration();
         corsConfig.setAllowedOrigins(
                 Arrays.asList(
-                        "buyer-deal.vercel.app",
-                        "http://localhost:3000",
-                        "http://localhost:3044", "http://localhost:3066", "http://localhost:3088",
-                        "http://localhost:3144", "http://localhost:3166", "http://localhost:3188"
+                        "http://localhost:3000", "buyer-deal.vercel.app",
+                        "http://localhost:3001",
+                        "http://localhost:3002"
                 ));
 
         corsConfig.setAllowedMethods(
