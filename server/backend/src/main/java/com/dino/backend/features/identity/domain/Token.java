@@ -6,7 +6,10 @@ import com.dino.backend.shared.model.BaseEntity;
 import com.dino.backend.shared.utils.Required;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
@@ -42,20 +45,10 @@ public class Token extends BaseEntity {
 
     Instant refreshTokenExpiry;
 
-    public static Token createToken(Token token, User user) {
-        try {
-            Required.notNull(token.getId());
-
-            return Token.builder()
-                    .id(null)
-                    .user(user)
-                    .refreshToken(null)
-                    .refreshTokenExpiry(null)
-                    .build();
-
-        } catch (Exception e) {
-            throw new AppException(ErrorCode.TOKEN__CREATE_FAILED);
-        }
+    public static Token createToken(User user) {
+        return Token.builder()
+                .user(user)
+                .build();
     }
 
     // NOTE:
@@ -65,15 +58,15 @@ public class Token extends BaseEntity {
             Required.notNull(token.getId());
 
             return Token.builder()
-                    .id(Required.notNull(token.getId()))
-                    .user(token.user)
+                    .id(token.getId())
+                    .user(User.builder().id(token.getId()).build())
                     .refreshToken(refreshToken)
                     .refreshTokenExpiry(refreshTokenExpiry)
                     .createdAt(token.getCreatedAt())
                     .build();
 
         } catch (Exception e) {
-            throw new AppException(ErrorCode.TOKEN__CREATE_FAILED);
+            throw new AppException(ErrorCode.TOKEN__UPDATE_FAILED);
         }
     }
 }

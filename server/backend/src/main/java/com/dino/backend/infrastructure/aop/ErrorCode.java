@@ -38,7 +38,6 @@ public enum ErrorCode {
     AUTH__REFRESH_TOKEN_INVALID(1217, "Refresh token thì rỗng, trái phép, hoặc bị đánh cấp.", HttpStatus.BAD_REQUEST),
     //TOKEN 1300+//
     TOKEN__FIND_FAILED(1300, "Lấy token thất bại.", HttpStatus.INTERNAL_SERVER_ERROR),
-    TOKEN__CREATE_FAILED(1301, "Tạo mới token thất bại.", HttpStatus.INTERNAL_SERVER_ERROR),
     TOKEN__UPDATE_FAILED(1302, "Cập nhật token thất bại.", HttpStatus.INTERNAL_SERVER_ERROR),
     //SHOP 1400+//
     SHOP__NOT_FOUND(1401, "Shop is not found.", HttpStatus.BAD_REQUEST),

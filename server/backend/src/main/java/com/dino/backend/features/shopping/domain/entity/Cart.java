@@ -42,10 +42,11 @@ public class Cart extends BaseEntity {
 
     int count;
 
-    public static Cart createCart(Cart cart, User buyer) {
-        cart.setItems(new ArrayList<>());
-        cart.setCount(0);
-        cart.setBuyer(buyer);
-        return cart;
+    public static Cart createCart(User buyer) {
+        return Cart.builder()
+                .buyer(buyer)
+                .items(new ArrayList<>())
+                .count(0)
+                .build();
     }
 }
