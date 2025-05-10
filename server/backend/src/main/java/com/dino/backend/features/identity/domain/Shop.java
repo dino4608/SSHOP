@@ -19,7 +19,7 @@ import java.util.List;
 @Table(name = "shops")
 @DynamicInsert
 @DynamicUpdate
-@SQLDelete(sql = "UPDATE shops SET deleted = true WHERE account_id=?")
+@SQLDelete(sql = "UPDATE shops SET isDeleted = true WHERE account_id=?")
 @SQLRestriction("deleted = false")
 @SuperBuilder
 @Getter

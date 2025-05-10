@@ -6,10 +6,8 @@ import com.dino.backend.shared.model.BaseEntity;
 import com.dino.backend.shared.utils.Required;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
@@ -22,13 +20,14 @@ import java.time.Instant;
 @Table(name = "tokens")
 @DynamicInsert
 @DynamicUpdate
-@SQLDelete(sql = "UPDATE tokens SET deleted = true WHERE user_id=?")
+@SQLDelete(sql = "UPDATE tokens SET isDeleted = true WHERE user_id=?")
 @SQLRestriction("deleted = false")
 @SuperBuilder
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class Token extends BaseEntity {
 
     @Id

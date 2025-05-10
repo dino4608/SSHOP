@@ -23,7 +23,7 @@ import java.util.*;
 @Table(name = "users")
 @DynamicInsert // ignore null-value attributes
 @DynamicUpdate
-@SQLDelete(sql = "UPDATE users SET deleted = true WHERE user_id=?")
+@SQLDelete(sql = "UPDATE users SET isDeleted = true WHERE user_id=?")
 @SQLRestriction("deleted = false")
 @SuperBuilder
 @Getter
@@ -31,7 +31,6 @@ import java.util.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@JsonInclude(JsonInclude.Include.NON_NULL)
 public class User extends BaseEntity {
 
     @Id
@@ -96,7 +95,6 @@ public class User extends BaseEntity {
         // EXP: the validation layer ensured:
         // - email: ensure the format
         // - password: ensure the size of 6
-
         User newUser = User.builder()
                 .status(UserStatusType.LACK_INFO.toString())
                 .roles(new HashSet<>(Collections.singletonList(UserRoleType.BUYER.toString())))
@@ -114,16 +112,5 @@ public class User extends BaseEntity {
         newUser.setCart(newCart);
 
         return newUser;
-    }
-
-    public static User responseUser(User user) {
-        return User.builder()
-                .status(user.getStatus())
-                .username(user.getUsername())
-                .email(user.getEmail())
-                .isEmailVerified(user.getIsEmailVerified())
-                .name(user.getName())
-                .photo(user.getPhoto())
-                .build();
     }
 }
