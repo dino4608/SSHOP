@@ -1,25 +1,17 @@
 // app/auth/TokenRefresher.tsx
-import { ACCESS_TOKEN } from "@/lib/constants";
-import { cookies } from "next/headers";
+import { api } from "@/api";
 import { Fragment, Suspense } from "react";
 import { TokenRestorer } from "./TokenRestorer";
 
 export const TokenGate = async ({ children }: { children: React.ReactNode }) => {
 
-    // Lấy cookie từ request
-    const serverCookies = await cookies();
-    const accessToken = serverCookies.get(ACCESS_TOKEN)?.value;
-
     // Kiểm tra token hợp lệ bằng cách gọi API 'current'
-    const res = await fetch(`${process.env.API_BASE_URL}/api/current`, {
-        headers: {
-            'Authorization': `Bearer ${accessToken}`,
-        },
-        cache: 'no-store', // Không cache, luôn gọi mới
-    });
+    const apiRes = await api.auth.getCurrentUser();
 
-    if (res.status === 401) {
-        // Nếu token hết hạn, trả về loading refresher
+    console.log('>>> TokenGate: apiRes: ' + apiRes);
+
+    // Nếu token hết hạn, trả về loading refresher
+    if (!apiRes.success) {
         return (
             <Suspense fallback={<div>Đang làm mới token...</div>}>
                 <TokenRestorer />
@@ -29,10 +21,14 @@ export const TokenGate = async ({ children }: { children: React.ReactNode }) => 
 
     // Token hợp lệ, render children bình thường
     // TODO #1: update Redux store
-    const userData = await res.json();
+    const currentUser = apiRes.data;
+
+    console.log('>>> TokenGate: currentUser: ' + currentUser);
+
     return (
         <Fragment>
-            {children}
+            {currentUser.name || currentUser.email || currentUser.username}
+            {/*{children} */}
         </Fragment>
     );
 }

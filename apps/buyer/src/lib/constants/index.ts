@@ -10,3 +10,11 @@ export const initialApiResponse: TApiResponse<any> = {
 export * from "./env";
 
 export * from "./string";
+
+export enum HttpMethod {
+    GET = 'GET',
+    POST = 'POST',
+    PATCH = 'PATCH',
+    PUT = 'PUT',
+    DELETE = 'DELETE',
+}

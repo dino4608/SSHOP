@@ -3,7 +3,7 @@ import { NavigationMenu, NavigationMenuList } from "@/components/ui/navigation-m
 import { MessageCircleMore, SquareMenu, UserRound } from "lucide-react";
 import AccountDropdown from "./AccountDropdown";
 import { NavigationDropdownItem, NavigationLinkItem } from "@/components/ui/custom/navigation-menu";
-import useCurrentUser from "@/hooks/useCurrentUser";
+import { useCurrentUser } from "@/hooks/useRootState";
 
 const RightNavigation = () => {
     const currentUser = useCurrentUser();

@@ -36,7 +36,6 @@ export type TLoginOrSignUpWithGoogleBody = {
     code: string;
 }
 
-
 // Response //
 export type TLookupIdentifierResponse = {
     isEmailProvided: boolean;
@@ -47,4 +46,16 @@ export type TAuthResponse = {
     isAuthenticated: boolean;
     accessToken: string;
     user: TUser,
+}
+
+// Others //
+export interface CurrentUser {
+    status: string;
+    username: string;
+    email: string;
+    phone: string;
+    isEmailVerified: boolean;
+    isPhoneVerified: boolean;
+    name: string;
+    photo: string;
 }

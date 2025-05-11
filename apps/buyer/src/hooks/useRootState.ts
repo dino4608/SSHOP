@@ -7,7 +7,7 @@ import { useAppSelector } from "@/store/hooks";
  * bạn chỉ cần sửa trong useAuth, không cần đi sửa khắp nơi.
  * -  Tăng khả năng tái sử dụng và đọc code dễ hơn, tên chuẩn hóa
  */
-const useCurrentUser = () => {
+export const useCurrentUser = () => {
 
     let currentUser = useAppSelector(state => state.auth.currentUser);
 
@@ -17,5 +17,3 @@ const useCurrentUser = () => {
 
     return currentUser;
 }
-
-export default useCurrentUser;

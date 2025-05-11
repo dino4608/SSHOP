@@ -2,7 +2,7 @@ import { loginOrSignupWithGoogle, loginWithPassword, lookupIdentifier, signupWit
 
 // TODO: import lazily
 
-export const serverActions = {
+export const server = {
     auth: {
         lookupIdentifier,
         loginWithPassword,

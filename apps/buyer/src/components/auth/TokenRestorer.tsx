@@ -2,22 +2,27 @@
 'use client';
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import { api } from '@/api';
 
 export function TokenRestorer() {
     const router = useRouter();
 
     useEffect(() => {
         const refreshToken = async () => {
-            const refreshRes = await fetch('/api/auth/refresh', {
-                method: 'POST',
-            });
+            // call next api
+            // const refreshRes = await fetch('/api/auth/refresh', {
+            //     method: 'POST',
+            // });
 
-            if (refreshRes.ok) {
+            // call direct api
+            const apiRes = await api.auth.refresh();
+
+            if (apiRes.success) {
                 // reload lại route hiện tại (Next.js 13+)
                 router.refresh();
             } else {
                 // Xử lý khi không refresh được
-                console.error('Refresh token không thành công');
+                console.log('>>> TokenRestorer: Refresh token không thành công');
             }
         };
 

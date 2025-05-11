@@ -1,4 +1,4 @@
-import { loginOrSignupWithGoogle, loginWithPassword, lookupIdentifier, signupWithPassword } from "./identity.api";
+import { getCurrentUser, loginOrSignupWithGoogle, loginWithPassword, logout, lookupIdentifier, refresh, signupWithPassword } from "./identity.api";
 import { getTree } from "./product.api";
 
 export const api = {
@@ -10,5 +10,8 @@ export const api = {
         loginWithPassword,
         signupWithPassword,
         loginOrSignupWithGoogle,
+        refresh,
+        getCurrentUser,
+        logout,
     },
 }
