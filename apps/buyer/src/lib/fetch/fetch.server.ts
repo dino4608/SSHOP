@@ -31,8 +31,8 @@ export const buildHeader = async (
         headers['Cookie'] = `REFRESH_TOKEN=${REFRESH_TOKEN}`;
 
         // TEST
-        console.log('>>> cookies toString: ', cookieStore.toString());
-        console.log('>>> cookies getValue: ', REFRESH_TOKEN);
+        // console.log('>>> serverFetch: cookies toString: ', cookieStore.toString());
+        // console.log('>>> serverFetch: cookies getValue: ', REFRESH_TOKEN);
     }
 
     return headers;
@@ -53,6 +53,6 @@ const fetchCore = async (
     });
 }
 
-export const fetchServer = async <T = any>(api: TApiDefinition) => {
+export const serverFetch = async <T = any>(api: TApiDefinition<T>) => {
     return fetchSafely<T>(api, fetchCore);
 }

@@ -113,16 +113,16 @@ public class AuthBuyerController {
         // COMMAND //
 
         @PostMapping("/logout")
-        public ResponseEntity<Void> logout(
+        public ResponseEntity<AuthResponse> logout(
                 @CookieValue(name = "REFRESH_TOKEN", required = false) String refreshToken
         ) {
             HttpHeaders headers = new HttpHeaders();
-            this.authAppService.logout(refreshToken, headers);
+            AuthResponse authResponse = this.authAppService.logout(refreshToken, headers);
 
             return ResponseEntity
                     .ok()
                     .headers(headers)
-                    .body(null);
+                    .body(authResponse);
         }
 
     }

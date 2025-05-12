@@ -45,7 +45,7 @@ export type TLookupIdentifierResponse = {
 export type TAuthResponse = {
     isAuthenticated: boolean;
     accessToken: string;
-    user: TUser,
+    currentUser: TUser,
 }
 
 // Others //

@@ -1,5 +1,5 @@
 import { TApiDefinition } from "../api-definition/config";
-import clientCookies from "../utils/clientCookies";
+import clientCookies from "../storage/cookie.client";
 import { fetchSafely } from "./config";
 
 const buildHeader = async (
@@ -34,11 +34,11 @@ const fetchCore = async (
     // fetch: include refresh token
     return await fetch(endpoint, {
         ...options,
-        headers,
         credentials: "include",
+        headers,
     });
 }
 
-export const fetchClient = async <T = any>(api: TApiDefinition) => {
+export const clientFetch = async <T = any>(api: TApiDefinition<T>) => {
     return fetchSafely<T>(api, fetchCore);
 }

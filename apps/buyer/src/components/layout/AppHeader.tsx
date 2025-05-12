@@ -1,11 +1,10 @@
-import React from 'react';
-import Cart from './header/Cart';
-import LeftNavigation from './header/LeftNavigation';
-import Logo from './header/Logo';
-import RightNavigation from './header/RightNavigation';
-import SearchBar from './header/SearchBar';
+import { Cart } from "../header/Cart";
+import { Logo } from "../header/Logo";
+import { NavLeft } from "../header/NavLeft";
+import { NavRight } from "../header/NavRight";
+import { SearchBar } from "../header/SearchBar";
 
-const Header = () => {
+export const AppHeader = () => {
 
     // TODO: adjust LeftNavigation, RightNavigation to simpler
 
@@ -19,16 +18,14 @@ const Header = () => {
             <div className='h-8 container mx-auto flex justify-between items-center text-back font-medium'>
                 <Logo />
 
-                <LeftNavigation />
+                <NavLeft />
 
                 <SearchBar />
 
-                <RightNavigation />
+                <NavRight />
 
                 <Cart />
             </div>
         </header>
     );
 };
-
-export default Header;

@@ -1,9 +1,9 @@
 const isBrowser = typeof window !== 'undefined';
 
-const clientLocalStorage = {
+const clientLocal = {
     set: <T = string>(key: string, value: T) => {
         if (!isBrowser) {
-            throw new Error(`clientLocalStorage cannot be used outside the browser`);
+            return null;
         }
 
         const stringified = typeof value === 'string'
@@ -14,7 +14,7 @@ const clientLocalStorage = {
 
     get: <T = string>(key: string): T | null => {
         if (!isBrowser) {
-            throw new Error(`clientLocalStorage cannot be used outside the browser`);
+            return null;
         }
 
         const value = localStorage.getItem(key);
@@ -29,11 +29,11 @@ const clientLocalStorage = {
 
     remove: (key: string) => {
         if (!isBrowser) {
-            throw new Error(`clientLocalStorage cannot be used outside the browser`);
+            return null;
         }
 
         localStorage.removeItem(key);
     },
 };
 
-export default clientLocalStorage;
+export default clientLocal;

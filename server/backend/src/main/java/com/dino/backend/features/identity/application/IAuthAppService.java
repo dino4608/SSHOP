@@ -25,6 +25,6 @@ public interface IAuthAppService {
 
     AuthResponse refresh(String refreshToken, HttpHeaders headers);
 
-    void logout(String refreshToken, HttpHeaders headers);
+    AuthResponse logout(String refreshToken, HttpHeaders headers);
 
 }

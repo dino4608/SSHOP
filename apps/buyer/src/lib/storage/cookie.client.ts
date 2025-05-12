@@ -1,20 +1,21 @@
+import ms from "ms";
+
 const isBrowser = typeof window !== 'undefined';
 
 const clientCookies = {
-    set: (key: string, value: string, options: { days?: number; path?: string } = {}) => {
+    set: (key: string, value: string, days: number = 1, path: string = '/') => {
         if (!isBrowser) {
-            throw new Error(`clientCookies cannot be used outside the browser`);
+            return null;
         }
 
-        const { days = 7, path = '/' } = options;
         const expires = new Date();
-        expires.setTime(expires.getTime() + days * 24 * 60 * 60 * 1000);
+        expires.setDate(expires.getDate() + days);
         document.cookie = `${key}=${encodeURIComponent(value)}; expires=${expires.toUTCString()}; path=${path}`;
     },
 
     get: (key: string): string | null => {
         if (!isBrowser) {
-            throw new Error(`clientCookies cannot be used outside the browser`);
+            return null;
         }
 
         const nameEQ = `${key}=`;
@@ -29,11 +30,20 @@ const clientCookies = {
 
     remove: (key: string, path: string = '/') => {
         if (!isBrowser) {
-            throw new Error(`clientCookies cannot be used outside the browser`);
+            return null;
         }
 
-        document.cookie = `${key}=; Max-Age=0; path=${path}`;
+        const expires = new Date(0).toUTCString(); // epoch time: Thu, 01 Jan 1970
+        document.cookie = `${key}=; expires=${expires}; path=${path}`;
     },
+
+    // remove2: (key: string, path: string = '/') => {
+    //     if (!isBrowser) {
+    //         return null;
+    //     }
+
+    //     document.cookie = `${key}=; Max-Age=0; path=${path}`;
+    // },
 };
 
 export default clientCookies;

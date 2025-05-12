@@ -1,7 +1,7 @@
 import { ShoppingCart } from "lucide-react";
 import Link from "next/link";
 
-const Cart = () => {
+export const Cart = () => {
     return (
         <Link
             href={'/cart'}
@@ -16,5 +16,3 @@ const Cart = () => {
         </Link>
     );
 };
-
-export default Cart;

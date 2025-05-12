@@ -1,9 +1,11 @@
 
-import { api } from "@/api";
-import { Category } from "@/types/product.types"
+
+import { api } from "@/lib/api-definition";
+import { serverFetch } from "@/lib/fetch/fetch.server";
+import { TCategory } from "@/types/product.types";
 
 export default async function Page() {
-    const categories: Category[] = (await api.category.getTree()).data;
+    const categories: TCategory[] = (await serverFetch(api.category.getTree())).data;
     return (
         <>
             <ul>

@@ -1,12 +1,12 @@
 'use client';
 
-import { Product } from "@/types/product.types";
+import { TProduct } from "@/types/product.types";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 
 type Props = {
-    product: Product;
+    product: TProduct;
 }
 
 const ProductItem = ({ product }: Props) => {

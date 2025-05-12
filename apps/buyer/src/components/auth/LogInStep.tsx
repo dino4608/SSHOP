@@ -8,7 +8,6 @@ import {
     FormMessage
 } from "@/components/ui/form";
 import { Input } from '@/components/ui/input';
-import { api } from '@/api';
 import { useAppDispatch } from '@/store/hooks';
 import { authActions } from '@/store/slices/auth.slice';
 import { logInFormSchema, TLogInFormData } from "@/validations/auth.validations";
@@ -17,6 +16,9 @@ import { useRouter } from 'next/navigation';
 import { useState, useTransition } from 'react';
 import { useForm } from 'react-hook-form';
 import FormButtonSubmit, { FormError } from '../ui/custom/form';
+import { clientFetch } from '@/lib/fetch/fetch.client';
+import { api } from '@/lib/api-definition';
+import { actions } from '@/store/actions';
 
 type Props = {
     email: string;
@@ -39,7 +41,7 @@ const LogInStep = ({ email, onEmailChange }: Props) => {
 
     const onSubmit = ({ password }: TLogInFormData) => {
         startTransition(async () => {
-            const result = await api.auth.loginWithPassword({ email, password });
+            const result = await clientFetch(api.auth.loginWithPassword({ email, password }));
 
             if (!result.success) {
                 setError(result.error);

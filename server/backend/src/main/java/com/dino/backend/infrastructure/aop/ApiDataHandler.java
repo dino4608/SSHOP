@@ -40,6 +40,7 @@ public class ApiDataHandler implements ResponseBodyAdvice<Object> {
         //case: success
         return ApiResponse.builder()
                 .success(true)
+                .status(200)
                 .code(1)
                 .data(body)
                 .build();

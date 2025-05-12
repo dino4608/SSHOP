@@ -8,6 +8,7 @@
 
 export type TApiResponse<T> = {
     success: boolean;
+    status: number;
     code: number;
     error: string;
     data: T;

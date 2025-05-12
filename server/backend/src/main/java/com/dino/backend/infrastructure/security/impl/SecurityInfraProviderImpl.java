@@ -31,8 +31,10 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.StringJoiner;
 
+// NOTE: RequiredArgsConstructor
+// create a constructor for final and @NonNull fields
 @Service
-@RequiredArgsConstructor //create a constructor for final and @NonNull fields
+@RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @Slf4j
 public class SecurityInfraProviderImpl implements ISecurityInfraProvider {

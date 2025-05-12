@@ -1,10 +1,30 @@
 import { NavigationMenu, NavigationMenuList } from "@/components/ui/navigation-menu";
 import { Gem, Ticket, Zap } from "lucide-react";
-import CategoryDropdown from "./CategoryDropdown";
 import React from "react";
 import { NavigationDropdownItem, NavigationLinkItem } from "@/components/ui/custom/navigation-menu";
+import { ListItem } from "@/components/ui/navigation-menu";
+import { api } from "@/lib/api-definition";
+import { serverFetch } from "@/lib/fetch/fetch.server";
 
-const LeftNavigation = () => {
+const CategoryDropdown = async () => {
+    const categories = (await serverFetch(api.category.getTree())).data;
+
+    return (
+        <ul className="w-[400px] md:w-[500px] lg:w-[800px] grid md:grid-cols-6 gap-2 p-4">
+            {categories.map((item) => (
+                <ListItem
+                    key={item.id}
+                    title={item.name}
+                    href={`/category/${item.slug}`}
+                >
+                    {item.description}
+                </ListItem>
+            ))}
+        </ul>
+    );
+}
+
+export const NavLeft = () => {
     return (
         <NavigationMenu>
             <NavigationMenuList className="gap-0">
@@ -27,5 +47,3 @@ const LeftNavigation = () => {
         </NavigationMenu >
     );
 };
-
-export default LeftNavigation;

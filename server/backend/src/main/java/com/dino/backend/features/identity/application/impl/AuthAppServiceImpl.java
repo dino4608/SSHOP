@@ -14,14 +14,13 @@ import com.dino.backend.infrastructure.security.ISecurityInfraProvider;
 import com.dino.backend.infrastructure.security.model.GoogleTokenResponse;
 import com.dino.backend.infrastructure.security.model.GoogleUserResponse;
 import com.dino.backend.infrastructure.security.model.JwtType;
+import com.dino.backend.infrastructure.web.ICookieProvider;
 import com.dino.backend.infrastructure.web.model.CurrentUser;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpCookie;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.ResponseCookie;
 import org.springframework.stereotype.Service;
 
 import java.time.Duration;
@@ -46,6 +45,8 @@ public class AuthAppServiceImpl implements IAuthAppService {
 
     IOauth2InfraProvider oauth2InfraProvider;
 
+    ICookieProvider cookieProvider;
+
     // QUERY //
 
     // findUserByIdentifier //
@@ -64,6 +65,7 @@ public class AuthAppServiceImpl implements IAuthAppService {
                 .build();
     }
 
+    // getCurrentUser //
     @Override
     public CurrentUserResponse getCurrentUser(CurrentUser currentUser) {
         // 1. Retrieve user from database based on the current user's ID.
@@ -75,8 +77,8 @@ public class AuthAppServiceImpl implements IAuthAppService {
 
     // COMMAND //
 
-    // licenseToken //
-    private AuthResponse licenseToken(User user, HttpHeaders headers) {
+    // authenticate //
+    private AuthResponse authenticate(User user, HttpHeaders headers) {
         // get tokens
         String accessToken = this.securityInfraProvider.genToken(user, JwtType.ACCESS_TOKEN);
         String refreshToken = this.securityInfraProvider.genToken(user, JwtType.REFRESH_TOKEN);
@@ -87,19 +89,21 @@ public class AuthAppServiceImpl implements IAuthAppService {
         this.tokenAppService.updateRefreshToken(refreshToken, refreshTokenExpiry, user.getId());
 
         // set refresh token to cookie
-        HttpCookie cookie = ResponseCookie.from(JwtType.REFRESH_TOKEN.name(), refreshToken)
-                .httpOnly(true)
-                .sameSite("None")
-                .secure(true)
-                .path("/")
-                .maxAge(refreshTokenTtl)
-                .build();
-        headers.add(HttpHeaders.SET_COOKIE, cookie.toString());
+        this.cookieProvider.attachRefreshToken(headers, refreshToken,refreshTokenTtl);
 
         return AuthResponse.builder()
                 .isAuthenticated(true)
                 .accessToken(accessToken)
                 .currentUser(this.userMapper.toCurrentUserResponse(user))
+                .build();
+    }
+
+    // unauthenticate //
+    private AuthResponse unauthenticate(HttpHeaders headers) {
+        this.cookieProvider.clearRefreshToken(headers);
+        
+        return AuthResponse.builder()
+                .isAuthenticated(false)
                 .build();
     }
 
@@ -117,7 +121,7 @@ public class AuthAppServiceImpl implements IAuthAppService {
 
         // license token
 
-        return this.licenseToken(user, headers);
+        return this.authenticate(user, headers);
     }
 
     // signup + PasswordLoginRequest //
@@ -137,7 +141,22 @@ public class AuthAppServiceImpl implements IAuthAppService {
 
         // license token
 
-        return this.licenseToken(user, headers);
+        return this.authenticate(user, headers);
+    }
+
+    // signup + GoogleUserResponse //
+    private AuthResponse signup(GoogleUserResponse request, HttpHeaders headers) {
+        User user = User.createSignupUser(
+                User.builder()
+                        .email(request.getEmail())
+                        .name(request.getName())
+                        .gender(request.getGender())
+                        .build(),
+                null
+        );
+        user = this.userDomainRepository.save(user);
+
+        return this.authenticate(user, headers);
     }
 
     // loginOrSignup + GoogleOauth2Request //
@@ -155,24 +174,10 @@ public class AuthAppServiceImpl implements IAuthAppService {
         if (userOpt.isEmpty()) {
             authResponse = this.signup(googleUserResponse, headers);
         } else {
-            authResponse = this.licenseToken(userOpt.get(), headers);
+            authResponse = this.authenticate(userOpt.get(), headers);
         }
 
         return authResponse;
-    }
-
-    private AuthResponse signup(GoogleUserResponse request, HttpHeaders headers) {
-        User user = User.createSignupUser(
-                User.builder()
-                        .email(request.getEmail())
-                        .name(request.getName())
-                        .gender(request.getGender())
-                        .build(),
-                null
-        );
-        user = this.userDomainRepository.save(user);
-
-        return this.licenseToken(user, headers);
     }
 
     // refresh //
@@ -180,53 +185,56 @@ public class AuthAppServiceImpl implements IAuthAppService {
     public AuthResponse refresh(String refreshToken, HttpHeaders headers) {
         // 1. Check null or empty
         if (refreshToken == null || refreshToken.isBlank()) {
-            throw new AppException(ErrorCode.AUTH__REFRESH_TOKEN_INVALID);
+            return this.unauthenticate(headers);
         }
 
         // 2. Verify & extract user ID
         String userId = this.securityInfraProvider.verifyToken(refreshToken, JwtType.REFRESH_TOKEN)
-                .orElseThrow(() -> new AppException(ErrorCode.AUTH__REFRESH_TOKEN_INVALID));
+                .orElse(null);
+        if (userId == null) {
+            return this.unauthenticate(headers);
+        }
 
         // 3. Check if refresh token matches DB (to prevent reuse)
         if (!this.tokenAppService.isRefreshTokenValid(refreshToken, userId)) {
-            throw new AppException(ErrorCode.AUTH__REFRESH_TOKEN_INVALID);
+            return this.unauthenticate(headers);
         }
 
         // 4. Get user
         User user = this.userAppService.getUserById(userId);
 
-        // 5. License new tokens (also update DB & set cookie)
-        return this.licenseToken(user, headers);
+        // 5. authenticate successfully (license tokens, update DB & set cookie)
+        return this.authenticate(user, headers);
     }
 
     // logout //
     @Override
-    public void logout(String refreshToken, HttpHeaders headers) {
-        // 1.Check empty or blank
+    public AuthResponse logout(String refreshToken, HttpHeaders headers) {
+        // 1. Check null or empty refresh token
         if (refreshToken == null || refreshToken.isBlank()) {
-            throw new AppException(ErrorCode.AUTH__REFRESH_TOKEN_INVALID);
+            return this.unauthenticate(headers);
         }
 
         // 2. Verify & extract user ID
         String userId = this.securityInfraProvider.verifyToken(refreshToken, JwtType.REFRESH_TOKEN)
-                .orElseThrow(() -> new AppException(ErrorCode.AUTH__REFRESH_TOKEN_INVALID));
+                .orElse(null);
+        if (userId == null) {
+            return this.unauthenticate(headers);
+        }
 
         // 3. Check if refresh token matches DB (to prevent reuse)
         if (!this.tokenAppService.isRefreshTokenValid(refreshToken, userId)) {
-            throw new AppException(ErrorCode.AUTH__REFRESH_TOKEN_INVALID);
+            return this.unauthenticate(headers);
         }
 
-        // 4. Xoá refresh token khỏi DB (hoặc set giá trị null)
+        // 4. Remove refresh token from DB (or set it as null)
         this.tokenAppService.updateRefreshToken("", null, userId);
 
-        // 5. Clear refresh tokens in set cookies
-        headers.add(HttpHeaders.SET_COOKIE, ResponseCookie.from(JwtType.REFRESH_TOKEN.name(), "")
-                .httpOnly(true)
-                .sameSite("None")
-                .secure(true)
-                .path("/")
-                .maxAge(0)
-                .build().toString());
+        // 5. Clear refresh token in cookies
+        this.cookieProvider.clearRefreshToken(headers);
+
+        // Return unauthenticated response
+        return AuthResponse.builder().isAuthenticated(true).build();
     }
 }
 

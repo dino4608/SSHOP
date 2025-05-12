@@ -1,7 +1,7 @@
-import StoreProvider from "@/store/provider"
-import { TokenAuthProvider } from "../auth/TokenAuthProvider";
+import { StoreProvider } from "@/store/provider";
+import { TokenAuthProvider } from "../token/TokenAuthProvider";
 
-const AppProvider = ({ children }: { children: React.ReactNode }) => {
+export const AppProvider = ({ children }: { children: React.ReactNode }) => {
 
     return (
         <StoreProvider>
@@ -11,5 +11,3 @@ const AppProvider = ({ children }: { children: React.ReactNode }) => {
         </StoreProvider>
     )
 }
-
-export default AppProvider;

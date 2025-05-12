@@ -35,8 +35,8 @@ public enum ErrorCode {
     AUTH__PASSWORD_INVALID(1303, "Password không hợp lệ.", HttpStatus.BAD_REQUEST),
     AUTH__PASSWORD_MIN(1101, "Password nên có ít nhất 6 kí tự.", HttpStatus.BAD_REQUEST),
     AUTH__EMAIL_NOT_MATCHED(1102, "Email nên đúng định dạng.", HttpStatus.BAD_REQUEST),
-    AUTH__REFRESH_TOKEN_INVALID(1217, "Refresh token thì rỗng, trái phép, hoặc bị đánh cấp.", HttpStatus.BAD_REQUEST),
-    //TOKEN 1300+//
+    // AUTH__REFRESH_TOKEN_INVALID(1217, "Refresh token thì rỗng, trái phép, hoặc bị đánh cấp.", HttpStatus.BAD_REQUEST),
+    // TOKEN 1300+ //
     TOKEN__FIND_FAILED(1300, "Lấy token thất bại.", HttpStatus.INTERNAL_SERVER_ERROR),
     TOKEN__UPDATE_FAILED(1302, "Cập nhật token thất bại.", HttpStatus.INTERNAL_SERVER_ERROR),
     //SHOP 1400+//

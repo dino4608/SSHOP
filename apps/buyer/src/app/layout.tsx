@@ -1,10 +1,10 @@
-import AppProvider from "@/components/layout/AppProvider";
-import Footer from "@/components/layout/Footer";
-import Header from "@/components/layout/Header";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { Toaster } from "sonner";
 import "./globals.css";
+import { AppProvider } from "@/components/layout/AppProvider";
+import { AppHeader } from "@/components/layout/AppHeader";
+import { AppFooter } from "@/components/layout/AppFooter";
 
 // Set up APP variable
 export const APP = {
@@ -38,17 +38,12 @@ export default function RootLayout({
         antialiased bg-white text-gray-900 dark:bg-gray-900 dark:text-gray-100`
       }>
         <AppProvider>
-
           <main>
-            <Header />
-
+            <AppHeader />
             {children}
-
-            <Footer />
+            <AppFooter />
           </main>
-
-          <Toaster />
-
+          <Toaster closeButton richColors />
         </AppProvider>
       </body>
     </html>

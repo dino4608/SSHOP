@@ -2,7 +2,8 @@
 
 import LoadingSuspense from '@/components/layout/LoadingSuspense';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { api } from '@/api';
+import { api } from '@/lib/api-definition';
+import { clientFetch } from '@/lib/fetch/fetch.client';
 import { useAppDispatch } from '@/store/hooks';
 import { authActions } from '@/store/slices/auth.slice';
 import { AlertCircle, Loader2 } from 'lucide-react';
@@ -23,7 +24,7 @@ const GoogleAuthPage = () => {
 
         if (code) {
             startTransition(async () => {
-                const result = await api.auth.loginOrSignupWithGoogle({ code })
+                const result = await clientFetch(api.auth.loginOrSignupWithGoogle({ code }))
 
                 if (!result.success) {
                     setError(result.error);

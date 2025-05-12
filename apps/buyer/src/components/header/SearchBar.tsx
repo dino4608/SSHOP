@@ -2,7 +2,7 @@ import { Search } from 'lucide-react';
 import Form from 'next/form';
 import React from 'react';
 
-const SearchBar = () => {
+export const SearchBar = () => {
     return (
         <Form
             action='/search'
@@ -29,5 +29,3 @@ const SearchBar = () => {
         </Form>
     );
 };
-
-export default SearchBar;

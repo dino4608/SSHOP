@@ -20,6 +20,8 @@ public class ApiResponse<T> {
 
     boolean success;
 
+    int status;
+
     int code;
 
     String error;

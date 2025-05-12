@@ -1,4 +1,6 @@
-import clientLocalStorage from "@/lib/utils/clientLocalStorage";
+import { ACCESS_TOKEN, CURRENT_USER } from "@/lib/constants";
+import clientCookies from "@/lib/storage/cookie.client";
+import clientLocal from "@/lib/storage/local.client";
 import { TAuthResponse, TUser } from "@/types/identity.types";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
@@ -7,11 +9,15 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
  * - Có thể state chứa thêm field như loading, error, v.v. // TODO
  * - Đảm bảo Redux state tự chủ, không phụ thuộc API chặt chẽ.
  */
-type TUserState = {
-    currentUser: TUser | null;
-}
+// type TUserState = {
+//     currentUser: TUser | null;
+// }
 
-const initialState: TUserState = { currentUser: null };
+// const initialState: TUserState = { currentUser: null };
+const initialState: Partial<Omit<TAuthResponse, 'isAuthenticated'>> = {
+    accessToken: undefined,
+    currentUser: undefined,
+}
 
 /* NOTE: Redux Toolkit
  * - Step: create Slide => create Reducer => add to Store.
@@ -25,13 +31,15 @@ const authSlice = createSlice({
     name: "auth",
     initialState,
     reducers: {
-        setCredentials: (state, { payload, type }: PayloadAction<TAuthResponse>) => {
-            console.log('>>> type: ' + type);
-            clientLocalStorage.set('accessToken', payload.accessToken);
-            clientLocalStorage.set('currentUser', payload.user);
-            state.currentUser = payload.user;
+        setCredentials: (state, { payload }: PayloadAction<TAuthResponse>) => {
+            clientCookies.set(ACCESS_TOKEN, payload.accessToken);
+            clientLocal.set(CURRENT_USER, payload.currentUser);
+            state.accessToken = payload.accessToken;
+            state.currentUser = payload.currentUser;
         },
         clear: (state) => {
+            clientCookies.remove(ACCESS_TOKEN);
+            clientLocal.remove(CURRENT_USER);
             return initialState;
         },
     },

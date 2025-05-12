@@ -1,17 +1,23 @@
 // app/auth/TokenRefresher.tsx
 'use client';
-
-import { api } from '@/api';
+import { useIsAuthenticated } from '@/hooks/useIsAuthenticated';
+import { api } from '@/lib/api-definition';
 import { ACCESS_TOKEN } from '@/lib/constants';
-import clientCookies from '@/lib/utils/clientCookies';
+import { clientFetch } from '@/lib/fetch/fetch.client';
+import clientCookies from '@/lib/storage/cookie.client';
+import { parseJwtExp } from '@/lib/utils';
 import ms from 'ms';
 import { useEffect } from 'react';
 
 const TOKEN_REFRESH_THRESHOLD = '10m';
 const TOKEN_REFRESH_INTERVAL = '9m';
 
-export function TokenAutoRefresher() {
+export const TokenAutoRefresher = () => {
+    const isAuthenticated = useIsAuthenticated();
+
     useEffect(() => {
+        if (!isAuthenticated) return;
+
         // NOTE:
         // setInterval, clearInterval: a pair of global function in JavaScript
         // setInterval will returns ID interval
@@ -30,27 +36,15 @@ export function TokenAutoRefresher() {
                 // await fetch('/api/auth/refresh');
 
                 // call direct api
-                const apiRes = await api.auth.refresh();
+                const apiRes = await clientFetch(api.auth.refresh());
+
                 console.log(`>>> TokenAutoRefresher: apiRes: ${apiRes}`);
 
             }
         }, ms(TOKEN_REFRESH_INTERVAL));
 
         return () => clearInterval(intervalId);
-    }, []);
+    }, [isAuthenticated]);
 
     return null;
-}
-
-function parseJwtExp(token: string): number | null {
-    try {
-        const payload = JSON.parse(atob(token.split('.')[1]));
-
-        console.log(`>>> parseJwtExp: payload: ${payload}`);
-
-        return payload.exp; // Epoch timestamp, Unix timestamp (integer in seconds)
-
-    } catch (e) {
-        throw new Error('>>> parseJwtExp: failed');
-    }
 }

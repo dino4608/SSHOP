@@ -3,10 +3,12 @@ import { TApiDefinition } from "../api-definition/config";
 import { BACKEND_URL, HttpMethod } from "../constants";
 
 export function buildEndpoint(domain: string, route: string, query?: any): RequestInfo {
-    if (!query) return `${domain}/${route}`;
+    console.log(`>>> buildEndpoint: endpoint: ${domain + route}`);
+
+    if (!query) return `${domain + route}`;
     const queryRecord: Record<string, string> = query;
     const queryString = new URLSearchParams(queryRecord).toString();
-    return `${domain}/${route}?${queryString}`;
+    return `${domain + route}?${queryString}`;
 }
 
 export function buildOptions(method: HttpMethod, body?: any): RequestInit {
@@ -17,13 +19,13 @@ export function buildOptions(method: HttpMethod, body?: any): RequestInit {
     }
 }
 
-export function withAuth(endpoint: string) {
-    if (!endpoint || typeof endpoint !== 'string')
+export function withAuth(route: string) {
+    if (!route || typeof route !== 'string')
         throw new Error('>>> withAuth: invalid endpoint');
 
-    const normalized = endpoint.toLowerCase().trim();
+    const normalized = route.toLowerCase().trim();
 
-    if (normalized.startsWith('/public/')) return false; // no auth
+    if (normalized.startsWith('/public')) return false; // no auth
 
     return true; // requires auth
 }
@@ -31,22 +33,19 @@ export function withAuth(endpoint: string) {
 export const normalizeResponse = async <T>(response: Response) => {
     const json = await response.json() as TApiResponse<T>;
 
-    // TEST
-    console.log('>>> json res: ' + json);
-    console.log('>>> cookies res: ' + response.headers.get('set-cookie'));
-
     if (!json.success) {
-        console.error(`>>> Api error: ${json.error}`);
+        console.warn(`>>> normalizeResponse: fetch error: ${json.error}`);
     }
 
     return json;
 }
 
 export const normalizeError = <T>(error: any) => {
-    console.error(`>>> Api error: ${error.message || 'Lỗi không xác định'}`);
+    console.error(`>>> normalizeError: fetch error: ${error.message || 'Lỗi không xác định'}`);
 
     return {
         success: false,
+        status: 500,
         code: 0,
         error: 'Lỗi không xác định',
         data: {} as T
@@ -61,7 +60,7 @@ export const normalizeError = <T>(error: any) => {
 // Method      |                                    | `GET`, `POST`, `PATCH`, `DELETE`
 // Endpoint    | URL cụ thể đại diện cho tài nguyên | `https://api.example.com` + `/users` + `?name=dino`
 export const fetchSafely = async <T = any>(
-    api: TApiDefinition,
+    api: TApiDefinition<T>,
     fetchCore: (endpoint: RequestInfo, options?: RequestInit, withAuth?: boolean) => Promise<Response>
 ): Promise<TApiResponse<T>> => {
 

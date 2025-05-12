@@ -166,11 +166,11 @@ const FlashSaleSection = () => {
                     </div>
                 </div>
 
-                {/* products list // todo: make carousel slower */}
+                {/* products list // TODO: make carousel slower */}
                 <div className="grid grid-cols-6 gap-4 transition-all ease-in-out">
                     {visibleProducts.map((item) => (
                         <div key={item.id} className="overflow-hidden">
-                            <div className="aspect-[1/1] bg-white rounded-lg overflow-hidden relative">
+                            <div className="aspect-square bg-white rounded-lg overflow-hidden relative">
                                 {/* product image */}
                                 <Image
                                     src={item.image}
