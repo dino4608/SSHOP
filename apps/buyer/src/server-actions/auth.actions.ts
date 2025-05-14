@@ -1,6 +1,5 @@
 'use server';
-
-import { api } from "@/lib/api-definition";
+import { api } from "@/lib/api";
 import { serverFetch } from "@/lib/fetch/fetch.server";
 import { TLoginOrSignUpWithGoogleBody, TLoginWithPasswordBody, TLookupIdentifierQuery } from "@/types/identity.types";
 

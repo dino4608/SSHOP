@@ -1,7 +1,7 @@
 // app/auth/TokenRefresher.tsx
 'use client';
 import { useIsAuthenticated } from '@/hooks/useIsAuthenticated';
-import { api } from '@/lib/api-definition';
+import { api } from '@/lib/api';
 import { ACCESS_TOKEN } from '@/lib/constants';
 import { clientFetch } from '@/lib/fetch/fetch.client';
 import clientCookies from '@/lib/storage/cookie.client';
@@ -18,7 +18,7 @@ export const TokenAutoRefresher = () => {
     useEffect(() => {
         if (!isAuthenticated) return;
 
-        // NOTE:
+        // NOTE: setInterval, clearInterval
         // setInterval, clearInterval: a pair of global function in JavaScript
         // setInterval will returns ID interval
         // ID interval will be used to clearInterval when component unmount.

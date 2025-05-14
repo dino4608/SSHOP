@@ -3,7 +3,7 @@ import { Gem, Ticket, Zap } from "lucide-react";
 import React from "react";
 import { NavigationDropdownItem, NavigationLinkItem } from "@/components/ui/custom/navigation-menu";
 import { ListItem } from "@/components/ui/navigation-menu";
-import { api } from "@/lib/api-definition";
+import { api } from "@/lib/api";
 import { serverFetch } from "@/lib/fetch/fetch.server";
 
 const CategoryDropdown = async () => {

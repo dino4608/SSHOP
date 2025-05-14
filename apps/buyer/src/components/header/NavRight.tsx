@@ -1,18 +1,17 @@
 'use client'
 import { navigationMenuItemStyle } from '@/components/ui/navigation-menu';
 import { useCurrentUser } from "@/hooks/useStore";
-import { api } from "@/lib/api-definition";
+import { api } from "@/lib/api";
 import { clientFetch } from "@/lib/fetch/fetch.client";
-import { cn } from "@/lib/utils";
 import { useAppDispatch } from "@/store/hooks";
 import { authActions } from "@/store/slices/auth.slice";
 import { TUser } from "@/types/identity.types";
 import { BadgeCheckIcon, BellIcon, CreditCardIcon, LogOutIcon, MessageCircleMore, SettingsIcon, SquareMenu, UserRound, UserRoundIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { toast } from 'sonner';
 import { NavigationLinkItem } from "../ui/custom/navigation-menu";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "../ui/dropdown-menu";
 import { NavigationMenu, NavigationMenuItem, NavigationMenuList } from "../ui/navigation-menu";
-import { toast } from 'sonner';
 
 const NavAccount = ({ currentUser }: { currentUser: TUser }) => {
     const dispatch = useAppDispatch()

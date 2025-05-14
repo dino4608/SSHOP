@@ -1,5 +1,5 @@
 /*
- * NOTE:
+ * NOTE: types, services
  * Vì sao KHÔNG nên nhập types vào services?
  * - types nên là tầng thấp, không phụ thuộc ngược vào tầng cao như services (nguyên tắc dependency).
  * - Nếu bạn cho phép types → service, sau này dễ bị vòng phụ thuộc (circular dependencies) hoặc import sai chiều.

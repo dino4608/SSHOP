@@ -1,5 +1,5 @@
 // app/auth/TokenRefresher.tsx
-import { api } from "@/lib/api-definition";
+import { api } from "@/lib/api";
 import { serverFetch } from "@/lib/fetch/fetch.server";
 import { Fragment, Suspense } from "react";
 import { TokenRestorer } from "./TokenRestorer";

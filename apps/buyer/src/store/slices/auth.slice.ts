@@ -4,7 +4,7 @@ import clientLocal from "@/lib/storage/local.client";
 import { TAuthResponse, TUser } from "@/types/identity.types";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-/* NOTE:
+/* NOTE: Type of slice
  * Mặc dù nó Type of AuthState giống AuthResponse, nhưng bạn nên tách riêng vì:
  * - Có thể state chứa thêm field như loading, error, v.v. // TODO
  * - Đảm bảo Redux state tự chủ, không phụ thuộc API chặt chẽ.

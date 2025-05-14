@@ -2,28 +2,41 @@ import { NextRequest, NextResponse } from 'next/server';
 import { asyncIsAuthenticated } from './lib/server/auth';
 
 // 1. Specify public routes
-const publicRoutes = ['/', '/auth']
+const publicStaticRoutes = ['/', '/auth', '/auth/google']
+const publicDynamicPrefixes = ['/product/']
+const explicitlyPrivateRoutes = ['/product/test'];
+
+// isPublicStatic: oke, ko cần check dynamic route
+// !isPublicStatic: !isPublicDynamic: oke, ko cần check isExplicitlyPrivate
+// !isPublicStatic: isPublicDynamic: rủi ro, cần check isExplicitlyPrivate
+function isPublicRoute(path: string): boolean {
+    const isPublicStatic = publicStaticRoutes.includes(path);
+    if (isPublicStatic) return true;
+
+    const isPublicDynamic = publicDynamicPrefixes.some(prefix => path.startsWith(prefix));
+    if (!isPublicDynamic) return false;
+
+    const isExplicitlyPrivate = explicitlyPrivateRoutes.includes(path);
+    return !isExplicitlyPrivate;
+}
 
 export default async function middleware(request: NextRequest) {
     // 2. Check if the current route is public
-    const isPublic = publicRoutes.includes(request.nextUrl.pathname)
+    const path = request.nextUrl.pathname
+    const isPublic = isPublicRoute(path);
 
     // 3. Get tokens from the cookie and storage
     const isAuthenticated = await asyncIsAuthenticated()
 
-    // temporarily allow access to all routes
-    // if (request.nextUrl.pathname.startsWith('/')) {
-    //     return NextResponse.next()
-    // }
-
     // 4. Redirect to /auth if the user is not authenticated
     if (!isPublic && !isAuthenticated) {
-        return NextResponse.redirect(new URL('/auth', request.nextUrl))
+        console.warn(`>>> Middleware: path ${path}: isPublic ${isPublic} `);
+        return NextResponse.redirect(new URL('/', request.nextUrl))
     }
 
-    // 5. Next
-    // Case 1: isPublic => next
-    // Case 2: !isPublic + isAuthenticated => next
+    // 5. Pass
+    // Case 1: isPublic => pass
+    // Case 2: !isPublic + isAuthenticated => pass
     return NextResponse.next()
 }
 

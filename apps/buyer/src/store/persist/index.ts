@@ -46,7 +46,7 @@ export const store = configureStore({
 // EXP: Dùng để theo dõi việc lưu và khôi phục state từ storage (localStorage)
 export const persistor = persistStore(store);
 
-// NOTE:
+// NOTE: Type of Redux hooks
 // Types of dispatch and state of Store
 // RootState: Nó đại diện cho toàn bộ kiểu của Redux store, được tạo tự động từ các reducer bạn đã cấu hình.
 // typeof store.getState: lấy Type của hàm

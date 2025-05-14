@@ -1,6 +1,6 @@
 
 
-import { api } from "@/lib/api-definition";
+import { api } from "@/lib/api";
 import { serverFetch } from "@/lib/fetch/fetch.server";
 import { TCategory } from "@/types/product.types";
 

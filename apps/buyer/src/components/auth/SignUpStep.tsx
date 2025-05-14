@@ -1,5 +1,4 @@
 'use client';
-
 import { Button } from '@/components/ui/button';
 import {
     Form,
@@ -18,7 +17,7 @@ import { useForm } from 'react-hook-form';
 import FormButtonSubmit, { FormError } from '../ui/custom/form';
 import ButtonAuthGoogle from './ButtonAuthGoogle';
 import { clientFetch } from '@/lib/fetch/fetch.client';
-import { api } from '@/lib/api-definition';
+import { api } from '@/lib/api';
 
 type Props = {
     email: string;

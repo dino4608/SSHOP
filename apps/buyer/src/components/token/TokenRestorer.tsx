@@ -1,12 +1,11 @@
 // app/components/auth/TokenRestorer.tsx
 'use client';
-import { useEffect, useState } from 'react';
-import { usePathname, useRouter } from 'next/navigation';
+import { api } from '@/lib/api';
 import { clientFetch } from '@/lib/fetch/fetch.client';
-import { api } from '@/lib/api-definition';
-import { useDispatch } from 'react-redux';
 import { authActions } from '@/store/slices/auth.slice';
-import { useIsAuthenticated } from '@/hooks/useIsAuthenticated';
+import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
 
 // TokenGate isAuth T, apiCurrentUser F => don't render children, render TokenRestorer
 export function TokenRestorer() {
@@ -19,7 +18,7 @@ export function TokenRestorer() {
     // const isAuth = useIsAuthenticated();
     // const isHome = pathname === '/';
 
-    // NOTE:
+    // NOTE: useEffect
     // Giả sử component có usePathname, isHome, useEffect, if()
     // Component body được thực thi trước, gồm usePathname, isHome và if()
     // if() return null, ko amount component

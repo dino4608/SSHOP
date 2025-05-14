@@ -1,5 +1,5 @@
 import { TApiResponse } from "@/types/base.types";
-import { TApiDefinition } from "../api-definition/config";
+import { TApiDefinition } from "../api/config";
 import { BACKEND_URL, HttpMethod } from "../constants";
 
 export function buildEndpoint(domain: string, route: string, query?: any): RequestInfo {
@@ -52,10 +52,11 @@ export const normalizeError = <T>(error: any) => {
     }
 }
 
-// NOTE:
+// NOTE: URL
 // URL: <protocol>://<domain>:<port>/<route>?<query>#<fragment>
 // Domain      | Tên miền (gốc)                     | `https://api.example.com`
-// Route       | Đường dẫn sau domain               | `/users`, `/products/123/reviews`
+// Route       | Đường dẫn sau domain               | `/users`, `/products/[id]/reviews`
+// Path        | Giá trị cụ thể của route           | `/product/123`
 // Query       |                                    | `?name=dino`
 // Method      |                                    | `GET`, `POST`, `PATCH`, `DELETE`
 // Endpoint    | URL cụ thể đại diện cho tài nguyên | `https://api.example.com` + `/users` + `?name=dino`

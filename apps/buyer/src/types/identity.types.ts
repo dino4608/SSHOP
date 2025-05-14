@@ -1,5 +1,5 @@
 /*
- * NOTE:
+ * NOTE: Naming conventions
  * Naming conventions for suffixes
  * - Http: query, body, request
  * - Non-http: result

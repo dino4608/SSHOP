@@ -1,8 +1,7 @@
 'use client';
-
 import LoadingSuspense from '@/components/layout/LoadingSuspense';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { api } from '@/lib/api-definition';
+import { api } from '@/lib/api';
 import { clientFetch } from '@/lib/fetch/fetch.client';
 import { useAppDispatch } from '@/store/hooks';
 import { authActions } from '@/store/slices/auth.slice';
