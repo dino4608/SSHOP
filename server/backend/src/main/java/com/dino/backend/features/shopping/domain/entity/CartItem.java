@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.SQLDelete;
@@ -15,13 +16,13 @@ import org.hibernate.annotations.SQLRestriction;
 @Table(name = "cart_items")
 @DynamicInsert
 @DynamicUpdate
-@SQLDelete(sql = "UPDATE cart_items SET deleted = true WHERE item_id=?")
-@SQLRestriction("deleted = false")
+@SQLDelete(sql = "UPDATE cart_items SET is_deleted = true WHERE item_id=?")
+@SQLRestriction("is_deleted = false")
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
+@SuperBuilder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class CartItem extends BaseEntity {
     @Id

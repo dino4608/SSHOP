@@ -10,12 +10,12 @@ import lombok.experimental.FieldDefaults;
 @Setter
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonInclude(JsonInclude.Include.ALWAYS)
 public class AuthResponse {
 
-    boolean authenticated;
+    Boolean isAuthenticated;
 
     String accessToken;
 
-    User user;
+    CurrentUserResponse currentUser;
 }

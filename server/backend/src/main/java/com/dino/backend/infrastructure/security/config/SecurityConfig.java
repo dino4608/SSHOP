@@ -1,6 +1,6 @@
 package com.dino.backend.infrastructure.security.config;
 
-import org.springframework.beans.factory.annotation.Value;
+import com.dino.backend.infrastructure.common.Env;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
@@ -24,6 +24,12 @@ import javax.crypto.spec.SecretKeySpec;
 @EnableMethodSecurity
 public class SecurityConfig {
 
+    private final Env env;
+
+    public SecurityConfig(Env env) {
+        this.env = env;
+    }
+
     private final String[] PUBLIC_ENDPOINTS = {
             //SWAGGER//
             "/swagger-ui/**",
@@ -34,27 +40,24 @@ public class SecurityConfig {
             "/api/v1/media/**",
             //CATEGORY//
             "/api/v1/category/**",
-            // AUTH //
-            "/api/v1/auth/**",
+            // BUYER PUBLIC (AUTH) //
+            "/api/v1/public/**",
     };
-
-    @Value("${jwt.access.secret-key}")
-    private String ACCESS_SECRET_KEY; //todo: change to the security infra service
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity.authorizeHttpRequests(request ->
-                        request
-                                .requestMatchers(this.PUBLIC_ENDPOINTS).permitAll()
-//                        .requestMatchers(HttpMethod.POST, PUBLIC_POST_ENDPOINTS).permitAll()
-                                .anyRequest().authenticated()
+                request
+                        .requestMatchers(this.PUBLIC_ENDPOINTS).permitAll()
+                        // .requestMatchers(HttpMethod.POST, PUBLIC_POST_ENDPOINTS).permitAll()
+                        .anyRequest().authenticated()
         );
 
         httpSecurity.oauth2ResourceServer(oauth2 ->
                 oauth2
                         //config jwt: decode, convert authentication
                         .jwt(jwtConfigurer -> jwtConfigurer
-                                .decoder(jwtDecoder())
+                                .decoder(this.jwtDecoder())
                                 .jwtAuthenticationConverter(jwtAuthenticationConverter()))
                         //handle exception
                         .authenticationEntryPoint(new JwtAuthenticationEntryPoint())
@@ -64,15 +67,6 @@ public class SecurityConfig {
         httpSecurity.cors(Customizer.withDefaults());
 
         return httpSecurity.build();
-    }
-
-    @Bean
-    JwtDecoder jwtDecoder() {
-        SecretKeySpec secretKeySpec = new SecretKeySpec(this.ACCESS_SECRET_KEY.getBytes(), "HS512");
-        return NimbusJwtDecoder
-                .withSecretKey(secretKeySpec)
-                .macAlgorithm(MacAlgorithm.HS512)
-                .build();
     }
 
     /**
@@ -99,5 +93,17 @@ public class SecurityConfig {
     @Bean
     PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder(10);
+    }
+
+    @Bean
+    JwtDecoder jwtDecoder() {
+        SecretKeySpec secretKeySpec = new SecretKeySpec(
+                this.env.ACCESS_SECRET_KEY.getBytes(),
+                MacAlgorithm.HS512.getName());
+
+        return NimbusJwtDecoder
+                .withSecretKey(secretKeySpec)
+                .macAlgorithm(MacAlgorithm.HS512)
+                .build();
     }
 }

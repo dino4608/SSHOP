@@ -13,32 +13,21 @@ import org.springframework.http.HttpStatusCode;
 public enum ErrorCode {
     //SUCCESS CODE: 1//
     //SYSTEM 1000+//
-    SYSTEM__UNHANDLED_EXCEPTION(1000, "An unhandled error.", HttpStatus.INTERNAL_SERVER_ERROR),
+    SYSTEM__UNHANDLED_EXCEPTION(1000, "Lỗi chưa được xử lý.", HttpStatus.INTERNAL_SERVER_ERROR),
     SYSTEM__DEVELOPING_FEATURE(1001, "The feature is still developing.", HttpStatus.INTERNAL_SERVER_ERROR),
     SYSTEM__UNIMPLEMENTED_FEATURE(1002, "The feature is still developing.", HttpStatus.INTERNAL_SERVER_ERROR),
     SYSTEM__KEY_UNSUPPORTED(1003, "The key is unsupported.", HttpStatus.INTERNAL_SERVER_ERROR),
     SYSTEM__METHOD_NOT_SUPPORTED(1004, "Method '%s' is not supported.", HttpStatus.INTERNAL_SERVER_ERROR),
     SYSTEM__ROUTE_NOT_SUPPORTED(1005, "Route '%s' not supported.", HttpStatus.INTERNAL_SERVER_ERROR),
     //ACCOUNT 1100+//
-    ACCOUNT__USERNAME_MIN(1100, "Username should be at least 4 characters.", HttpStatus.BAD_REQUEST),
-    ACCOUNT__PHONE_NOT_MATCHED(1103, "Phone should follow the phone format.", HttpStatus.BAD_REQUEST),
-    ACCOUNT__NOT_FOUND(1104, "Account is not found.", HttpStatus.BAD_REQUEST),
-    ACCOUNT__EXISTED(1105, "Account has already existed.", HttpStatus.BAD_REQUEST),
-    ACCOUNT__EXISTED_BUYER_SELLER(1106, "Account has already existed as buyer or seller.", HttpStatus.BAD_REQUEST),
-    ACCOUNT__LACK_INFO(1107, "Account is lack of required information.", HttpStatus.INTERNAL_SERVER_ERROR),
-    ACCOUNT__NOT_HASH_PASSWORD(1108, "Password hasn't hashed yet.", HttpStatus.INTERNAL_SERVER_ERROR),
+    USER__FIND_FAILED(1100, "Lấy người dùng thất bại", HttpStatus.INTERNAL_SERVER_ERROR),
     //SECURITY 1200+//
-    SECURITY__UNAUTHENTICATED(1200, "You are not allowed to access this resource.", HttpStatus.UNAUTHORIZED),
-    SECURITY__UNAUTHORIZED(1201, "You are not permitted to access this resource.", HttpStatus.FORBIDDEN),
-    SECURITY__WRONG_PASSWORD(1202, "Username or password doesn't match any our records. Please try again.", HttpStatus.BAD_REQUEST),
-    SECURITY__USER_NOT_REGISTER_SELLER(1203, "The account is a user. Please sign up with user account.", HttpStatus.BAD_REQUEST),
-    SECURITY__SELLER_NOT_REGISTER_SELLER(1204, "The account already exists. Please choose a different one.", HttpStatus.BAD_REQUEST),
-    SECURITY__ADMIN_NOT_REGISTER_SELLER(1215, "The account is banned from registration as seller.", HttpStatus.BAD_REQUEST),
-    SECURITY__NOT_IN_SECURITY(1216, "Authenticating your account is fail. Please login again.", HttpStatus.BAD_REQUEST),
-    SECURITY__REFRESH_TOKEN_FAILED(1217, "Refresh token is old or not authentic", HttpStatus.BAD_REQUEST),
-    OAUTH2__EXCHANGE_WITH_GOOGLE_FAILED(1218, "Trao đổi với GOOGLE thất bại.", HttpStatus.BAD_REQUEST),
-    OAUTH2__GET_GOOGLE_USER_FAILED(1219, "Lấy thông tin user thất bại.", HttpStatus.BAD_REQUEST),
-    SECURITY__FORBIDDEN(1220, "Action is forbidden.", HttpStatus.FORBIDDEN),
+    SECURITY__UNAUTHENTICATED(1200, "Tài nguyên được bảo vệ.", HttpStatus.UNAUTHORIZED),
+    SECURITY__UNAUTHORIZED(1201, "Tài nguyên bị cấm.", HttpStatus.FORBIDDEN),
+    SECURITY__GET_CURRENT_USER_FAILED(1216, "Lấy người dùng hiện tại thất bại.", HttpStatus.INTERNAL_SERVER_ERROR),
+    SECURITY__GEN_TOKEN_FAILED(1217, "Tạo token thất bại", HttpStatus.INTERNAL_SERVER_ERROR),
+    OAUTH2__GET_GOOGLE_TOKEN_FAILED(1218, "Lấy access token của Google thất bại.", HttpStatus.INTERNAL_SERVER_ERROR),
+    OAUTH2__GET_GOOGLE_USER_FAILED(1219, "Lấy thông tin người dùng của Google thất bại.", HttpStatus.INTERNAL_SERVER_ERROR),
     // AUTH 1300+ //
     AUTH__IDENTIFIER_REQUIRED(1300, "Email nên được cung cấp.", HttpStatus.BAD_REQUEST),
     AUTH__IDENTIFIER_NOT_FOUND(1301, "Email không tìm thấy.", HttpStatus.BAD_REQUEST),
@@ -46,9 +35,10 @@ public enum ErrorCode {
     AUTH__PASSWORD_INVALID(1303, "Password không hợp lệ.", HttpStatus.BAD_REQUEST),
     AUTH__PASSWORD_MIN(1101, "Password nên có ít nhất 6 kí tự.", HttpStatus.BAD_REQUEST),
     AUTH__EMAIL_NOT_MATCHED(1102, "Email nên đúng định dạng.", HttpStatus.BAD_REQUEST),
-    //TOKEN 1300+//
-    TOKEN__NOT_FOUND(1300, "Token không tìm thấy.", HttpStatus.BAD_REQUEST),
-    TOKEN__LACK_ID(1300, "Token không nên thiếu ID.", HttpStatus.INTERNAL_SERVER_ERROR),
+    // AUTH__REFRESH_TOKEN_INVALID(1217, "Refresh token thì rỗng, trái phép, hoặc bị đánh cấp.", HttpStatus.BAD_REQUEST),
+    // TOKEN 1300+ //
+    TOKEN__FIND_FAILED(1300, "Lấy token thất bại.", HttpStatus.INTERNAL_SERVER_ERROR),
+    TOKEN__UPDATE_FAILED(1302, "Cập nhật token thất bại.", HttpStatus.INTERNAL_SERVER_ERROR),
     //SHOP 1400+//
     SHOP__NOT_FOUND(1401, "Shop is not found.", HttpStatus.BAD_REQUEST),
     SHOP__LACK_INFO(1402, "Shop is lack of required information.", HttpStatus.INTERNAL_SERVER_ERROR),

@@ -1,11 +1,11 @@
 'use client';
 
 import React from "react";
-import { Product } from "@/types/product.types";
+import { TProduct } from "@/types/product.types";
 import ProductItem from "./product-grid/ProductItem";
 import HomeContainer from "./HomeContainer";
 
-const allProducts: Product[] = [
+const allProducts: TProduct[] = [
     { id: 1, name: "Short Nam", category: "Men's Clothing", price: 79000 },
     { id: 2, name: "Dây chuyền Helios", category: "Accessories", price: 152000 },
     { id: 3, name: "Giày thể thao", category: "Shoes", price: 320000 },

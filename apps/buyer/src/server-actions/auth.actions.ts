@@ -1,22 +1,20 @@
 'use server';
+import { api } from "@/lib/api";
+import { serverFetch } from "@/lib/fetch/fetch.server";
+import { TLoginOrSignUpWithGoogleBody, TLoginWithPasswordBody, TLookupIdentifierQuery } from "@/types/identity.types";
 
-import { api } from "@/services";
-import { TLookUpFormData, TLogInFormData } from "@/validations/auth.validations";
-import { wrap } from "./utils";
-import { TLogInOrSignUpWithGoogleQuery } from "@/types/identity.types";
-
-export const lookupIdentifier = async (data: TLookUpFormData) => {
-    return await wrap(() => api.auth.lookupIdentifier(data));
+export const lookupIdentifier = async (data: TLookupIdentifierQuery) => {
+    return await serverFetch(api.auth.lookupIdentifier(data))
 };
 
-export const logInWithPassword = async (data: TLogInFormData & TLookUpFormData) => {
-    return await wrap(() => api.auth.logInWithPassword(data))
+export const loginWithPassword = async (data: TLoginWithPasswordBody) => {
+    return await serverFetch(api.auth.loginWithPassword(data))
 }
 
-export const signUpWithPassword = async (data: TLogInFormData & TLookUpFormData) => {
-    return await wrap(() => api.auth.signUpWithPassword(data))
+export const signupWithPassword = async (data: TLoginWithPasswordBody) => {
+    return await serverFetch(api.auth.signupWithPassword(data))
 }
 
-export const logInOrSignUpWithGoogle = async (data: any) => {
-    return await wrap(() => api.auth.logInOrSignUpWithGoogle(data))
+export const loginOrSignupWithGoogle = async (data: TLoginOrSignUpWithGoogleBody) => {
+    return await serverFetch(api.auth.loginOrSignupWithGoogle(data))
 }

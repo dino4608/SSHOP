@@ -1,11 +1,11 @@
-export type Product = {
+export type TProduct = {
     id: number;
     name: string;
     price: number;
     category: string;
 };
 
-export type Category = {
+export type TCategory = {
     id: number;
     name: string;
     description?: string;

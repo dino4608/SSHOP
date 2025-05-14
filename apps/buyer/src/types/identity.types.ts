@@ -1,5 +1,5 @@
 /*
- * NOTE:
+ * NOTE: Naming conventions
  * Naming conventions for suffixes
  * - Http: query, body, request
  * - Non-http: result
@@ -22,28 +22,40 @@ export type TUser = {
 }
 
 // Query //
-export type TLookupQuery = {
+export type TLookupIdentifierQuery = {
     email: string;
 }
 
-export type TLogInOrSignUpWithGoogleQuery = {
-    code: string;
-}
-
 // Body //
-export type TLogInWithPasswordBody = {
+export type TLoginWithPasswordBody = {
     email: string,
     password: string,
 }
 
+export type TLoginOrSignUpWithGoogleBody = {
+    code: string;
+}
+
 // Response //
-export type TLookupResponse = {
+export type TLookupIdentifierResponse = {
     isEmailProvided: boolean;
     isPasswordProvided: boolean;
 }
 
 export type TAuthResponse = {
-    authenticated: boolean;
+    isAuthenticated: boolean;
     accessToken: string;
-    user: TUser,
+    currentUser: TUser,
+}
+
+// Others //
+export interface CurrentUser {
+    status: string;
+    username: string;
+    email: string;
+    phone: string;
+    isEmailVerified: boolean;
+    isPhoneVerified: boolean;
+    name: string;
+    photo: string;
 }

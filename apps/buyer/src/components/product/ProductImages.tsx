@@ -28,7 +28,8 @@ const ProductImages = ({ selectedImage, setSelectedImage }: Props) => {
         <div className="flex gap-4">
             {/* Thumbnails */}
             <div className="flex flex-col gap-2 max-h-full overflow-y-auto scrollbar-hidden">
-                {/* EXP: aspect-* h-full: tạo ra một ratio tính toán theo height
+                {/* EXP:
+                aspect-* h-full: tạo ra một ratio tính toán theo height
                 height lại kế thừa từ parent
                 parent height: có dãn, tính theo cột phải
                 parent width: tính toán một cách tự nhiên, bằng 64px

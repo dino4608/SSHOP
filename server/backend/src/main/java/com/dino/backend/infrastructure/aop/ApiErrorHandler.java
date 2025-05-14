@@ -20,12 +20,14 @@ public class ApiErrorHandler {
      */
     @ExceptionHandler(value = AppException.class)
     ResponseEntity<ApiResponse<Object>> handleException(AppException exception) {
-        ApiResponse<Object> apiError = ApiResponse.builder()
-                .success(false)
-                .code(exception.getCode())
-                .error(exception.getMessage())
-                .build();
-        return ResponseEntity.badRequest().body(apiError);
+        return ResponseEntity
+                .status(exception.getStatus())
+                .body(ApiResponse.builder()
+                        .success(false)
+                        .status(exception.getStatus().value())
+                        .code(exception.getCode())
+                        .error(exception.getMessage())
+                        .build());
     }
 
     /**
@@ -36,13 +38,13 @@ public class ApiErrorHandler {
      */
     @ExceptionHandler(value = RuntimeException.class)
     ResponseEntity<ApiResponse<Object>> handleException(RuntimeException exception) {
-        log.error("Unhandled exception occurred: ", exception);
-
+        log.error(">>> INTERNAL: unhandled exception occurred", exception);
         ErrorCode error = ErrorCode.SYSTEM__UNHANDLED_EXCEPTION;
         return ResponseEntity
                 .status(error.getStatus())
                 .body(ApiResponse.builder()
                         .success(false)
+                        .status(error.getStatus().value())
                         .code(error.getCode())
                         .error(error.getMessage())
                         .build()
@@ -65,12 +67,14 @@ public class ApiErrorHandler {
         } catch (IllegalArgumentException ignored) {
         }
 
-        ApiResponse<Object> apiError = ApiResponse.builder()
-                .success(false)
-                .code(error.getCode())
-                .error(error.getMessage())
-                .build();
-        return ResponseEntity.badRequest().body(apiError);
+        return ResponseEntity
+                .status(error.getStatus())
+                .body(ApiResponse.builder()
+                        .success(false)
+                        .status(error.getStatus().value())
+                        .code(error.getCode())
+                        .error(error.getMessage())
+                        .build());
     }
 
 
@@ -87,6 +91,7 @@ public class ApiErrorHandler {
                 .status(error.getStatus())
                 .body(ApiResponse.builder()
                         .success(false)
+                        .status(error.getStatus().value())
                         .code(error.getCode())
                         .error(error.getMessage())
                         .build()
@@ -100,6 +105,7 @@ public class ApiErrorHandler {
                 .status(error.getStatus())
                 .body(ApiResponse.builder()
                         .success(false)
+                        .status(error.getStatus().value())
                         .code(error.getCode())
                         .error(String.format(error.getMessage(), exception.getMethod()))
                         .build()
@@ -113,6 +119,7 @@ public class ApiErrorHandler {
                 .status(error.getStatus())
                 .body(ApiResponse.builder()
                         .success(false)
+                        .status(error.getStatus().value())
                         .code(error.getCode())
                         .error(String.format(error.getMessage(), exception.getResourcePath()))
                         .build()
