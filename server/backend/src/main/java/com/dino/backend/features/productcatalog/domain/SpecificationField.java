@@ -1,21 +1,22 @@
 package com.dino.backend.features.productcatalog.domain;
 
 import com.dino.backend.features.productcatalog.domain.model.ProductSpecification;
-import com.dino.backend.features.productcatalog.domain.model.SkuSpecification;
 import com.dino.backend.shared.model.BaseEntity;
 import io.hypersistence.utils.hibernate.type.json.JsonType;
-import jakarta.persistence.Table;
 import jakarta.persistence.*;
+import jakarta.persistence.Table;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.*;
 
+import java.util.List;
+
 @Entity
-@Table(name = "SpecificationTemplates")
+@Table(name = "SpecificationFields")
 @DynamicInsert
 @DynamicUpdate
-@SQLDelete(sql = "UPDATE product_templates SET is_deleted = true WHERE category_id=?")
+@SQLDelete(sql = "UPDATE specification_fields SET is_deleted = true WHERE category_id=?")
 @SQLRestriction("is_deleted = false")
 @Getter
 @Setter
@@ -23,7 +24,7 @@ import org.hibernate.annotations.*;
 @NoArgsConstructor
 @SuperBuilder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class SpecificationTemplate extends BaseEntity {
+public class SpecificationField extends BaseEntity {
     @Id
     String id;
 
@@ -32,11 +33,7 @@ public class SpecificationTemplate extends BaseEntity {
     @JoinColumn(name = "categoryId", updatable = false, nullable = false)
     Category category;
 
-    @Type(JsonType.class)
-    @Column(columnDefinition = "jsonb")
-    ProductSpecification attribute;
+    String name;
 
-    @Type(JsonType.class)
-    @Column(columnDefinition = "jsonb")
-    SkuSpecification specification;
+    List<String> options;
 }

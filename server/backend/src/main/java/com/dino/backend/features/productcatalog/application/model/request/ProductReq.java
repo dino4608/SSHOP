@@ -2,7 +2,6 @@ package com.dino.backend.features.productcatalog.application.model.request;
 
 import com.dino.backend.features.productcatalog.domain.model.ProductSpecification;
 import com.dino.backend.features.productcatalog.domain.model.ProductTierVariation;
-import com.dino.backend.features.productcatalog.domain.model.SkuSpecification;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
@@ -82,8 +81,6 @@ public class ProductReq {
         @NotNull (message = "SKU__RETAIL_PRICE_NOT_EMPTY")
         @Min(message = "SKU_RETAIL_PRICE_MIN", value = 1000)
         Float retailPrice;
-
-        private ArrayList<SkuSpecification> specifications;
     }
 
     @Getter @Setter @AllArgsConstructor @NoArgsConstructor @Builder @FieldDefaults(level = AccessLevel.PRIVATE)

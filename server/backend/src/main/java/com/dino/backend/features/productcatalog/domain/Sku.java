@@ -1,21 +1,19 @@
 package com.dino.backend.features.productcatalog.domain;
 
 import com.dino.backend.features.inventory.domain.Inventory;
-import com.dino.backend.features.productcatalog.domain.model.SkuSpecification;
-import com.dino.backend.shared.model.BaseEntity;
 import com.dino.backend.features.ordering.domain.CartItem;
 import com.dino.backend.features.ordering.domain.OrderItem;
+import com.dino.backend.shared.model.BaseEntity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import io.hypersistence.utils.hibernate.type.json.JsonType;
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Table;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.SuperBuilder;
-import org.hibernate.annotations.*;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.SQLRestriction;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -65,12 +63,8 @@ public class Sku extends BaseEntity {
 
     Float retailPrice;
 
+    Float productionCost;
+
     // carts => sku metrics;
-
-    // productionCost => float
-
-    @Type(JsonType.class)
-    @Column(columnDefinition = "jsonb")
-    private ArrayList<SkuSpecification> specifications;
 
 }

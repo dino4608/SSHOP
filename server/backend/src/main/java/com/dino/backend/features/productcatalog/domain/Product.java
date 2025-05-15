@@ -67,6 +67,14 @@ public class Product extends BaseEntity {
 
     Float retailPrice;
 
+    @Type(JsonType.class)
+    @Column(columnDefinition = "jsonb")
+    ArrayList<ProductSpecification> specifications;
+
+    @Type(JsonType.class)
+    @Column(columnDefinition = "jsonb")
+    ArrayList<ProductTierVariation> tierVariations;
+
     // stars => review
 
     // sales => product metrics
@@ -74,13 +82,4 @@ public class Product extends BaseEntity {
     // weight, unit => parcel weight
 
     // height + length + width => dimensions
-
-    
-    @Type(JsonType.class)
-    @Column(columnDefinition = "jsonb")
-    ArrayList<ProductSpecification> attributes;
-
-    @Type(JsonType.class)
-    @Column(columnDefinition = "jsonb")
-    ArrayList<ProductTierVariation> tierVariations;
 }
