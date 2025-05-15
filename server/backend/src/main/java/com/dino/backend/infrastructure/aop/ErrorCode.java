@@ -40,23 +40,11 @@ public enum ErrorCode {
     TOKEN__FIND_FAILED(1300, "Lấy token thất bại.", HttpStatus.INTERNAL_SERVER_ERROR),
     TOKEN__UPDATE_FAILED(1302, "Cập nhật token thất bại.", HttpStatus.INTERNAL_SERVER_ERROR),
     //SHOP 1400+//
-    SHOP__NOT_FOUND(1401, "Shop is not found.", HttpStatus.BAD_REQUEST),
-    SHOP__LACK_INFO(1402, "Shop is lack of required information.", HttpStatus.INTERNAL_SERVER_ERROR),
+
     //CATEGORY 1500+//
-    CATEGORY__NAME_OUT_SIZE(1500, "Name should be between 4 and 40 characters.", HttpStatus.BAD_REQUEST),
-    CATEGORY__DESCRIPTION_OUT_SIZE(1501, "Description should be at most 255 characters.", HttpStatus.BAD_REQUEST),
-    CATEGORY__PHOTO_OUT_SIZE(1502, "Photo should be at most 255 characters.", HttpStatus.BAD_REQUEST),
-    CATEGORY__NAME_NOT_EMPTY(1503, "Name should not be empty.", HttpStatus.BAD_REQUEST),
-    CATEGORY__NAME_UNIQUE(1504, "Name already exists. Please choose a different one.", HttpStatus.BAD_REQUEST),
-    CATEGORY__NOT_FOUND(1505, "Category is not found.", HttpStatus.BAD_REQUEST),
-    CATEGORY__POSITION_MIN(1506, "Position should be higher or equal to 1.", HttpStatus.BAD_REQUEST),
+    CATEGORY__NOT_FOUND(1500, "Không tìm thấy ngành hàng.", HttpStatus.BAD_REQUEST),
     //PRODUCT 1600+//
-    PRODUCT__SKUS_NOT_EMPTY(1600, "The SKU list should not be empty.", HttpStatus.BAD_REQUEST),
-    PRODUCT__NAME_NOT_EMPTY(1601, "The name should not be empty.", HttpStatus.BAD_REQUEST),
-    PRODUCT__THUMB_NOT_EMPTY(1602, "The thumb should not be empty.", HttpStatus.BAD_REQUEST),
-    PRODUCT__WEIGHT_NOT_EMPTY(1605, "The weight should not be empty.", HttpStatus.BAD_REQUEST),
-    PRODUCT__WEIGHT_MIN(1606, "The weight should at least 50 g.", HttpStatus.BAD_REQUEST),
-    PRODUCT__LOCATION_NOT_EMPTY(1607, "The location should not be empty.", HttpStatus.BAD_REQUEST),
+    PRODUCT__NOT_FOUND(1600, "Không tìm thấy sản phẩm.", HttpStatus.BAD_REQUEST),
     //MEDIA 1700+//
     MEDIA__FILE_OUT_EXTENSIONS(1701, "File extensions should be pdf, jpg, jpeg, png, doc or docx.", HttpStatus.BAD_REQUEST),
     MEDIA__FILE_CREATE_DIRECTORY(1702, "An error occurred while creating a media directory.", HttpStatus.INTERNAL_SERVER_ERROR),

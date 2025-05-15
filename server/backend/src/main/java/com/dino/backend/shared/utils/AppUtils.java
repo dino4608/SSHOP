@@ -1,7 +1,6 @@
 package com.dino.backend.shared.utils;
 
 import com.dino.backend.shared.model.PageReq;
-import com.dino.backend.shared.model.PageRes;
 import com.github.slugify.Slugify;
 import io.micrometer.common.util.StringUtils;
 import org.springframework.data.domain.Page;
@@ -73,12 +72,16 @@ public class AppUtils {
      * @return PageResponse
      */
     public static <T> PageRes<T> toPageRes(Page<T> pageJpa) {
-        return PageRes.<T>builder()
+        PageRes.Pagination pagination = PageRes.Pagination.builder()
                 .totalPages(pageJpa.getTotalPages())
                 .totalElements(pageJpa.getTotalElements())
                 .page(pageJpa.getNumber() + 1) // Page of client starts 1. But PageNumber of Jpa starts from 0
                 .size(pageJpa.getSize())
-                .content(pageJpa.getContent())
+                .build();
+
+        return PageRes.<T>builder()
+                .pagination(pagination)
+                .items(pageJpa.getContent())
                 .build();
     }
 

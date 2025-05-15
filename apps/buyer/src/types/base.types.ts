@@ -13,3 +13,15 @@ export type TApiResponse<T> = {
     error: string;
     data: T;
 }
+
+export type TPagination = {
+    totalPages: number;
+    totalElements: number;
+    page: number;
+    size: number;
+}
+
+export type TPageRes<T> = {
+    pagination: TPagination,
+    items: T[]
+}

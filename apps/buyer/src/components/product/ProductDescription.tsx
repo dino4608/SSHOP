@@ -1,4 +1,10 @@
+import { TProductSpecification } from "@/types/product.types";
 import { Dot } from "lucide-react";
+
+type ProductDescriptionProps = {
+    description: string;
+    specifications: TProductSpecification[];
+};
 
 const ProductDescription = () => {
 

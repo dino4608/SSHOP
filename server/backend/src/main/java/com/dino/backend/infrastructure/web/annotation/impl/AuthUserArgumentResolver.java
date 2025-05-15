@@ -20,6 +20,7 @@ public class AuthUserArgumentResolver implements HandlerMethodArgumentResolver {
 
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
+
         return parameter.hasParameterAnnotation(AuthUser.class)
                 && parameter.getParameterType().equals(CurrentUser.class);
     }
@@ -31,16 +32,6 @@ public class AuthUserArgumentResolver implements HandlerMethodArgumentResolver {
             NativeWebRequest webRequest,
             WebDataBinderFactory binderFactory) throws Exception {
 
-        var authentication = SecurityContextHolder.getContext().getAuthentication();
-
-
-
-        String userId = SecurityUtils.getCurrentUserId();
-
-        Set<String> roles = authentication.getAuthorities().stream()
-                .map(GrantedAuthority::getAuthority)
-                .collect(Collectors.toSet());
-
-        return new CurrentUser(userId, roles);
+        return SecurityUtils.getCurrentUser();
     }
 }

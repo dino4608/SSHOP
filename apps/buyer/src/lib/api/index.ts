@@ -1,10 +1,8 @@
-import { getCurrentUser, loginOrSignupWithGoogle, loginWithPassword, logout, lookupIdentifier, refresh, signupWithPassword } from "./identity.api";
-import { getTree } from "./product.api";
+import { getCurrentUser, loginOrSignupWithGoogle, loginWithPassword, logout, lookupIdentifier, refresh, signupWithPassword } from "./auth.api";
+import { getTree } from "./categories.api";
+import { productsApi } from "./products.api";
 
 export const api = {
-    category: {
-        getTree,
-    },
     auth: {
         lookupIdentifier,
         loginWithPassword,
@@ -14,4 +12,8 @@ export const api = {
         getCurrentUser,
         logout,
     },
+    category: {
+        getTree
+    },
+    products: productsApi
 }

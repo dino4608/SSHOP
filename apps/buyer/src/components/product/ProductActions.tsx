@@ -1,10 +1,13 @@
 'use client';
 
+import { TProductTierVariation } from '@/types/product.types';
+import { TShop } from '@/types/shop.types';
+import { TSku } from '@/types/sku.types';
 import { MessageCircle, Store, TicketCheck } from 'lucide-react';
 import Image from 'next/image';
 import React, { useState } from 'react';
 
-const colors = [
+const colors1 = [
     { code: "GZR9915", image: "/images/jeans1.jpg", disabled: false },
     { code: "GZR9916", image: "/images/jeans2.jpg", disabled: false },
     { code: "GZR9921", image: "/images/jeans3.jpg", disabled: false },
@@ -13,27 +16,36 @@ const colors = [
     { code: "GZR9918", image: "/images/jeans6.jpg", disabled: false },
 ];
 
-const sizes = [
+const sizes1 = [
     { label: "S (45–55kg)", value: "S" },
     { label: "M (55–64kg)", value: "M" },
     { label: "L (64–74kg)", value: "L" },
     { label: "XL (74–84kg)", value: "XL" },
 ];
 
-type Props = {
-    onVariantSelect: (img: string) => void;
+type ProductActionsProps = {
+    onSelectVariant: (img: string) => void;
+    id: string;
+    name: string;
+    shop: TShop;
+    skus: TSku[];
+    retailPrice: number;
+    tierVariations: TProductTierVariation[];
 };
 
 // select the first variant: ${selectedColor === code ? 'border-[var(--dino-red-1)] text-black' : 'border-gray-200'}
 // hover variants: 'hover:border-black'
-const ProductActions = ({ onVariantSelect }: Props) => {
+const ProductActions = ({ onSelectVariant, ...product }: ProductActionsProps) => {
     const [selectedColor, setSelectedColor] = useState<string | null>(null);
     const [selectedSize, setSelectedSize] = useState<string | null>(null);
     const [quantity, setQuantity] = useState<number>(1);
 
-    const handleQuantityChange = (delta: number) => {
+    const onQuantityChange = (delta: number) => {
         setQuantity(prev => Math.max(1, prev + delta));
     };
+
+    console.log('>>> product: ', product);
+
 
     // Max of Actions area is 100vh - header - breadcrumb - padding of ProductClientSide (referencing)
     return (
@@ -42,8 +54,8 @@ const ProductActions = ({ onVariantSelect }: Props) => {
             <div className='overflow-y-auto scrollbar-hidden space-y-4 pb-4'>
                 {/* Product name // todo: (55) should be blue */}
                 <div className='flex flex-col gap-1'>
-                    <h1 className="text-lg font-medium">Awesome Wireless Earbuds, BLUETOOTH 6.0, Fingerprint Touch Headphones with Noise Reduction Microphone</h1>
-                    <div className="text-sm text-gray-500">⭐ 4.8 (55) | 🔥 2.3K sold | 🏠 by GadgetStore</div>
+                    <h1 className="text-lg font-medium">{product.name}</h1>
+                    <div className="text-sm text-gray-500">⭐ 4.8 (55) | 🔥 2.3K sold | 🏠 by {product.shop.shopName}</div>
                 </div>
 
                 {/* Product price */}
@@ -59,7 +71,7 @@ const ProductActions = ({ onVariantSelect }: Props) => {
                     <div className='flex gap-1'>
                         {/* Base price */}
                         <div className='flex items-center text-sm text-gray-400 line-through'>
-                            ₫800.000-₫1.200.000
+                            {`₫${product.retailPrice}-₫${product.retailPrice}`}
                         </div>
 
                         {/* Discount figures */}
@@ -73,16 +85,16 @@ const ProductActions = ({ onVariantSelect }: Props) => {
                 <div className="space-y-4 text-sm">
                     {/* Color */}
                     <div>
-                        <div className="font-medium mb-2">Colors</div>
+                        <div className="font-medium mb-2">{product.tierVariations[0].name}</div>
                         <div className='flex flex-wrap gap-2'>
-                            {colors.map(({ code, image, disabled }) => (
+                            {colors1.map(({ code, image, disabled }) => (
                                 <button
                                     key={code}
                                     disabled={disabled}
                                     onClick={() => {
                                         if (!disabled) {
                                             setSelectedColor(code);
-                                            onVariantSelect(image); // Send its parent the image state
+                                            onSelectVariant(image); // Send its parent the image state
                                         }
                                     }}
                                     className={`
@@ -114,9 +126,9 @@ const ProductActions = ({ onVariantSelect }: Props) => {
 
                     {/* Size */}
                     <div>
-                        <div className="font-medium mb-2">Sizes</div>
+                        <div className="font-medium mb-2">{product.tierVariations[1].name}</div>
                         <div className="flex flex-wrap gap-2">
-                            {sizes.map(({ label, value }) => (
+                            {sizes1.map(({ label, value }) => (
                                 <button
                                     key={value}
                                     onClick={() => setSelectedSize(value)}
@@ -137,14 +149,14 @@ const ProductActions = ({ onVariantSelect }: Props) => {
 
                     {/* Quantity */}
                     <div className="flex items-center gap-4">
-                        <div className="font-medium">Quantity</div>
+                        <div className="font-medium">Số lượng</div>
                         <div className="flex items-center border rounded-md overflow-hidden w-fit">
                             <button
-                                onClick={() => handleQuantityChange(-1)}
+                                onClick={() => onQuantityChange(-1)}
                                 className="px-3 py-1 text-xl">-</button>
                             <div className="px-4 py-1 border-l border-r">{quantity}</div>
                             <button
-                                onClick={() => handleQuantityChange(1)}
+                                onClick={() => onQuantityChange(1)}
                                 className="px-3 py-1 text-xl">+</button>
                         </div>
                     </div>

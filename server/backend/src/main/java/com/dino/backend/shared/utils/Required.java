@@ -43,9 +43,4 @@ public class Required<T> {
         }
         return value;
     }
-
-    // Getter method to retrieve the value (if needed).
-//    public T getValue() {
-//        return value;
-//    }
 }
