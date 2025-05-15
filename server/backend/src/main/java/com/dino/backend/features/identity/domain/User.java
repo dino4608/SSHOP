@@ -2,12 +2,12 @@ package com.dino.backend.features.identity.domain;
 
 import com.dino.backend.features.identity.domain.model.UserRoleType;
 import com.dino.backend.features.identity.domain.model.UserStatusType;
-import com.dino.backend.features.shopping.domain.entity.Address;
-import com.dino.backend.features.shopping.domain.entity.Cart;
-import com.dino.backend.features.shopping.domain.entity.Order;
+import com.dino.backend.features.shop.domain.Shop;
+import com.dino.backend.features.ordering.domain.Address;
+import com.dino.backend.features.ordering.domain.Cart;
+import com.dino.backend.features.ordering.domain.Order;
 import com.dino.backend.shared.model.BaseEntity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;

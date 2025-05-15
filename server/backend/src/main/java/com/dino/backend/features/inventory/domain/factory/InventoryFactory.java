@@ -1,7 +1,7 @@
 package com.dino.backend.features.inventory.domain.factory;
 
-import com.dino.backend.features.inventory.domain.entity.Inventory;
-import com.dino.backend.features.inventory.domain.entity.Sku;
+import com.dino.backend.features.inventory.domain.Inventory;
+import com.dino.backend.features.productcatalog.domain.Sku;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.experimental.FieldDefaults;
