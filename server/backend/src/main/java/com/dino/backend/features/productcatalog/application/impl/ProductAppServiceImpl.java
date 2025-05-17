@@ -2,6 +2,7 @@ package com.dino.backend.features.productcatalog.application.impl;
 
 import com.dino.backend.features.productcatalog.application.mapper.IProductMapper;
 import com.dino.backend.features.productcatalog.application.model.projection.ProductProj;
+import com.dino.backend.features.productcatalog.domain.model.ProductProjection;
 import com.dino.backend.features.productcatalog.application.model.request.ProductReq;
 import com.dino.backend.features.productcatalog.application.ICategoryQueryService;
 import com.dino.backend.features.productcatalog.application.IProductAppService;
@@ -24,7 +25,7 @@ import org.springframework.stereotype.Service;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @Slf4j
 public class ProductAppServiceImpl implements IProductAppService {
-    IProductInfraRepository productDomainRepo;
+    IProductInfraRepository productInfraRepository;
 
     IProductMapper productMapper;
 
@@ -34,31 +35,11 @@ public class ProductAppServiceImpl implements IProductAppService {
 
     ISkuAppService skuDomainService;
 
-    //CREATE//
+    // QUERY //
+
+    // list //
     @Override
-    public Product create(ProductReq.Create productDto) {
-        Product productRequested = this.productMapper.toEntity(productDto);
-
-        // productRequested.setShop(Shop.builder().id(sellerId).build()); // todo: security utils
-
-        productRequested.setCategory(this.cateDomainService.findOrErrorById(productRequested.getCategory().getId()));
-
-        productRequested.getSkus().stream().parallel()
-                .forEach(sku -> {
-                    if (AppUtils.isPresent(sku.getSkuCode()))
-                        this.skuDomainService.checkSkuCodeOrError(sku.getSkuCode());
-                });
-
-        final Product productCreated = this.productAggFactory.create(productRequested);
-
-        Product productResult = this.productDomainRepo.save(productCreated);
-        return productResult;
-    }
-
-    //LIST//
-    public PageRes<ProductProj> findAll(Pageable pageable) {
-        Page<ProductProj> productPage = this.productDomainRepo.findAllProjectedBy(pageable);
-
-        return AppUtils.toPageRes(productPage);
+    public PageRes<ProductProjection> list(Pageable pageable) {
+        return  PageRes.from(this.productInfraRepository.findAllProjectedBy(pageable));
     }
 }

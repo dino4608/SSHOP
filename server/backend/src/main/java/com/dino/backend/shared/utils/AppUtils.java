@@ -74,11 +74,11 @@ public class AppUtils {
      */
     public static <T> PageRes<T> toPageRes(Page<T> pageJpa) {
         return PageRes.<T>builder()
-                .totalPages(pageJpa.getTotalPages())
-                .totalElements(pageJpa.getTotalElements())
-                .page(pageJpa.getNumber() + 1) // Page of client starts 1. But PageNumber of Jpa starts from 0
-                .size(pageJpa.getSize())
-                .content(pageJpa.getContent())
+//                .totalPages(pageJpa.getTotalPages())
+//                .totalElements(pageJpa.getTotalElements())
+//                .page(pageJpa.getNumber() + 1) // Page of client starts 1. But PageNumber of Jpa starts from 0
+//                .size(pageJpa.getSize())
+//                .content(pageJpa.getContent())
                 .build();
     }
 

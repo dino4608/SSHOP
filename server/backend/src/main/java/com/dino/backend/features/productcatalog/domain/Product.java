@@ -1,5 +1,6 @@
 package com.dino.backend.features.productcatalog.domain;
 
+import com.dino.backend.features.productcatalog.domain.model.ProductMeta;
 import com.dino.backend.features.shop.domain.Shop;
 import com.dino.backend.features.productcatalog.domain.model.ProductSpecification;
 import com.dino.backend.features.productcatalog.domain.model.ProductTierVariation;
@@ -65,7 +66,7 @@ public class Product extends BaseEntity {
 
     String sizeChart;
 
-    Float retailPrice;
+    Integer retailPrice;
 
     @Type(JsonType.class)
     @Column(columnDefinition = "jsonb")
@@ -74,6 +75,10 @@ public class Product extends BaseEntity {
     @Type(JsonType.class)
     @Column(columnDefinition = "jsonb")
     ArrayList<ProductTierVariation> tierVariations;
+
+    @Type(JsonType.class)
+    @Column(columnDefinition = "jsonb")
+    ProductMeta meta;
 
     // stars => review
 

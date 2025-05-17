@@ -34,9 +34,9 @@ public class Inventory extends BaseEntity {
     @JsonIgnore
     Sku sku;
 
-    Integer total;
-
     Integer stocks;
 
     Integer sales;
+
+    Integer total;
 }

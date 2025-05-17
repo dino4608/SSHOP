@@ -55,15 +55,14 @@ public class Sku extends BaseEntity {
     @Column(nullable = false)
     String skuCode;
 
-    @Column()
-    String tierName;
-
-    @Column()
+    @Column(nullable = false)
     Integer[] tierIndex;
 
-    Float retailPrice;
+    String tierName;
 
-    Float productionCost;
+    Integer retailPrice;
+
+    Integer productionCost;
 
     // carts => sku metrics;
 

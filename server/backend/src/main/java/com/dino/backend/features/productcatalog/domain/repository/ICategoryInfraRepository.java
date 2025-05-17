@@ -13,13 +13,16 @@ import java.util.Optional;
 
 public interface ICategoryInfraRepository extends JpaRepository<Category, String>, JpaSpecificationExecutor<Category> {
     // READ //
+
+    <T> List<T> findAllProjectedBy(Pageable pageable, Class<T> type); // #2
+
+    Page<CategoryProjection> findAllProjectedBy(Pageable pageable); // #2
+
     <T> List<T> findAllProjectedBy(Sort sort, Class<T> type); // #1
 
     List<CategoryProjection> findAllProjectedBy(Sort sort); // #1
 
     List<CategoryProjection> findAllProjectedByOrderByPositionAsc(); // #1
-
-    Page<CategoryProjection> findAllProjectedBy(Pageable pageable);
 
     Optional<Category> findFirstByName(String name);
 

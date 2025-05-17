@@ -28,7 +28,7 @@ public class ProductFactory {
 
         product.setSkus(this.skuAggFactory.create(product)); //cascade
 
-        product.setRetailPrice(this.genRetailPrice(product.getSkus()));
+        //product.setRetailPrice(this.genRetailPrice(product.getSkus()));
 
         return product;
     }
