@@ -1,22 +1,17 @@
-import { TPageRes } from "@/types/base.types";
+import { TApiDefinition, TPageRes } from "@/types/base.types";
 import { TProduct, TProductItem } from "@/types/product.types";
-import { TApiDefinition } from "./config";
-import { HttpMethod } from "../constants";
-
-const PUBLIC_PRODUCT_RESOURCE = '/public/products';
+import { HttpMethod, RESOURCES } from "../constants";
 
 export const productsApi = {
-
     // PUBLIC //
 
     // QUERY //
-
     list: (): TApiDefinition<TPageRes<TProductItem>> => ({
-        route: `${PUBLIC_PRODUCT_RESOURCE}/list`,
+        route: `${RESOURCES.PRODUCTS.PUBLIC}/list`,
         method: HttpMethod.GET,
     }),
     getById: (productId: string): TApiDefinition<TProduct> => ({
-        route: `${PUBLIC_PRODUCT_RESOURCE}/${productId}`,
+        route: `${RESOURCES.PRODUCTS.PUBLIC}/${productId}`,
         method: HttpMethod.GET,
     })
 }

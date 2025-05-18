@@ -1,7 +1,7 @@
 'use client';
-
+import { RESOURCES } from '@/lib/constants';
+import { getFileUrl } from '@/lib/files';
 import Image from 'next/image';
-import React from 'react';
 
 const imageUrls = [
     '/square.jpg',
@@ -16,13 +16,28 @@ const imageUrls = [
     '/pocket3.jpg',
 ];
 
+type TProductMedia = {
+    id: string;
+    thumb: string;
+    photos: string[];
+    video: string;
+    sizeChart: string;
+}
+
 type Props = {
     selectedImage: string | null;
     setSelectedImage: (img: string) => void;
+    product: TProductMedia;
 };
 
-const ProductImages = ({ selectedImage, setSelectedImage }: Props) => {
+export const ProductMedia = ({ selectedImage, setSelectedImage, product }: Props) => {
     // const [selectedImage, setSelectedImage] = useState(imageUrls[0]); // todo: default image dùng useEffect
+    const images = [
+        ...(product.thumb ? [product.thumb] : []),
+        ...(product.video ? [product.video] : []),
+        ...(product.photos ?? []),
+        ...(product.sizeChart ? [product.sizeChart] : [])
+    ];
 
     return (
         <div className="flex gap-4">
@@ -35,15 +50,15 @@ const ProductImages = ({ selectedImage, setSelectedImage }: Props) => {
                 parent width: tính toán một cách tự nhiên, bằng 64px
                  */}
                 <div className="h-full aspect-square flex flex-col gap-2">
-                    {imageUrls.map((url) => (
+                    {images.map((image) => (
                         <Image
-                            key={url}
-                            src={url}
-                            alt={`Thumbnail ${url}`}
-                            onMouseEnter={() => setSelectedImage(url)}
+                            key={image}
+                            src={getFileUrl(image, RESOURCES.PRODUCTS.BASE, product.id)}
+                            alt={`Thumbnail ${image}`}
+                            onMouseEnter={() => setSelectedImage(image)}
                             width={64}
                             height={64}
-                            className={`w-16 h-16 object-cover rounded cursor-pointer border-2 ${selectedImage === url ? 'border-blue-500' : 'border-transparent'}`}
+                            className={`w-16 h-16 object-cover rounded cursor-pointer border-2 ${selectedImage === image ? 'border-blue-500' : 'border-transparent'}`}
                         />
                     ))}
                 </div>
@@ -54,7 +69,7 @@ const ProductImages = ({ selectedImage, setSelectedImage }: Props) => {
                 {/* width của cột phải: flex-1 w-full nên lấy toàn bộ width còn lại
                 height của cột phải: aspect-square w-full tính toán chiều cao theo chiều rộng  */}
                 <Image
-                    src={selectedImage || imageUrls[0]}
+                    src={getFileUrl(selectedImage || images[0], RESOURCES.PRODUCTS.BASE, product.id)} //{}
                     alt="Selected Product"
                     fill
                     className="object-contain rounded"
@@ -64,5 +79,3 @@ const ProductImages = ({ selectedImage, setSelectedImage }: Props) => {
         </div>
     );
 };
-
-export default ProductImages;

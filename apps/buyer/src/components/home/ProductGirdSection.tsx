@@ -1,18 +1,17 @@
 'use client';
-
 import { api } from "@/lib/api";
 import { clientFetch } from "@/lib/fetch/fetch.client";
-import HomeContainer from "./HomeContainer";
-import ProductItem from "./ProductItem";
-import { useEffect, useState } from "react";
-import { TProduct, TProductItem } from "@/types/product.types";
 import { TPagination } from "@/types/base.types";
+import { TProductItem } from "@/types/product.types";
+import { useEffect, useState } from "react";
+import HomeContainer from "./HomeContainer";
+import { ProductItem } from "./ProductItem";
 
 type ProductGridSectionProps = {
     selectedCategory: string | null;
 }
 
-const ProductGridSection = ({ selectedCategory }: ProductGridSectionProps) => {
+export const ProductGridSection = ({ selectedCategory }: ProductGridSectionProps) => {
     const [products, setProducts] = useState<TProductItem[]>([]);
     const [loading, setLoading] = useState(true);
     const [pagination, setPagination] = useState<TPagination>({} as TPagination);
@@ -48,5 +47,3 @@ const ProductGridSection = ({ selectedCategory }: ProductGridSectionProps) => {
         </HomeContainer>
     );
 };
-
-export default ProductGridSection;

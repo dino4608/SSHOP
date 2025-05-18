@@ -1,12 +1,7 @@
 package com.dino.backend.shared.utils;
 
-import com.dino.backend.shared.model.PageReq;
 import com.github.slugify.Slugify;
 import io.micrometer.common.util.StringUtils;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 
 import java.lang.reflect.Field;
 import java.util.Arrays;
@@ -63,50 +58,6 @@ public class AppUtils {
     public static String toSlug(String name) {
         Slugify slugify = Slugify.builder().build();
         return slugify.slugify(name);
-    }
-
-    /**
-     * Map PageResponse from Page of Jpa
-     *
-     * @param pageJpa: Page of Jpa
-     * @return PageResponse
-     */
-    public static <T> PageRes<T> toPageRes(Page<T> pageJpa) {
-        PageRes.Pagination pagination = PageRes.Pagination.builder()
-                .totalPages(pageJpa.getTotalPages())
-                .totalElements(pageJpa.getTotalElements())
-                .page(pageJpa.getNumber() + 1) // Page of client starts 1. But PageNumber of Jpa starts from 0
-                .size(pageJpa.getSize())
-                .build();
-
-        return PageRes.<T>builder()
-                .pagination(pagination)
-                .items(pageJpa.getContent())
-                .build();
-    }
-
-    /**
-     * Build Pageable from page, sort and direct
-     *
-     * @param page:   int
-     * @param size:   int
-     * @param sort:   sort on attribute
-     * @param direct: direct on asc or desc
-     * @return Pageable
-     */
-    public static Pageable toPageable(int page, int size, String sort, String direct) {
-        Sort.Direction direction = direct.equalsIgnoreCase("ASC")
-                ? Sort.Direction.ASC
-                : Sort.Direction.DESC;
-
-        return PageRequest.of(--page, size, direction, sort); // Page of client starts 1. But PageNumber of Jpa starts
-        // from 0
-    }
-
-    public static Pageable toPageable(PageReq pageReq) {
-        Pageable pageable = AppUtils.toPageable(pageReq.getPage(), pageReq.getSize(), pageReq.getSort(),
-                pageReq.getDirect());
-        return pageable;
     }
 
     /**

@@ -1,6 +1,7 @@
 package com.dino.backend.infrastructure.security.config;
 
 import com.dino.backend.infrastructure.common.Env;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
@@ -20,28 +21,22 @@ import org.springframework.security.web.SecurityFilterChain;
 import javax.crypto.spec.SecretKeySpec;
 
 @Configuration
+@RequiredArgsConstructor
 @EnableWebSecurity
 @EnableMethodSecurity
 public class SecurityConfig {
 
     private final Env env;
 
-    public SecurityConfig(Env env) {
-        this.env = env;
-    }
-
     private final String[] PUBLIC_ENDPOINTS = {
-            //SWAGGER//
+            // BUYER PUBLIC //
+            "/api/v1/public/**",
+            // FILE //
+            "/files/**",
+            // SWAGGER //
             "/swagger-ui/**",
             "/swagger-ui.html",
             "/v3/api-docs/**",
-            //MEDIA//
-            "/media/**",
-            "/api/v1/media/**",
-            //CATEGORY//
-            "/api/v1/category/**",
-            // BUYER PUBLIC (AUTH) //
-            "/api/v1/public/**",
     };
 
     @Bean

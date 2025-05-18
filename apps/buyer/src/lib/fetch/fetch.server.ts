@@ -1,5 +1,5 @@
 import { cookies } from "next/headers";
-import { TApiDefinition } from "../api/config";
+import { TApiDefinition } from "@/types/base.types";
 import { fetchSafely } from "./config";
 
 export const buildHeader = async (

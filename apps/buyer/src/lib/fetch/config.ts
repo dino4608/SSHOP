@@ -1,14 +1,14 @@
-import { TApiResponse } from "@/types/base.types";
-import { TApiDefinition } from "../api/config";
-import { BACKEND_URL, HttpMethod } from "../constants";
+import { TApiDefinition, TApiResponse } from "@/types/base.types";
+import { env, HttpMethod } from "../constants";
 
 export function buildEndpoint(domain: string, route: string, query?: any): RequestInfo {
-    console.log(`>>> buildEndpoint: endpoint: ${domain + route}`);
+    const endpoint = `${domain}/api/v1${route}`;
+    console.log(`>>> buildEndpoint: ${endpoint}`);
 
-    if (!query) return `${domain + route}`;
+    if (!query) return endpoint;
     const queryRecord: Record<string, string> = query;
     const queryString = new URLSearchParams(queryRecord).toString();
-    return `${domain + route}?${queryString}`;
+    return `${endpoint}?${queryString}`;
 }
 
 export function buildOptions(method: HttpMethod, body?: any): RequestInit {
@@ -60,12 +60,13 @@ export const normalizeError = <T>(error: any) => {
 // Query       |                                    | `?name=dino`
 // Method      |                                    | `GET`, `POST`, `PATCH`, `DELETE`
 // Endpoint    | URL cụ thể đại diện cho tài nguyên | `https://api.example.com` + `/users` + `?name=dino`
+// Endpoint    | Ngoại lệ: Một API được expose ra bởi controller, dù có chứa biến route, miễn là client có thể gọi được khi biết giá trị cụ thể.
 export const fetchSafely = async <T = any>(
     api: TApiDefinition<T>,
     fetchCore: (endpoint: RequestInfo, options?: RequestInit, withAuth?: boolean) => Promise<Response>
 ): Promise<TApiResponse<T>> => {
 
-    const domain = BACKEND_URL
+    const domain = env.BACKEND_URL;
     const { route, method, query, body } = api
 
     try {

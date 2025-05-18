@@ -46,12 +46,12 @@ public enum ErrorCode {
     //PRODUCT 1600+//
     PRODUCT__NOT_FOUND(1600, "Không tìm thấy sản phẩm.", HttpStatus.BAD_REQUEST),
     //MEDIA 1700+//
-    MEDIA__FILE_OUT_EXTENSIONS(1701, "File extensions should be pdf, jpg, jpeg, png, doc or docx.", HttpStatus.BAD_REQUEST),
-    MEDIA__FILE_CREATE_DIRECTORY(1702, "An error occurred while creating a media directory.", HttpStatus.INTERNAL_SERVER_ERROR),
-    MEDIA__FILE_CREATE_FOLDER(1703, "An error occurred while creating a media folder.", HttpStatus.INTERNAL_SERVER_ERROR),
-    MEDIA__FILE_CREATE_PATH(1704, "An error occurred while creating a file path.", HttpStatus.INTERNAL_SERVER_ERROR),
-    MEDIA__FILE_STREAM(1705, "An error occurred while stream the file.", HttpStatus.INTERNAL_SERVER_ERROR),
-    MEDIA__FILE_EMPTY(1706, "File is empty. Please upload a file.", HttpStatus.BAD_REQUEST),
+    FILE__FILE_OUT_EXTENSIONS(1701, "File extensions should be pdf, jpg, jpeg, png, doc or docx.", HttpStatus.BAD_REQUEST),
+    FILE__FILE_CREATE_DIRECTORY(1702, "An error occurred while creating a media directory.", HttpStatus.INTERNAL_SERVER_ERROR),
+    FILE__FILE_CREATE_FOLDER(1703, "An error occurred while creating a media folder.", HttpStatus.INTERNAL_SERVER_ERROR),
+    FILE__FILE_CREATE_PATH(1704, "An error occurred while creating a file path.", HttpStatus.INTERNAL_SERVER_ERROR),
+    FILE__FILE_STREAM(1705, "An error occurred while stream the file.", HttpStatus.INTERNAL_SERVER_ERROR),
+    FILE__FILE_EMPTY(1706, "File is empty. Please upload a file.", HttpStatus.BAD_REQUEST),
     //SKU 1800+//
     SKU__INVENTORY_NOT_EMPTY(1800, "The inventory should not be empty.", HttpStatus.BAD_REQUEST),
     SKU__NO_NOT_EMPTY(1801, "The no should not be empty.", HttpStatus.BAD_REQUEST),

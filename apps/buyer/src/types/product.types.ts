@@ -26,6 +26,7 @@ export type TProductMeta = {
     isCodEnabled: boolean;
 }
 
+// TODO: case TProduct have null fields
 export type TProduct = {
     id: string;
     shop: TShop;
@@ -37,7 +38,7 @@ export type TProduct = {
     slug: string;
     thumb: string;
     photos: string[];
-    video: string | null;
+    video: string;
     sizeChart: string;
     retailPrice: number;
     specifications: TProductSpecification[];

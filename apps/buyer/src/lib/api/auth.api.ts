@@ -1,54 +1,54 @@
+import { TApiDefinition } from "@/types/base.types";
 import { TAuthResponse, TLoginOrSignUpWithGoogleBody, TLoginWithPasswordBody, TLookupIdentifierQuery, TLookupIdentifierResponse, TUser } from "../../types/auth.types";
-import { HttpMethod } from "../constants";
-import { TApiDefinition } from "./config";
+import { HttpMethod, RESOURCES } from "../constants";
 
-// PUBLIC_AUTH_RESOURCE //
-const PUBLIC_AUTH_RESOURCE = '/public/auth';
+export const authApi = {
+    // PUBLIC //
 
-// QUERY //
-export const lookupIdentifier = (query: TLookupIdentifierQuery): TApiDefinition<TLookupIdentifierResponse> => ({
-    route: `${PUBLIC_AUTH_RESOURCE}/lookup`,
-    method: HttpMethod.GET,
-    query,
-});
+    // QUERY //
+    lookupIdentifier: (query: TLookupIdentifierQuery): TApiDefinition<TLookupIdentifierResponse> => ({
+        route: `${RESOURCES.AUTH.PUBLIC}/lookup`,
+        method: HttpMethod.GET,
+        query,
+    }),
 
-// COMMAND //
-export const loginWithPassword = (body: TLoginWithPasswordBody): TApiDefinition<TAuthResponse> => ({
-    route: `${PUBLIC_AUTH_RESOURCE}/login/password`,
-    method: HttpMethod.POST,
-    body,
-});
+    // COMMAND //
+    loginWithPassword: (body: TLoginWithPasswordBody): TApiDefinition<TAuthResponse> => ({
+        route: `${RESOURCES.AUTH.PUBLIC}/login/password`,
+        method: HttpMethod.POST,
+        body,
+    }),
 
-export const signupWithPassword = (body: TLoginWithPasswordBody): TApiDefinition<TAuthResponse> => ({
-    route: `${PUBLIC_AUTH_RESOURCE}/signup/password`,
-    method: HttpMethod.POST,
-    body,
-});
+    signupWithPassword: (body: TLoginWithPasswordBody): TApiDefinition<TAuthResponse> => ({
+        route: `${RESOURCES.AUTH.PUBLIC}/signup/password`,
+        method: HttpMethod.POST,
+        body,
+    }),
 
-export const loginOrSignupWithGoogle = (body: TLoginOrSignUpWithGoogleBody): TApiDefinition<TAuthResponse> => ({
-    route: `${PUBLIC_AUTH_RESOURCE}/oauth2/google`,
-    method: HttpMethod.POST,
-    body,
-});
+    loginOrSignupWithGoogle: (body: TLoginOrSignUpWithGoogleBody): TApiDefinition<TAuthResponse> => ({
+        route: `${RESOURCES.AUTH.PUBLIC}/oauth2/google`,
+        method: HttpMethod.POST,
+        body,
+    }),
 
-export const refresh = (): TApiDefinition<TAuthResponse> => ({
-    route: `${PUBLIC_AUTH_RESOURCE}/refresh`,
-    method: HttpMethod.POST,
-});
+    refresh: (): TApiDefinition<TAuthResponse> => ({
+        route: `${RESOURCES.AUTH.PUBLIC}/refresh`,
+        method: HttpMethod.POST,
+    }),
 
-// PRIVATE_AUTH_RESOURCE //
-const PRIVATE_AUTH_RESOURCE = '/auth';
+    // RESOURCE //
 
-// QUERY //
-export const getCurrentUser = (): TApiDefinition<TUser> => ({
-    route: `${PRIVATE_AUTH_RESOURCE}/me`,
-    method: HttpMethod.GET,
-});
+    // QUERY //
+    getCurrentUser: (): TApiDefinition<TUser> => ({
+        route: `${RESOURCES.AUTH.PRIVATE}/me`,
+        method: HttpMethod.GET,
+    }),
 
-// COMMAND //
-export const logout = (): TApiDefinition<TAuthResponse> => ({
-    route: `${PRIVATE_AUTH_RESOURCE}/logout`,
-    method: HttpMethod.POST,
-});
+    // COMMAND //
+    logout: (): TApiDefinition<TAuthResponse> => ({
+        route: `${RESOURCES.AUTH.PRIVATE}/logout`,
+        method: HttpMethod.POST,
+    }),
+}
 
 

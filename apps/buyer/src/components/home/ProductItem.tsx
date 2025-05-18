@@ -1,5 +1,6 @@
 'use client';
-
+import { RESOURCES } from "@/lib/constants";
+import { getFileUrl } from "@/lib/files";
 import { TProductItem } from "@/types/product.types";
 import Image from "next/image";
 import Link from "next/link";
@@ -9,14 +10,14 @@ type ProductItemProps = {
     product: TProductItem;
 }
 
-const ProductItem = ({ product }: ProductItemProps) => {
+export const ProductItem = ({ product }: ProductItemProps) => {
     return (
         <Link href={`/product/${product.id}`}>
             <div className="w-full overflow-hidden rounded-lg bg-white shadow">
                 {/* Product image */}
                 <div className="relative aspect-square">
                     <Image
-                        src={"/square.jpg"}
+                        src={getFileUrl(product.thumb, RESOURCES.PRODUCTS.BASE, product.id)}
                         alt="Product Image"
                         fill={true}
                         className="object-over"
@@ -56,5 +57,3 @@ const ProductItem = ({ product }: ProductItemProps) => {
         </Link>
     );
 };
-
-export default ProductItem;

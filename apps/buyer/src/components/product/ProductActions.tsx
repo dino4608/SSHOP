@@ -5,7 +5,7 @@ import { TShop } from '@/types/shop.types';
 import { TSku } from '@/types/sku.types';
 import { MessageCircle, Store, TicketCheck } from 'lucide-react';
 import Image from 'next/image';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 const colors1 = [
     { code: "GZR9915", image: "/images/jeans1.jpg", disabled: false },
@@ -23,29 +23,31 @@ const sizes1 = [
     { label: "XL (74–84kg)", value: "XL" },
 ];
 
-type ProductActionsProps = {
-    onSelectVariant: (img: string) => void;
+type TProductActions = {
     id: string;
     name: string;
     shop: TShop;
     skus: TSku[];
     retailPrice: number;
     tierVariations: TProductTierVariation[];
+}
+type ProductActionsProps = {
+    onSelectVariant: (img: string) => void;
+    product: TProductActions;
 };
 
 // select the first variant: ${selectedColor === code ? 'border-[var(--dino-red-1)] text-black' : 'border-gray-200'}
 // hover variants: 'hover:border-black'
-const ProductActions = ({ onSelectVariant, ...product }: ProductActionsProps) => {
+const ProductActions = ({ onSelectVariant, product }: ProductActionsProps) => {
+
     const [selectedColor, setSelectedColor] = useState<string | null>(null);
     const [selectedSize, setSelectedSize] = useState<string | null>(null);
     const [quantity, setQuantity] = useState<number>(1);
+    const [productActions, setProductActions] = useState<TProductActions>();
 
     const onQuantityChange = (delta: number) => {
         setQuantity(prev => Math.max(1, prev + delta));
     };
-
-    console.log('>>> product: ', product);
-
 
     // Max of Actions area is 100vh - header - breadcrumb - padding of ProductClientSide (referencing)
     return (
@@ -55,7 +57,7 @@ const ProductActions = ({ onSelectVariant, ...product }: ProductActionsProps) =>
                 {/* Product name // todo: (55) should be blue */}
                 <div className='flex flex-col gap-1'>
                     <h1 className="text-lg font-medium">{product.name}</h1>
-                    <div className="text-sm text-gray-500">⭐ 4.8 (55) | 🔥 2.3K sold | 🏠 by {product.shop.shopName}</div>
+                    <div className="text-sm text-gray-500">⭐ 4.8 (55) | 🔥 2.3K sold | 🏠 by {product.shop?.shopName}</div>
                 </div>
 
                 {/* Product price */}

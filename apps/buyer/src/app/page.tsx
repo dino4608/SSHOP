@@ -1,9 +1,8 @@
 'use client';
-
 import CategoryListSection from "@/components/home/CategoryListSection";
 import FlashSaleSection from "@/components/home/FlashSaleSection";
 import HeroImageSection from "@/components/home/HeroImageSection";
-import ProductGridSection from "@/components/home/ProductGirdSection";
+import { ProductGridSection } from "@/components/home/ProductGirdSection";
 import { useState } from "react";
 
 
