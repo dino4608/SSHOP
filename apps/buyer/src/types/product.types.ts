@@ -26,7 +26,6 @@ export type TProductMeta = {
     isCodEnabled: boolean;
 }
 
-// TODO: case TProduct have null fields
 export type TProduct = {
     id: string;
     shop: TShop;
@@ -48,6 +47,18 @@ export type TProduct = {
     updatedAt: Date;
     isDeleted: boolean;
 }
+
+export type TProductActions = Pick<TProduct,
+    'id' | 'name' | 'shop' | 'skus' | 'retailPrice' | 'tierVariations'>;
+
+export type TProductBreadcrumb = Pick<TProduct,
+    'name' | 'category'>;
+
+export type TProductMedia = Pick<TProduct,
+    'id' | 'thumb' | 'photos' | 'video' | 'sizeChart'>;
+
+export type TProductDescription = Pick<TProduct,
+    'description' | 'specifications'>;
 
 export type TProductItem = {
     id: string;

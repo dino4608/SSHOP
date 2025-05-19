@@ -1,5 +1,5 @@
 'use client';
-import Breadcrumb from '@/components/product/Breadcrumb';
+import ProductBreadcrumb from '@/components/product/ProductBreadcrumb';
 import ProductActions from '@/components/product/ProductActions';
 import ProductDeals from '@/components/product/ProductDeals';
 import ProductDelivery from '@/components/product/ProductDelivery';
@@ -16,9 +16,8 @@ type TProductDetailPageProps = {
 export const ProductDetail = ({ product }: TProductDetailPageProps) => {
     const [selectedImage, setSelectedImage] = useState<string | null>(null);
     const {
-        id,
-        name, shop, skus, retailPrice, tierVariations,
-        category, status, slug,
+        id, name, category, shop, skus, retailPrice, tierVariations,
+        status, slug,
         thumb, photos, video, sizeChart,
         description, specifications, meta,
         createdAt, updatedAt, isDeleted
@@ -29,7 +28,7 @@ export const ProductDetail = ({ product }: TProductDetailPageProps) => {
     // REFERENCED: height = padding top = 16px
     return (
         <>
-            <Breadcrumb />
+            <ProductBreadcrumb product={{ name, category }} />
 
             {/* Product Info */}
             <div className="px-2 sm:px-10 lg:px-35">
@@ -46,9 +45,9 @@ export const ProductDetail = ({ product }: TProductDetailPageProps) => {
 
                             <ProductDeals />
 
-                            <ProductShopInfo />
+                            <ProductShopInfo shop={shop} />
 
-                            <ProductDescription />
+                            <ProductDescription product={{ description, specifications }} />
 
                             <div className="h-72 rounded-lg bg-green-400 flex items-center justify-center text-white font-bold text-xl">Coupons from DealShop</div>
                             <div className="h-72 rounded-lg bg-amber-400 flex items-center justify-center text-white font-bold text-xl">Gift</div>

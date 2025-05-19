@@ -1,6 +1,6 @@
 'use client';
 
-import { TProductTierVariation } from '@/types/product.types';
+import { TProductActions, TProductTierVariation } from '@/types/product.types';
 import { TShop } from '@/types/shop.types';
 import { TSku } from '@/types/sku.types';
 import { MessageCircle, Store, TicketCheck } from 'lucide-react';
@@ -23,14 +23,6 @@ const sizes1 = [
     { label: "XL (74–84kg)", value: "XL" },
 ];
 
-type TProductActions = {
-    id: string;
-    name: string;
-    shop: TShop;
-    skus: TSku[];
-    retailPrice: number;
-    tierVariations: TProductTierVariation[];
-}
 type ProductActionsProps = {
     onSelectVariant: (img: string) => void;
     product: TProductActions;
