@@ -2,8 +2,8 @@ export type TCategory = {
     id: string;
     name: string;
     slug: string;
+    photo: string | null;
     description: string;
-    image: string | null;
     position: number;
     createdAt: Date;
     updatedAt: Date;
@@ -15,6 +15,6 @@ export type TCategoryItem = {
     name: string;
     description?: string;
     slug: string;
-    image: string;
+    photo: string;
     position?: number;
 };

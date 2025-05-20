@@ -1,11 +1,11 @@
 'use client';
-import ProductBreadcrumb from '@/components/product/ProductBreadcrumb';
-import ProductActions from '@/components/product/ProductActions';
+import { ProductBreadcrumb } from '@/components/product/ProductBreadcrumb';
+import { ProductBuyBox } from '@/components/product/ProductBuyBox';
 import ProductDeals from '@/components/product/ProductDeals';
 import ProductDelivery from '@/components/product/ProductDelivery';
-import ProductDescription from '@/components/product/ProductDescription';
+import { ProductDescription } from '@/components/product/ProductDescription';
 import { ProductMedia } from '@/components/product/ProductMedia';
-import ProductShopInfo from '@/components/product/ProductShopInfo';
+import { ProductShopInfo } from '@/components/product/ProductShopInfo';
 import { TProduct } from '@/types/product.types';
 import { useState } from 'react';
 
@@ -18,7 +18,7 @@ export const ProductDetail = ({ product }: TProductDetailPageProps) => {
     const {
         id, name, category, shop, skus, retailPrice, tierVariations,
         status, slug,
-        thumb, photos, video, sizeChart,
+        thumb, photos, video, sizeGuidePhoto: sizeChart,
         description, specifications, meta,
         createdAt, updatedAt, isDeleted
     } = product
@@ -39,7 +39,7 @@ export const ProductDetail = ({ product }: TProductDetailPageProps) => {
                             <ProductMedia
                                 selectedImage={selectedImage}
                                 setSelectedImage={setSelectedImage}
-                                product={{ id, thumb, photos, video, sizeChart }} />
+                                product={{ id, thumb, photos, video, sizeGuidePhoto: sizeChart }} />
 
                             <ProductDelivery />
 
@@ -57,8 +57,8 @@ export const ProductDetail = ({ product }: TProductDetailPageProps) => {
 
                         {/* Right Column */}
                         <div className="w-7/15">
-                            <ProductActions
-                                onSelectVariant={setSelectedImage}
+                            <ProductBuyBox
+                                onSelectPhoto={setSelectedImage}
                                 product={{ id, name, shop, skus, retailPrice, tierVariations }} />
                         </div>
                     </div>

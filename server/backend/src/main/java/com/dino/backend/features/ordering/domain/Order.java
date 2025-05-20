@@ -2,16 +2,17 @@ package com.dino.backend.features.ordering.domain;
 
 import com.dino.backend.features.identity.domain.User;
 import com.dino.backend.features.shop.domain.Shop;
+import com.dino.backend.features.userprofile.domain.Address;
 import com.dino.backend.shared.model.BaseEntity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import io.hypersistence.utils.hibernate.type.json.JsonType;
 import jakarta.persistence.*;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Table;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.SuperBuilder;
-import org.hibernate.annotations.DynamicInsert;
-import org.hibernate.annotations.DynamicUpdate;
-import org.hibernate.annotations.SQLDelete;
-import org.hibernate.annotations.SQLRestriction;
+import org.hibernate.annotations.*;
 
 import java.time.Instant;
 import java.util.ArrayList;
@@ -34,24 +35,6 @@ public class Order extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "orderId", nullable = false, updatable = false)
     String id;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "buyerId", updatable = false, nullable = false)
-    @JsonIgnore
-    User buyer;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "shopId", updatable = false, nullable = false)
-    @JsonIgnore
-    Shop shop;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "addressId")
-    @JsonIgnore
-    Address address;
-
-    @OneToMany(mappedBy = "order", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    ArrayList<OrderItem> items;
 
     String status;
 
@@ -76,6 +59,23 @@ public class Order extends BaseEntity {
     Instant shipmentDate;
 
     Instant deliveryDate;
+
+    @Type(JsonType.class)
+    @Column(columnDefinition = "jsonb")
+    Address address;
+
+    @OneToMany(mappedBy = "order", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    ArrayList<OrderItem> items;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "buyerId", updatable = false, nullable = false)
+    @JsonIgnore
+    User buyer;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "shopId", updatable = false, nullable = false)
+    @JsonIgnore
+    Shop shop;
 
     //NESTED OBJECTS//
     public enum StatusType {DRAFT, UNPAID, PREPARING, TRANSIT, DELIVERING, DELIVERED, RETURN, CANCELED,}

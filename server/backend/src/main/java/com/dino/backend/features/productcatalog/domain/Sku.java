@@ -29,18 +29,33 @@ import java.util.List;
 @SuperBuilder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Sku extends BaseEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "skuId", updatable = false, nullable = false)
     String id;
 
+    String status;
+
+    @Column(nullable = false)
+    String code;
+
+    @Column(nullable = false)
+    List<Integer> tierOptionIndexes;
+
+    String tierOptionValue;
+
+    Integer retailPrice;
+
+    Integer productionCost;
+
+    @OneToOne(mappedBy = "sku", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    Inventory inventory;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "productId", updatable = false, nullable = false)
     @JsonIgnore
     Product product;
-
-    @OneToOne(mappedBy = "sku", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    Inventory inventory;
 
     @OneToMany(mappedBy = "sku", fetch = FetchType.LAZY)
     @JsonIgnore
@@ -49,20 +64,6 @@ public class Sku extends BaseEntity {
     @OneToMany(mappedBy = "sku", fetch = FetchType.LAZY)
     @JsonIgnore
     List<OrderItem> orderItems;
-
-    String status;
-
-    @Column(nullable = false)
-    String skuCode;
-
-    @Column(nullable = false)
-    Integer[] tierIndex;
-
-    String tierName;
-
-    Integer retailPrice;
-
-    Integer productionCost;
 
     // carts => sku metrics;
 

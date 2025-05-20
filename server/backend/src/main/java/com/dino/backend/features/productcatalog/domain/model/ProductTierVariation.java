@@ -1,10 +1,9 @@
 package com.dino.backend.features.productcatalog.domain.model;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
@@ -12,11 +11,22 @@ import java.util.ArrayList;
 @NoArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@JsonInclude(JsonInclude.Include.NON_NULL)
 public class ProductTierVariation {
     String name;
 
-    ArrayList<String> options;
+    List<Option> options;
 
-    ArrayList<String> photos;
+    @Getter
+    @Setter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Builder
+    @FieldDefaults(level = AccessLevel.PRIVATE)
+    public static class Option {
+        String value;
+
+        String photo;
+    }
 }
+
+

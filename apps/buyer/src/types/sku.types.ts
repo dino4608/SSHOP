@@ -8,9 +8,9 @@ export type TSku = {
     id: string;
     inventory: TInventory;
     status: SkuStatusType;
-    skuCode: string;
-    tierIndex: number[];
-    tierName: string;
+    code: string;
+    tierOptionIndexes: number[];
+    tierOptionValue: string;
     retailPrice: number;
     productionCost: number | null;
     createdAt: Date;

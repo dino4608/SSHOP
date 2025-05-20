@@ -1,14 +1,14 @@
 package com.dino.backend.features.productcatalog.domain;
 
-import com.dino.backend.features.productcatalog.domain.model.ProductSpecification;
 import com.dino.backend.shared.model.BaseEntity;
-import io.hypersistence.utils.hibernate.type.json.JsonType;
 import jakarta.persistence.*;
-import jakarta.persistence.Table;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.SuperBuilder;
-import org.hibernate.annotations.*;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.SQLRestriction;
 
 import java.util.List;
 

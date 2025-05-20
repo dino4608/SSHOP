@@ -1,5 +1,4 @@
 'use client';
-
 import { TProductBreadcrumb } from '@/types/product.types';
 import { ChevronRight, Home } from 'lucide-react';
 import Link from 'next/link';
@@ -9,7 +8,7 @@ type TProductBreadcrumbProps = {
     product: TProductBreadcrumb;
 };
 
-const ProductBreadcrumb = ({ product }: TProductBreadcrumbProps) => {
+export const ProductBreadcrumb = ({ product }: TProductBreadcrumbProps) => {
     // REFERENCED: height = padding y + text + border = 8*2 + 16 + 0.8 = 32.8px
     // px-2 sm:px-10 lg:px-35
     return (
@@ -43,5 +42,3 @@ const ProductBreadcrumb = ({ product }: TProductBreadcrumbProps) => {
         </div>
     );
 }
-
-export default ProductBreadcrumb;

@@ -1,9 +1,9 @@
 package com.dino.backend.features.productcatalog.domain;
 
 import com.dino.backend.features.productcatalog.domain.model.ProductMeta;
-import com.dino.backend.features.shop.domain.Shop;
 import com.dino.backend.features.productcatalog.domain.model.ProductSpecification;
 import com.dino.backend.features.productcatalog.domain.model.ProductTierVariation;
+import com.dino.backend.features.shop.domain.Shop;
 import com.dino.backend.shared.model.BaseEntity;
 import io.hypersistence.utils.hibernate.type.json.JsonType;
 import jakarta.persistence.*;
@@ -14,7 +14,6 @@ import lombok.experimental.FieldDefaults;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -36,24 +35,10 @@ public class Product extends BaseEntity {
     @Column(name = "productId", updatable = false, nullable = false)
     String id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "shopId", updatable = false, nullable = false)
-    Shop shop;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "categoryId", nullable = false)
-    Category category;
-
-    @OneToMany(mappedBy = "product", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true) // NOTE: orphanRemoval: xóa các child mồ coi
-    List<Sku> skus;
-
     String status;
 
     @Column(nullable = false)
     String name;
-
-    @Column(columnDefinition = "text")
-    String description;
 
     String slug;
 
@@ -62,23 +47,37 @@ public class Product extends BaseEntity {
 
     List<String> photos;
 
-    String video;
+    String sizeGuidePhoto;
 
-    String sizeChart;
+    String video;
 
     Integer retailPrice;
 
-    @Type(JsonType.class)
-    @Column(columnDefinition = "jsonb")
-    ArrayList<ProductSpecification> specifications;
+    @Column(columnDefinition = "text")
+    String description;
 
     @Type(JsonType.class)
     @Column(columnDefinition = "jsonb")
-    ArrayList<ProductTierVariation> tierVariations;
+    List<ProductSpecification> specifications;
+
+    @Type(JsonType.class)
+    @Column(columnDefinition = "jsonb")
+    List<ProductTierVariation> tierVariations;
 
     @Type(JsonType.class)
     @Column(columnDefinition = "jsonb")
     ProductMeta meta;
+
+    @OneToMany(mappedBy = "product", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true) // NOTE: orphanRemoval: xóa các child mồ coi
+    List<Sku> skus;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "categoryId", nullable = false)
+    Category category;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "shopId", updatable = false, nullable = false)
+    Shop shop;
 
     // stars => review
 

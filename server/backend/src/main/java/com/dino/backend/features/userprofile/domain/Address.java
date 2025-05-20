@@ -1,16 +1,16 @@
-package com.dino.backend.features.ordering.domain;
+package com.dino.backend.features.userprofile.domain;
 
 import com.dino.backend.features.identity.domain.User;
+import com.dino.backend.shared.model.BaseEntity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
-
-import java.util.List;
 
 @Entity
 @Table(name = "addresses")
@@ -22,23 +22,14 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
+@SuperBuilder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class Address {
+public class Address extends BaseEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "addressId", updatable = false, nullable = false)
     String id;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "buyerId", updatable = false, nullable = false)
-    @JsonIgnore
-    User buyer;
-
-    @OneToMany(mappedBy = "address", fetch = FetchType.LAZY)
-    @JsonIgnore
-    @ToString.Exclude
-    List<Order> orders;
 
     String status;
 
@@ -54,10 +45,10 @@ public class Address {
 
     String street;
 
-    boolean isDefault;
+    Boolean isDefault;
 
-    //NESTED OBJECTS//
-    public enum StatusType {
-        NEW, USED, ARCHIVED
-    }
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "buyerId", updatable = false, nullable = false)
+    @JsonIgnore
+    User buyer;
 }

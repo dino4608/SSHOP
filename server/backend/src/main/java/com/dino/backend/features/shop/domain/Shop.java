@@ -40,6 +40,22 @@ public class Shop extends BaseEntity {
     @ToString.Exclude
     User seller;
 
+    String status;
+
+    String code;
+
+    String name;
+
+    String photo;
+
+    String contactEmail;
+
+    String contactPhone;
+
+    String businessType;
+
+    String sellerType;
+
     @OneToMany(mappedBy = "shop", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     @JsonIgnore
     @ToString.Exclude
@@ -49,22 +65,6 @@ public class Shop extends BaseEntity {
     @JsonIgnore
     @ToString.Exclude
     List<Order> orders;
-
-    String status;
-
-    String shopName;
-
-    String shopCode;
-
-    String shopLogo;
-
-    String contactEmail;
-
-    String contactPhone;
-
-    String businessType;
-
-    String sellerType;
 
     // location => address
 

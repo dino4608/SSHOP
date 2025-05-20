@@ -21,7 +21,7 @@ public class SkuAppServiceImpl implements ISkuAppService {
     // SERVICES//
     @Override
     public void checkSkuCodeOrError(String skuCode) {
-        this.skuDomainRepo.findBySkuCode(skuCode)
+        this.skuDomainRepo.findByCode(skuCode)
                 .ifPresent(ignore -> {
                     throw new AppException(ErrorCode.SKU__CODE_UNIQUE);
                 });

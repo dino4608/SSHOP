@@ -1,5 +1,4 @@
 'use client';
-
 import { RESOURCES } from "@/lib/constants";
 import { getFileUrl } from "@/lib/files";
 import { TShop } from "@/types/shop.types";
@@ -25,7 +24,7 @@ type TProductShopInfoProps = {
     shop: TShop;
 }
 
-const ProductShopInfo = ({ shop }: TProductShopInfoProps) => {
+export const ProductShopInfo = ({ shop }: TProductShopInfoProps) => {
     const scrollRef = useRef<HTMLDivElement>(null);
     const [isDragging, setIsDragging] = useState(false);
     const [startX, setStartX] = useState(0);
@@ -55,7 +54,7 @@ const ProductShopInfo = ({ shop }: TProductShopInfoProps) => {
                 {/* Shop image */}
                 <div className="flex justify-start items-center gap-4">
                     <Image
-                        src={getFileUrl(shop.shopLogo, RESOURCES.SHOPS.BASE, shop.id)} //'/images/star.jpg'
+                        src={getFileUrl(shop.photo, RESOURCES.SHOPS.BASE, shop.id)} //'/images/star.jpg'
                         alt='Shop Avatar'
                         width={80}
                         height={80}
@@ -65,7 +64,7 @@ const ProductShopInfo = ({ shop }: TProductShopInfoProps) => {
                     <div className="text-gray-500 text-sm space-y-1">
                         {/* Shop name */}
                         <div className="text-black text-lg font-semibold">
-                            {shop.shopName}
+                            {shop.name}
                         </div>
                         {/* Ship highlights */}
                         <div className="flex items-center gap-2">
@@ -151,5 +150,3 @@ const ProductShopInfo = ({ shop }: TProductShopInfoProps) => {
         </div>
     );
 };
-
-export default ProductShopInfo;

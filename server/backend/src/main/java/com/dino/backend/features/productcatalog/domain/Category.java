@@ -26,14 +26,11 @@ import java.util.List;
 @SuperBuilder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Category extends BaseEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "categoryId", updatable = false, nullable = false)
     String id;
-
-    @OneToMany(mappedBy = "category", fetch =  FetchType.LAZY)
-    @JsonIgnore
-    List<Product> products;
 
     @Column(length = 40, nullable = false, unique = true)
     String name;
@@ -41,11 +38,15 @@ public class Category extends BaseEntity {
     @Column(length = 40, nullable = false, unique = true)
     String slug;
 
+    String photo;
+
     String description;
 
-    String image;
-
     Integer position;
+
+    @OneToMany(mappedBy = "category", fetch =  FetchType.LAZY)
+    @JsonIgnore
+    List<Product> products;
 
     // nested categories => list / array
 }

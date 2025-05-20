@@ -7,5 +7,5 @@ import java.util.Optional;
 
 public interface ISkuInfraRepository extends JpaRepository<Sku, String> {
     // FIND//
-    Optional<Sku> findBySkuCode(String skuCode);
+    Optional<Sku> findByCode(String skuCode);
 }

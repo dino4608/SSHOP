@@ -18,8 +18,10 @@ export type TProductSpecification = {
 
 export type TProductTierVariation = {
     name: string;
-    options: string[];
-    photos: string[];
+    options: {
+        value: string;
+        photo: string | null;
+    }[];
 }
 
 export type TProductMeta = {
@@ -28,34 +30,37 @@ export type TProductMeta = {
 
 export type TProduct = {
     id: string;
-    shop: TShop;
-    category: TCategory;
-    skus: TSku[];
     status: ProductStatusType;
     name: string;
-    description: string;
     slug: string;
     thumb: string;
     photos: string[];
+    sizeGuidePhoto: string;
     video: string;
-    sizeChart: string;
     retailPrice: number;
+    description: string;
     specifications: TProductSpecification[];
     tierVariations: TProductTierVariation[];
     meta: TProductMeta;
+    skus: TSku[];
+    category: TCategory;
+    shop: TShop;
     createdAt: Date;
     updatedAt: Date;
     isDeleted: boolean;
 }
 
-export type TProductActions = Pick<TProduct,
+export type TProductBuyBox = Pick<TProduct,
     'id' | 'name' | 'shop' | 'skus' | 'retailPrice' | 'tierVariations'>;
+
+export type TProductSelector = Pick<TProductBuyBox,
+    'id' | 'skus' | 'tierVariations'>;
 
 export type TProductBreadcrumb = Pick<TProduct,
     'name' | 'category'>;
 
 export type TProductMedia = Pick<TProduct,
-    'id' | 'thumb' | 'photos' | 'video' | 'sizeChart'>;
+    'id' | 'thumb' | 'photos' | 'video' | 'sizeGuidePhoto'>;
 
 export type TProductDescription = Pick<TProduct,
     'description' | 'specifications'>;
