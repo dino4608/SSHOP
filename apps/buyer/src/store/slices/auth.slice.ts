@@ -1,7 +1,7 @@
 import { ACCESS_TOKEN, CURRENT_USER } from "@/lib/constants";
 import clientCookies from "@/lib/storage/cookie.client";
 import clientLocal from "@/lib/storage/local.client";
-import { TAuthResponse, TUser } from "@/types/identity.types";
+import { TAuthResponse, TUser } from "@/types/auth.types";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 /* NOTE: Type of slice

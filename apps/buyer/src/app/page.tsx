@@ -1,16 +1,13 @@
 'use client';
-
 import CategoryListSection from "@/components/home/CategoryListSection";
 import FlashSaleSection from "@/components/home/FlashSaleSection";
 import HeroImageSection from "@/components/home/HeroImageSection";
-import ProductGridSection from "@/components/home/ProductGirdSection";
+import { ProductGridSection } from "@/components/home/ProductGirdSection";
 import { useState } from "react";
 
 
 const HomePage = () => {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
-
-  console.log("HomePage render");
 
   return (
     <div className="py-10 space-y-10">

@@ -6,10 +6,31 @@
  * - Khi tách, services dùng types, nhưng types không biết gì về service — đúng hướng phụ thuộc.
  */
 
+import { HttpMethod } from "@/lib/constants";
+
+export type TApiDefinition<T> = {
+    route: string;
+    method: HttpMethod;
+    query?: object;
+    body?: object;
+};
+
 export type TApiResponse<T> = {
     success: boolean;
     status: number;
     code: number;
     error: string;
     data: T;
+}
+
+export type TPagination = {
+    totalPages: number;
+    totalElements: number;
+    page: number;
+    size: number;
+}
+
+export type TPageRes<T> = {
+    pagination: TPagination,
+    items: T[]
 }

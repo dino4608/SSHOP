@@ -1,15 +1,78 @@
-export type TProduct = {
-    id: number;
-    name: string;
-    price: number;
-    category: string;
-};
+import { TCategory } from "./category.types";
+import { TShop } from "./shop.types";
+import { TSku } from "./sku.types";
 
-export type TCategory = {
-    id: number;
+export enum ProductStatusType {
+    DRAFT = 'DRAFT',
+    REVIEWING = 'REVIEWING',
+    LIVE = 'LIVE',
+    DEACTIVATED = 'DEACTIVATED',
+    SUSPENDED = 'SUSPENDED',
+    DELETED = 'DELETED',
+}
+
+export type TProductSpecification = {
     name: string;
-    description?: string;
+    value: string;
+}
+
+export type TProductTierVariation = {
+    name: string;
+    options: {
+        value: string;
+        photo: string | null;
+    }[];
+}
+
+export type TProductMeta = {
+    isCodEnabled: boolean;
+}
+
+export type TProduct = {
+    id: string;
+    status: ProductStatusType;
+    name: string;
     slug: string;
-    image: string;
-    position?: number;
+    thumb: string;
+    photos: string[];
+    sizeGuidePhoto: string;
+    video: string;
+    retailPrice: number;
+    description: string;
+    specifications: TProductSpecification[];
+    tierVariations: TProductTierVariation[];
+    meta: TProductMeta;
+    skus: TSku[];
+    category: TCategory;
+    shop: TShop;
+    createdAt: Date;
+    updatedAt: Date;
+    isDeleted: boolean;
+}
+
+export type TProductBuyBox = Pick<TProduct,
+    'id' | 'name' | 'shop' | 'skus' | 'retailPrice' | 'tierVariations'>;
+
+export type TProductSelector = Pick<TProductBuyBox,
+    'id' | 'skus' | 'tierVariations'>;
+
+export type TProductBreadcrumb = Pick<TProduct,
+    'name' | 'category'>;
+
+export type TProductMedia = Pick<TProduct,
+    'id' | 'thumb' | 'photos' | 'video' | 'sizeGuidePhoto'>;
+
+export type TProductDescription = Pick<TProduct,
+    'description' | 'specifications'>;
+
+export type TProductItem = {
+    id: string;
+    name: string;
+    status: ProductStatusType;
+    meta: {
+        isCodEnabled: boolean;
+    };
+    thumb: string;
+    updatedAt: Date;
+    retailPrice: number;
 };

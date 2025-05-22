@@ -1,7 +1,10 @@
 'use client';
-
+import { RESOURCES } from "@/lib/constants";
+import { getFileUrl } from "@/lib/files";
+import { TShop } from "@/types/shop.types";
 import { Star } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 import { useRef, useState } from "react";
 
 const imageUrls = [
@@ -17,8 +20,11 @@ const imageUrls = [
     '/images/headphones (2).jpg',
 ];
 
+type TProductShopInfoProps = {
+    shop: TShop;
+}
 
-const ProductShopInfo = () => {
+export const ProductShopInfo = ({ shop }: TProductShopInfoProps) => {
     const scrollRef = useRef<HTMLDivElement>(null);
     const [isDragging, setIsDragging] = useState(false);
     const [startX, setStartX] = useState(0);
@@ -48,7 +54,7 @@ const ProductShopInfo = () => {
                 {/* Shop image */}
                 <div className="flex justify-start items-center gap-4">
                     <Image
-                        src='/images/star.jpg'
+                        src={getFileUrl(shop.photo, RESOURCES.SHOPS.BASE, shop.id)} //'/images/star.jpg'
                         alt='Shop Avatar'
                         width={80}
                         height={80}
@@ -58,7 +64,7 @@ const ProductShopInfo = () => {
                     <div className="text-gray-500 text-sm space-y-1">
                         {/* Shop name */}
                         <div className="text-black text-lg font-semibold">
-                            Helios.vn
+                            {shop.name}
                         </div>
                         {/* Ship highlights */}
                         <div className="flex items-center gap-2">
@@ -83,8 +89,15 @@ const ProductShopInfo = () => {
 
                 {/* Shop actions */}
                 <div className="flex flex-col justify-center items-center gap-2">
-                    <button className="px-6 rounded bg-gray-200 text-base font-semibold">Visit</button>
-                    <button className="px-6 rounded bg-gray-200 text-base font-semibold">Chat</button>
+                    <Link
+                        href={`/shops/${shop.id}`}
+                        className="px-6 rounded bg-gray-200 text-base font-semibold"
+                    >
+                        Visit
+                    </Link>
+                    <button className="px-6 rounded bg-gray-200 text-base font-semibold">
+                        Chat
+                    </button>
                 </div>
             </div>
 
@@ -137,5 +150,3 @@ const ProductShopInfo = () => {
         </div>
     );
 };
-
-export default ProductShopInfo;

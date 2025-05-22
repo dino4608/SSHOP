@@ -1,19 +1,19 @@
-'use server';
+import { ProductDetail } from '@/components/product/ProductDetail';
+import { api } from '@/lib/api';
+import { serverFetch } from '@/lib/fetch/fetch.server';
 
-import ProductClientSide from '@/components/product/ProductClientSide';
-import React from 'react';
-
-type PageProps = {
-    params: Promise<{
-        id: string;
-    }>;
+type ProductDetailPageProps = {
+    params: Promise<{ id: string; }>;
 };
 
-const ProductDetailPage = async ({ params }: PageProps) => {
+const ProductDetailPage = async ({ params }: ProductDetailPageProps) => {
     const { id } = await params;
+    const apiRes = await serverFetch(api.products.getById(id));
+
+    // TODO: handle serverFetch error
 
     return (
-        <ProductClientSide productId={id} />
+        <ProductDetail product={apiRes.data} />
     );
 };
 

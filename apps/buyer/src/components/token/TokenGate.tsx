@@ -33,13 +33,11 @@ export const TokenGate = async ({ children }: { children: React.ReactNode }) => 
 
     // Nếu hợp lệ → render children
     if (apiRes.success) {
-        const currentUser = apiRes.data;
-        console.log(">>> TokenGate: currentUser: ", currentUser);
-        return <Fragment>{children}</Fragment>; // update Redux store
+        return <Fragment>{children}</Fragment>;
     }
 
     // Mặc định fallback nếu có lỗi khác → render children luôn
-    console.warn(">>> TokenGate: Unknown error, fallback to render children");
-    return <Fragment>{'>>> TokenGate: unhandled error: will render children'}</Fragment>;
+    console.warn(">>> TokenGate: Unknown error, no render");
+    return <Fragment>{'>>> TokenGate: Unknown error: no render'}</Fragment>;
 
 }

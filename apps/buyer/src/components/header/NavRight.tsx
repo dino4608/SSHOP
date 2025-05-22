@@ -5,7 +5,7 @@ import { api } from "@/lib/api";
 import { clientFetch } from "@/lib/fetch/fetch.client";
 import { useAppDispatch } from "@/store/hooks";
 import { authActions } from "@/store/slices/auth.slice";
-import { TUser } from "@/types/identity.types";
+import { TUser } from "@/types/auth.types";
 import { BadgeCheckIcon, BellIcon, CreditCardIcon, LogOutIcon, MessageCircleMore, SettingsIcon, SquareMenu, UserRound, UserRoundIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { toast } from 'sonner';

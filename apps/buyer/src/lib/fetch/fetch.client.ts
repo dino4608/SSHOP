@@ -1,4 +1,4 @@
-import { TApiDefinition } from "../api/config";
+import { TApiDefinition } from "@/types/base.types";
 import clientCookies from "../storage/cookie.client";
 import { fetchSafely } from "./config";
 

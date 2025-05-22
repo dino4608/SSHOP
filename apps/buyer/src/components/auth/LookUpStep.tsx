@@ -8,7 +8,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from '@/components/ui/input';
 import { TApiResponse } from '@/types/base.types';
-import { TLookupIdentifierResponse } from "@/types/identity.types";
+import { TLookupIdentifierResponse } from "@/types/auth.types";
 import { lookUpFormSchema, TLookUpFormData } from '@/validations/auth.validations';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useState, useTransition } from 'react';

@@ -1,6 +1,6 @@
 import clientLocal from "@/lib/storage/local.client";
 import { useAppSelector } from "@/store/hooks";
-import { TUser } from "@/types/identity.types";
+import { TUser } from "@/types/auth.types";
 import { useIsAuthenticated } from "./useIsAuthenticated";
 import { CURRENT_USER } from "@/lib/constants";
 
