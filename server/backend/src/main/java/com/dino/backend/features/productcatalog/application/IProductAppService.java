@@ -11,7 +11,4 @@ public interface IProductAppService {
     PageRes<ProductProjection> list(Pageable pageable);
 
     Product getById(String productId);
-
-    // COMMAND //
-
 }

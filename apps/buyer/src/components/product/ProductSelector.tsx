@@ -1,5 +1,6 @@
 'use client';
-import { findMatchingSku, getDisabledMatrix } from '@/helpers/product.helper';
+import { getDisabledOptionsMatrix } from '@/helpers/product.helper';
+import { findMatchingSku } from '@/helpers/sku.helper';
 import { RESOURCES } from '@/lib/constants';
 import { getFileUrl } from '@/lib/files';
 import { TProductSelector } from '@/types/product.types';
@@ -20,7 +21,7 @@ export const ProductSelector = ({ onChangeSelectedSku, onSelectPhoto, product }:
     );
 
     const disabledMatrix = useMemo(
-        () => getDisabledMatrix(product, selectedTierOptionIndexes),
+        () => getDisabledOptionsMatrix(product, selectedTierOptionIndexes),
         [product, selectedTierOptionIndexes]
     );
 

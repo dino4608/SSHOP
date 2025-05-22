@@ -31,8 +31,6 @@ public class Address extends BaseEntity {
     @Column(name = "addressId", updatable = false, nullable = false)
     String id;
 
-    String status;
-
     String contactName;
 
     String contactPhone;
@@ -48,7 +46,7 @@ public class Address extends BaseEntity {
     Boolean isDefault;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "buyerId", updatable = false, nullable = false)
+    @JoinColumn(name = "userId", updatable = false, nullable = false)
     @JsonIgnore
-    User buyer;
+    User user;
 }
