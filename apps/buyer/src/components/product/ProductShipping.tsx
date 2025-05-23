@@ -1,20 +1,17 @@
 'use client';
 import { getDeliveryDateRange } from "@/helpers/shipping.helper";
-import { TAddress } from "@/types/address.types";
+import { useAppSelector } from "@/store/hooks";
 import { Dot, MapPin, ShieldCheck, Truck } from "lucide-react";
 
-type TProductDeliveryProps = {
-    defaultAddress: TAddress | null;
-}
-const ProductDelivery = ({ defaultAddress }: TProductDeliveryProps) => {
-
+export const ProductShipping = () => {
+    const defaultAddress = useAppSelector((state) => state.address.defaultAddress);
     const deliveryDateRange = getDeliveryDateRange();
 
     return (
         <div className="p-4 border border-gray-200 rounded-lg bg-white flex flex-col gap-4">
             {/* header */}
             <div className="text-lg font-semibold">
-                Delivery
+                Vận chuyển
             </div>
 
             {/* Body content with dividers */}
@@ -22,18 +19,18 @@ const ProductDelivery = ({ defaultAddress }: TProductDeliveryProps) => {
                 {/* Shipping */}
                 {defaultAddress && (<div className="flex items-center gap-2 pb-2">
                     <Truck className="w-5 h-5" />
-                    Shipping:
+                    Phí:
                     <span className="inline-flex text-gray-400 line-through">₫17.000</span>
                     <span className="inline-flex px-2 bg-teal-100 rounded-sm text-teal-500 font-medium">Free shipping</span>
                     <span className="text-teal-500">
-                        Get by {deliveryDateRange}
+                        Nhận vào {deliveryDateRange}
                     </span>
                 </div>)}
 
                 {/* Address */}
                 {defaultAddress && (<div className="flex items-center gap-2 py-2">
                     <MapPin className="w-5 h-5" />
-                    To: {`${defaultAddress.commune}, ${defaultAddress.district}, ${defaultAddress.province}`}
+                    Địa chỉ: {`${defaultAddress.commune}, ${defaultAddress.district}, ${defaultAddress.province}`}
                 </div>)}
 
                 {/* <div className="grid grid-rows-3 gap-1 py-2">
@@ -66,5 +63,3 @@ const ProductDelivery = ({ defaultAddress }: TProductDeliveryProps) => {
 
     );
 };
-
-export default ProductDelivery;

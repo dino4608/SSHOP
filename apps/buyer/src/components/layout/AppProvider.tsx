@@ -1,14 +1,11 @@
-import { StoreProvider } from "@/store/StoreProvider";
-import { TokenAuthProvider } from "../token/TokenAuthProvider";
-import { GlobalDataProvider } from "../providers/data/GlobalDataProvider";
-
+import { StoreProvider } from "@/components/providers/store/StoreProvider";
+import { TokenAuthProvider } from "@/components/providers/token/TokenAuthProvider";
+import { GlobalDataProvider } from "@/components/providers/data/GlobalDataProvider";
 
 export const AppProvider = ({ children }: { children: React.ReactNode }) => {
-
     return (
         <StoreProvider>
             <TokenAuthProvider>
-                {/* {children} */}
                 <GlobalDataProvider>
                     {children}
                 </GlobalDataProvider>

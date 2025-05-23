@@ -132,6 +132,78 @@ Branches should follow the format: `<type>/<scope>`
 | **Rename & Refactor**                | `F2`                   | `Shift + F6`           |
 | **Window Icon**                      | `Window + .`           |                        |
 
+
+<br></br>
+## 🧩 **Phase 1: Identity ** (Date 5/14)
+
+### ✅ **Tóm tắt các tính năng đã hoàn thành**
+
+### 🔐 **1. Đăng nhập / Đăng ký**
+
+- **Hỗ trợ đầy đủ:** Đăng nhập và Đăng ký bằng `Password` và `Google`.
+- **Luồng thông minh:** Kiểm tra username tồn tại → phân nhánh `login` / `signup` tự động.
+- **UI thân thiện:** Dùng Shadcn Form, UX rõ ràng cho cả 2 luồng.
+
+### 🔁 **2. Token Provider chuẩn chỉnh**
+
+- **TokenGate (server):** Kiểm tra `isAuthenticated` ở `Layout` → bảo vệ route server.
+- **TokenRestorer (client):** Tự động gọi `refresh token` nếu hết hạn.
+- **TokenAutoRefresher:** Interval định kỳ để chủ động refresh (tránh giật UI).
+- **Middleware:** Redirect hợp lý giữa `public` / `private` route.
+- **Luồng xác thực:** Tự động, mượt, không lộ `flicker`.
+
+### 🚪 **3. Logout**
+
+- Gọi API `/logout`.
+- Clear toàn bộ: `Redux`, `Cookie`, `LocalStorage`.
+- `router.refresh()` hoặc `router.push()` tùy theo context hiện tại.
+
+### 🧠 **4. Shared Auth State**
+
+| **Layer**        | **Lưu trữ gì**                             | **Mục đích**                               |
+|------------------|--------------------------------------------|--------------------------------------------|
+| **Redux**        | `accessToken`, `currentUser`               | Dùng toàn app (UI, logic client).          |
+| **Cookies**      | `accessToken` (persist)                    | Sync với server (SSR, middleware, API).    |
+| **LocalStorage** | `refreshToken`, `currentUser` (nếu cần)    | Giữ an toàn phía client, hỗ trợ fallback.  |
+
+### 🔒 **5. Gọi API an toàn**
+
+- `clientFetch` vs `serverFetch`: Tách rõ 2 context gọi API.
+- Tự động retry khi accessToken hết hạn → fallback sang `TokenRestorer`.
+- Backend hỗ trợ decorator và interface tiện lợi:
+  - `@AuthUser`, `ICookieProvider`, `IOauth2Provider`, ...
+
+### 📐 **6. Backend DDD chuẩn chỉnh**
+
+| **Layer**      | **Vai trò chính**                                                     |
+|----------------|------------------------------------------------------------------------|
+| `controller`   | Chỉ nhận request → gọi service → trả response                          |
+| `application`  | Tập trung xử lý logic (validate, dùng repo, trả kết quả)              |
+| `domain`       | Nơi đặt Entity, Rule, Aggregate                                       |
+| `infra`        | Giao tiếp DB, OAuth, JWT, Cookie, v.v                                 |
+
+- Dùng `IAuthAppService`, `QueryService`, `BeanEnv`, rõ trách nhiệm.
+- **Không vi phạm DDD:** `Controller` KHÔNG gọi trực tiếp `Repository`.
+
+### 🚀 **Bạn đã đạt được:**
+
+- Nền tảng xác thực vững chắc, production-ready.
+- Sync logic rõ ràng giữa `server` và `client`.
+- Dễ dàng mở rộng cho buyer, seller, admin sau này.
+- Tái sử dụng logic giữa nhiều tầng (UI/API/Service).
+- Tích hợp tốt với hệ thống backend (`cookie`, `token`, `session`).
+
+### 🟢 **Gợi ý tiếp theo (nếu muốn build tiếp):**
+
+| **Mục tiêu**                            | **Ý nghĩa / Lợi ích**                                         |
+|----------------------------------------|---------------------------------------------------------------|
+| 👥 Phân quyền (buyer, admin, etc.)     | Phân tách UI, quyền truy cập                                  |
+| 🧾 Quản lý session đa thiết bị         | Hiện thông tin + logout thủ công các thiết bị khác            |
+| 🔐 2FA / Email Verification            | Bảo mật nâng cao + verify email                               |
+| 🗂️ Soft logout (token blacklist)       | Làm mượt trải nghiệm logout (không cần xoá token client)      |
+| 🔎 Audit log                           | Ghi nhận ai đăng nhập, từ đâu, thời điểm nào                  |
+
+
 <br></br>
 ## 🐞 **Faced Bugs and Issues**
 

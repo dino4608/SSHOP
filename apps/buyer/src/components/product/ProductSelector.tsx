@@ -102,13 +102,13 @@ export const ProductSelector = ({ onChangeSelectedSku, onSelectPhoto, product }:
             {/* Quantity and Stocks */}
             <div className="flex items-center gap-4">
                 <div className="font-medium">Số lượng</div>
-                <div className="flex items-center border-2 rounded-md overflow-hidden w-fit">
+                <div className="flex items-center border-2 border-gray-300 rounded-md overflow-hidden w-fit">
                     <button
                         onClick={() => onChangeQuantity(-1)}
                         className="px-3 py-1 text-xl"
                     >-</button>
                     {/* TODO: type number to enter quantity */}
-                    <div className="w-10 py-1 border-l border-r text-center font-semibold">
+                    <div className="w-10 py-1 border-l border-r border-gray-300 text-center font-semibold">
                         {quantity}
                     </div>
                     <button
@@ -116,6 +116,7 @@ export const ProductSelector = ({ onChangeSelectedSku, onSelectPhoto, product }:
                         className="px-3 py-1 text-xl"
                     >+</button>
                 </div>
+
                 {selectedSku && (<div className="text-gray-500">
                     Còn lại {selectedSku.inventory.stocks} sản phẩm
                 </div>)}

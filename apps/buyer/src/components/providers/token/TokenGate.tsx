@@ -3,11 +3,11 @@ import { api } from "@/lib/api";
 import { serverFetch } from "@/lib/fetch/fetch.server";
 import { Fragment, Suspense } from "react";
 import { TokenRestorer } from "./TokenRestorer";
-import { asyncIsAuthenticated } from "@/lib/server/auth";
+import { getIsAuthenticated } from "@/hooks/getIsAuthenticated";
 
 export const TokenGate = async ({ children }: { children: React.ReactNode }) => {
     // Nếu không có accessToken → không xác thực → render children
-    const isAuthenticated = await asyncIsAuthenticated();
+    const isAuthenticated = await getIsAuthenticated();
     if (!isAuthenticated) {
         console.log(">>> TokenGate: isAuthenticated F: render children with no auth");
         return <Fragment>{children}</Fragment>;

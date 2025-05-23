@@ -9,8 +9,8 @@ import {
 import { Input } from '@/components/ui/input';
 import { api } from '@/lib/api';
 import { clientFetch } from '@/lib/fetch/fetch.client';
+import { actions } from '@/store';
 import { useAppDispatch } from '@/store/hooks';
-import { authActions } from '@/store/slices/auth.slice';
 import { logInFormSchema, TLogInFormData } from "@/validations/auth.validations";
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'next/navigation';
@@ -44,7 +44,7 @@ const LogInStep = ({ email, onEmailChange }: Props) => {
             if (!result.success) {
                 setError(result.error);
             } else {
-                dispatch(authActions.setCredentials(result.data));
+                dispatch(actions.auth.setCredentials(result.data));
                 router.refresh();
             }
         });

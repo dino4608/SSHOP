@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { asyncIsAuthenticated } from './lib/server/auth';
+import { getIsAuthenticated } from './hooks/getIsAuthenticated';
 
 // 1. Specify public routes
 const publicAuthRoutes = ['/auth', '/auth/google']
@@ -29,7 +29,7 @@ function isAfterAuth(path: string, isAuthenticated: boolean): boolean {
 export default async function middleware(request: NextRequest) {
     // 2. If after auth, go auth, will redirect to the home page
     const path = request.nextUrl.pathname
-    const isAuthenticated = await asyncIsAuthenticated()
+    const isAuthenticated = await getIsAuthenticated()
 
     if (isAfterAuth(path, isAuthenticated)) {
         return NextResponse.redirect(new URL('/', request.nextUrl))

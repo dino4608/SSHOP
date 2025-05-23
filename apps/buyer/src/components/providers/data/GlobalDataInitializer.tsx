@@ -1,11 +1,11 @@
 // components/providers/data/GlobalDataInitializer.tsx
 import { getCurrentUser, getDefaultAddress } from '@/hooks/getStore';
-import { asyncIsAuthenticated } from "@/lib/server/auth";
+import { getIsAuthenticated } from "@/hooks/getIsAuthenticated";
 import { Fragment } from 'react';
 import { GlobalDataHydrator } from './GlobalDataHydrator';
 
 export const GlobalDataInitializer = async ({ children }: { children: React.ReactNode }) => {
-    const isAuthenticated = await asyncIsAuthenticated();
+    const isAuthenticated = await getIsAuthenticated();
 
     if (!isAuthenticated) {
         console.log(">>> GlobalDataInitializer: don't init.");

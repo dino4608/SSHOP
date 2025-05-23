@@ -1,10 +1,9 @@
 'use client'
 import { navigationMenuItemStyle } from '@/components/ui/navigation-menu';
-import { useCurrentUser } from "@/hooks/useStore";
 import { api } from "@/lib/api";
 import { clientFetch } from "@/lib/fetch/fetch.client";
 import { actions } from '@/store';
-import { useAppDispatch } from "@/store/hooks";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { TUser } from "@/types/auth.types";
 import { BadgeCheckIcon, BellIcon, CreditCardIcon, LogOutIcon, MessageCircleMore, SettingsIcon, SquareMenu, UserRound, UserRoundIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -81,7 +80,7 @@ const NavAccount = ({ currentUser }: { currentUser: TUser }) => {
 }
 
 export const NavRight = () => {
-    const currentUser = useCurrentUser();
+    const currentUser = useAppSelector((state) => state.auth.currentUser);
 
     return (
         <NavigationMenu>

@@ -9,7 +9,7 @@ export const getDeliveryDateRange = () => {
 
     const startDay = startDate.getDate();
     const endDay = endDate.getDate();
-    const month = endDate.toLocaleString('default', { month: 'long' });
+    const month = endDate.toLocaleString('vi-VN', { month: 'long' }); // ('default',);
 
     return `${startDay} - ${endDay} ${month}`;
 };

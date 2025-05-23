@@ -1,9 +1,9 @@
-import clientLocal from "@/lib/storage/local.client";
-import { useAppDispatch, useAppSelector } from "@/store/hooks";
-import { TUser } from "@/types/auth.types";
-import { useIsAuthenticated } from "./useIsAuthenticated";
-import { CURRENT_USER } from "@/lib/constants";
-import { actions } from "@/store";
+// import clientLocal from "@/lib/storage/local.client";
+// import { useAppDispatch, useAppSelector } from "@/store/hooks";
+// import { TUser } from "@/types/auth.types";
+// import { useIsAuthenticated } from "./useIsAuthenticated";
+// import { CURRENT_USER } from "@/lib/constants";
+// import { actions } from "@/store";
 
 /* NOTE: useAuth
  * Rất nên tạo hook useAuth như bạn đang làm, dù logic có vẻ đơn giản — vì:
@@ -21,13 +21,13 @@ import { actions } from "@/store";
  * Hooks phải luôn được gọi ở cấp cao nhất trong function component hoặc custom hook
  * không được gọi conditionally.
  */
-export const useCurrentUser = () => {
-    const isAuthenticated = useIsAuthenticated();
-    const currentUser = useAppSelector(state => state.auth.currentUser);
+// export const useCurrentUser = () => {
+//     const isAuthenticated = useIsAuthenticated();
+//     const currentUser = useAppSelector(state => state.auth.currentUser);
 
-    if (!isAuthenticated) return null;
-    return currentUser || clientLocal.get<TUser>(CURRENT_USER);
-}
+//     if (!isAuthenticated) return null;
+//     return currentUser || clientLocal.get<TUser>(CURRENT_USER);
+// }
 
 // export const useClearStore = () => {
 //     const dispatch = useAppDispatch()
