@@ -2,9 +2,9 @@
 import { ProductBreadcrumb } from '@/components/product/ProductBreadcrumb';
 import { ProductBuyBox } from '@/components/product/ProductBuyBox';
 import ProductDeals from '@/components/product/ProductDeals';
-import ProductDelivery from '@/components/product/ProductDelivery';
 import { ProductDescription } from '@/components/product/ProductDescription';
 import { ProductMedia } from '@/components/product/ProductMedia';
+import { ProductShipping } from '@/components/product/ProductShipping';
 import { ProductShopInfo } from '@/components/product/ProductShopInfo';
 import { TProduct } from '@/types/product.types';
 import { useState } from 'react';
@@ -41,7 +41,7 @@ export const ProductDetail = ({ product }: TProductDetailPageProps) => {
                                 setSelectedImage={setSelectedImage}
                                 product={{ id, thumb, photos, video, sizeGuidePhoto: sizeChart }} />
 
-                            <ProductDelivery />
+                            <ProductShipping />
 
                             <ProductDeals />
 

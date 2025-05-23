@@ -1,10 +1,9 @@
 'use client'
 import { navigationMenuItemStyle } from '@/components/ui/navigation-menu';
-import { useCurrentUser } from "@/hooks/useStore";
 import { api } from "@/lib/api";
 import { clientFetch } from "@/lib/fetch/fetch.client";
-import { useAppDispatch } from "@/store/hooks";
-import { authActions } from "@/store/slices/auth.slice";
+import { actions } from '@/store';
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { TUser } from "@/types/auth.types";
 import { BadgeCheckIcon, BellIcon, CreditCardIcon, LogOutIcon, MessageCircleMore, SettingsIcon, SquareMenu, UserRound, UserRoundIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -18,11 +17,12 @@ const NavAccount = ({ currentUser }: { currentUser: TUser }) => {
     const router = useRouter()
 
     const onLogout = async () => {
-        const res = await clientFetch(api.auth.logout()) // ← gọi API logout
+        const res = await clientFetch(api.auth.logout())
 
         if (res.success) {
             console.log(">>> NavAccount: Log out: isAuthenticated: ", res.data.isAuthenticated)
-            dispatch(authActions.clear())
+            dispatch(actions.auth.clear())
+            dispatch(actions.address.clear())
             router.refresh();
         } else {
             toast.error(res.error)
@@ -80,7 +80,7 @@ const NavAccount = ({ currentUser }: { currentUser: TUser }) => {
 }
 
 export const NavRight = () => {
-    const currentUser = useCurrentUser();
+    const currentUser = useAppSelector((state) => state.auth.currentUser);
 
     return (
         <NavigationMenu>

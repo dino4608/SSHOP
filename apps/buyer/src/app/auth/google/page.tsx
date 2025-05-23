@@ -3,8 +3,8 @@ import LoadingSuspense from '@/components/layout/LoadingSuspense';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { api } from '@/lib/api';
 import { clientFetch } from '@/lib/fetch/fetch.client';
+import { actions } from '@/store';
 import { useAppDispatch } from '@/store/hooks';
-import { authActions } from '@/store/slices/auth.slice';
 import { AlertCircle, Loader2 } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
@@ -28,8 +28,8 @@ const GoogleAuthPage = () => {
                 if (!result.success) {
                     setError(result.error);
                 } else {
-                    dispatch(authActions.setCredentials(result.data));
-                    router.push('/');
+                    dispatch(actions.auth.setCredentials(result.data));
+                    router.refresh();
                 }
             });
         } else {

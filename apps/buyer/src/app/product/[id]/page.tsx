@@ -1,6 +1,7 @@
 import { ProductDetail } from '@/components/product/ProductDetail';
 import { api } from '@/lib/api';
 import { serverFetch } from '@/lib/fetch/fetch.server';
+import { getIsAuthenticated } from '@/hooks/getIsAuthenticated';
 
 type ProductDetailPageProps = {
     params: Promise<{ id: string; }>;
@@ -8,12 +9,13 @@ type ProductDetailPageProps = {
 
 const ProductDetailPage = async ({ params }: ProductDetailPageProps) => {
     const { id } = await params;
-    const apiRes = await serverFetch(api.products.getById(id));
+    const isAuthenticated = await getIsAuthenticated();
 
-    // TODO: handle serverFetch error
+    const apiRes = await serverFetch(api.products.getById(id));
+    const product = apiRes.data;
 
     return (
-        <ProductDetail product={apiRes.data} />
+        <ProductDetail product={product} />
     );
 };
 

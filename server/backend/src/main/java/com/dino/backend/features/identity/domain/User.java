@@ -71,6 +71,11 @@ public class User extends BaseEntity {
     @ToString.Exclude
     Token token;
 
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
+    @ToString.Exclude
+    List<Address> addresses;
+
     @OneToOne(mappedBy = "seller", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore
     @ToString.Exclude
@@ -80,11 +85,6 @@ public class User extends BaseEntity {
     @JsonIgnore
     @ToString.Exclude
     Cart cart;
-
-    @OneToMany(mappedBy = "buyer", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonIgnore
-    @ToString.Exclude
-    List<Address> addresses;
 
     @OneToMany(mappedBy = "buyer", fetch = FetchType.LAZY)
     @JsonIgnore

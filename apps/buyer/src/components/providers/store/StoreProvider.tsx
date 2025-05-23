@@ -1,14 +1,12 @@
-// src/store/provider.tsx
 "use client";
-
+import { store } from "@/store";
 import React from "react";
-import { Provider } from "react-redux";
-import { store } from ".";
+import { Provider as ReduxProvider } from "react-redux";
 
 export const StoreProvider = ({ children }: { children: React.ReactNode }) => {
     return (
-        <Provider store={store}>
+        <ReduxProvider store={store}>
             {children}
-        </Provider>
+        </ReduxProvider>
     );
 }

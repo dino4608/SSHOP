@@ -4,21 +4,6 @@ import clientLocal from "@/lib/storage/local.client";
 import { TAuthResponse, TUser } from "@/types/auth.types";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-/* NOTE: Type of slice
- * Mặc dù nó Type of AuthState giống AuthResponse, nhưng bạn nên tách riêng vì:
- * - Có thể state chứa thêm field như loading, error, v.v. // TODO
- * - Đảm bảo Redux state tự chủ, không phụ thuộc API chặt chẽ.
- */
-// type TUserState = {
-//     currentUser: TUser | null;
-// }
-
-// const initialState: TUserState = { currentUser: null };
-const initialState: Partial<Omit<TAuthResponse, 'isAuthenticated'>> = {
-    accessToken: undefined,
-    currentUser: undefined,
-}
-
 /* NOTE: Redux Toolkit
  * - Step: create Slide => create Reducer => add to Store.
  * - Actions: don't need to create, they auto created by Slide.
@@ -27,6 +12,16 @@ const initialState: Partial<Omit<TAuthResponse, 'isAuthenticated'>> = {
  * - Immer sẽ clone state đã áp dụng các thay đổi, rồi return bản clone ngầm cho bạn.
  * - return: bỏ qua Immer, bạn tự tạo và trả về state mới.
  */
+type TAuthState = {
+    accessToken: string | null;
+    currentUser: TUser | null;
+}
+
+const initialState: TAuthState = {
+    accessToken: clientCookies.get(ACCESS_TOKEN) || null,
+    currentUser: clientLocal.get(CURRENT_USER) || null,
+}
+
 const authSlice = createSlice({
     name: "auth",
     initialState,
@@ -37,10 +32,14 @@ const authSlice = createSlice({
             state.accessToken = payload.accessToken;
             state.currentUser = payload.currentUser;
         },
-        clear: (state) => {
+        setCurrentUser: (state, { payload }: PayloadAction<TUser>) => {
+            clientLocal.set(CURRENT_USER, payload);
+            state.currentUser = payload;
+        },
+        clear: () => {
             clientCookies.remove(ACCESS_TOKEN);
             clientLocal.remove(CURRENT_USER);
-            return initialState;
+            return { accessToken: null, currentUser: null };
         },
     },
 });

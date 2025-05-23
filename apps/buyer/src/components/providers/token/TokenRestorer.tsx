@@ -2,21 +2,16 @@
 'use client';
 import { api } from '@/lib/api';
 import { clientFetch } from '@/lib/fetch/fetch.client';
-import { authActions } from '@/store/slices/auth.slice';
+import { actions } from '@/store';
+import { useAppDispatch } from '@/store/hooks';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
 
 // TokenGate isAuth T, apiCurrentUser F => don't render children, render TokenRestorer
 export function TokenRestorer() {
     const [success, setSuccess] = useState(false);
     const router = useRouter();
-    const dispatch = useDispatch();
-
-    // No use
-    // const pathname = usePathname();
-    // const isAuth = useIsAuthenticated();
-    // const isHome = pathname === '/';
+    const dispatch = useAppDispatch();
 
     // NOTE: useEffect
     // Giả sử component có usePathname, isHome, useEffect, if()
@@ -30,7 +25,7 @@ export function TokenRestorer() {
 
             if (apiRes.success) {
                 console.log(">>> TokenRestorer: Refresh success");
-                dispatch(authActions.setCredentials(apiRes.data));
+                dispatch(actions.auth.setCredentials(apiRes.data));
                 setSuccess(true);
                 router.refresh();
                 // request to refresh
@@ -38,17 +33,17 @@ export function TokenRestorer() {
                 // => TokenGate isAuth T, apiCurrentUser T, render children withAuth
             } else {
                 console.warn(">>> TokenRestorer: Refresh failed, clearing auth");
-                dispatch(authActions.clear());
+                dispatch(actions.auth.clear());
                 setSuccess(false);
                 router.refresh();
                 // request to refresh
-                // => middleware isAuth F, decide to redirect isPublic F
+                // => middleware isAuth F, decide to redirect from isPublic F
                 // => TokenGate isAuth F, render children noAuth
             }
         };
 
         tryRefreshToken();
-    }, [router, dispatch]); // No use: [router, pathname, dispatch, isAuth, isHome]);
+    }, [router, dispatch]);
 
     return (
         <div>
