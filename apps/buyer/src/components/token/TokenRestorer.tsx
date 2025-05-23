@@ -13,11 +13,6 @@ export function TokenRestorer() {
     const router = useRouter();
     const dispatch = useDispatch();
 
-    // No use
-    // const pathname = usePathname();
-    // const isAuth = useIsAuthenticated();
-    // const isHome = pathname === '/';
-
     // NOTE: useEffect
     // Giả sử component có usePathname, isHome, useEffect, if()
     // Component body được thực thi trước, gồm usePathname, isHome và if()
@@ -42,13 +37,13 @@ export function TokenRestorer() {
                 setSuccess(false);
                 router.refresh();
                 // request to refresh
-                // => middleware isAuth F, decide to redirect isPublic F
+                // => middleware isAuth F, decide to redirect from isPublic F
                 // => TokenGate isAuth F, render children noAuth
             }
         };
 
         tryRefreshToken();
-    }, [router, dispatch]); // No use: [router, pathname, dispatch, isAuth, isHome]);
+    }, [router, dispatch]);
 
     return (
         <div>

@@ -1,12 +1,19 @@
 // src/store/index.ts
 import { configureStore } from "@reduxjs/toolkit";
-import { authReducer } from "./slices/auth.slice";
+import { addressActions, addressReducer } from "./slices/address.slice";
+import { authActions, authReducer } from "./slices/auth.slice";
 
 export const store = configureStore({
     reducer: {
         auth: authReducer,
+        address: addressReducer,
     },
 });
+
+export const actions = {
+    auth: authActions,
+    address: addressActions,
+}
 
 // NOTE: Type of Redux hooks
 // Types of dispatch and state of Store

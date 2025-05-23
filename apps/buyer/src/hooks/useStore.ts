@@ -1,8 +1,9 @@
 import clientLocal from "@/lib/storage/local.client";
-import { useAppSelector } from "@/store/hooks";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { TUser } from "@/types/auth.types";
 import { useIsAuthenticated } from "./useIsAuthenticated";
 import { CURRENT_USER } from "@/lib/constants";
+import { actions } from "@/store";
 
 /* NOTE: useAuth
  * Rất nên tạo hook useAuth như bạn đang làm, dù logic có vẻ đơn giản — vì:
@@ -27,3 +28,36 @@ export const useCurrentUser = () => {
     if (!isAuthenticated) return null;
     return currentUser || clientLocal.get<TUser>(CURRENT_USER);
 }
+
+// export const useClearStore = () => {
+//     const dispatch = useAppDispatch()
+
+//     return () => {
+//         dispatch(actions.auth.clear())
+//         dispatch(actions.address.clear())
+//     }
+// }
+
+// export const useClearAll = () => {
+//     const dispatch = useAppDispatch()
+//     dispatch(actions.auth.clear())
+//     dispatch(actions.address.clear())
+// }
+
+// export const useStore = () => {
+//     return {
+//         currentUser: useCurrentUser,
+//         clear: useClearAll,
+//     }
+// }
+
+// export const useAppStore = () => {
+//     return {
+//         get currentUser() {
+//             return useCurrentUser();
+//         },
+//         get clear() {
+//             return useClearAll();
+//         },
+//     };
+// };

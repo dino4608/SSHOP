@@ -46,7 +46,7 @@ export default function SignUpStep({ email, onEmailChange }: Props) {
                 setError(result.error);
             } else {
                 dispatch(authActions.setCredentials(result.data));
-                router.push('/');
+                router.refresh();
             }
         });
     };

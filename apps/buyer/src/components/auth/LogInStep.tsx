@@ -45,7 +45,7 @@ const LogInStep = ({ email, onEmailChange }: Props) => {
                 setError(result.error);
             } else {
                 dispatch(authActions.setCredentials(result.data));
-                router.push('/');
+                router.refresh();
             }
         });
     };

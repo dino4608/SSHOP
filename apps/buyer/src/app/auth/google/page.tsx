@@ -29,7 +29,7 @@ const GoogleAuthPage = () => {
                     setError(result.error);
                 } else {
                     dispatch(authActions.setCredentials(result.data));
-                    router.push('/');
+                    router.refresh();
                 }
             });
         } else {

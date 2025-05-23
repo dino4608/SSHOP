@@ -2,7 +2,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import { asyncIsAuthenticated } from './lib/server/auth';
 
 // 1. Specify public routes
-const publicStaticRoutes = ['/', '/auth', '/auth/google']
+const publicAuthRoutes = ['/auth', '/auth/google']
+const publicStaticRoutes = ['/', ...publicAuthRoutes]
 const publicDynamicPrefixes = ['/product/']
 const explicitlyPrivateRoutes = ['/product/test'];
 
@@ -20,21 +21,28 @@ function isPublicRoute(path: string): boolean {
     return !isExplicitlyPrivate;
 }
 
-export default async function middleware(request: NextRequest) {
-    // 2. Check if the current route is public
-    const path = request.nextUrl.pathname
-    const isPublic = isPublicRoute(path);
+function isAfterAuth(path: string, isAuthenticated: boolean): boolean {
+    const isPublicAuth = publicAuthRoutes.includes(path);
+    return isPublicAuth && isAuthenticated;
+}
 
-    // 3. Get tokens from the cookie and storage
+export default async function middleware(request: NextRequest) {
+    // 2. If after auth, go auth, will redirect to the home page
+    const path = request.nextUrl.pathname
     const isAuthenticated = await asyncIsAuthenticated()
 
-    // 4. Redirect to /auth if the user is not authenticated
+    if (isAfterAuth(path, isAuthenticated)) {
+        return NextResponse.redirect(new URL('/', request.nextUrl))
+    }
+
+    // 3. If no auth, go private, will redirect to the auth page
+    const isPublic = isPublicRoute(path);
     if (!isPublic && !isAuthenticated) {
         console.warn(`>>> Middleware: path ${path}: isPublic ${isPublic} `);
         return NextResponse.redirect(new URL('/', request.nextUrl))
     }
 
-    // 5. Pass
+    // 4. Pass
     // Case 1: isPublic => pass
     // Case 2: !isPublic + isAuthenticated => pass
     return NextResponse.next()

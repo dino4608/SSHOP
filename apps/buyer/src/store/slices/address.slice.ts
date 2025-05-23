@@ -1,0 +1,32 @@
+// store/address.slice.ts (Tạo file mới này)
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+
+import { DEFAULT_ADDRESS } from "@/lib/constants";
+import clientLocal from "@/lib/storage/local.client";
+import { TAddress } from "@/types/address.types";
+
+type TAddressState = {
+    defaultAddress: TAddress | null;
+}
+
+const initialState: TAddressState = {
+    defaultAddress: clientLocal.get(DEFAULT_ADDRESS) || null,
+};
+
+const addressSlice = createSlice({
+    name: "address",
+    initialState,
+    reducers: {
+        setDefaultAddress: (state, { payload: address }: PayloadAction<TAddress>) => {
+            clientLocal.set(DEFAULT_ADDRESS, address);
+            state.defaultAddress = address;
+        },
+        clear: () => {
+            clientLocal.remove(DEFAULT_ADDRESS);
+            return { defaultAddress: null };
+        },
+    },
+});
+
+export const addressReducer = addressSlice.reducer;
+export const addressActions = addressSlice.actions;

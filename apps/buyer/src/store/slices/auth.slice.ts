@@ -1,7 +1,7 @@
 import { ACCESS_TOKEN, CURRENT_USER } from "@/lib/constants";
 import clientCookies from "@/lib/storage/cookie.client";
 import clientLocal from "@/lib/storage/local.client";
-import { TAuthResponse } from "@/types/auth.types";
+import { TAuthResponse, TUser } from "@/types/auth.types";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 /* NOTE: Type of slice
@@ -9,9 +9,10 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
  * - Có thể state chứa thêm field như loading, error, v.v. // TODO
  * - Đảm bảo Redux state tự chủ, không phụ thuộc API chặt chẽ.
  */
-// type TUserState = {
-//     currentUser: TUser | null;
-// }
+type TAuthState = {
+    accessToken: string | null;
+    currentUser: TUser | null;
+}
 
 // const initialState: TUserState = { currentUser: null };
 const initialState: Partial<Omit<TAuthResponse, 'isAuthenticated'>> = {
@@ -36,6 +37,10 @@ const authSlice = createSlice({
             clientLocal.set(CURRENT_USER, payload.currentUser);
             state.accessToken = payload.accessToken;
             state.currentUser = payload.currentUser;
+        },
+        setCurrentUser: (state, { payload }: PayloadAction<TUser>) => {
+            clientLocal.set(CURRENT_USER, payload);
+            state.currentUser = payload;
         },
         clear: (state) => {
             clientCookies.remove(ACCESS_TOKEN);
