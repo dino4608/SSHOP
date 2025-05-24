@@ -6,14 +6,16 @@ import { ProductDescription } from '@/components/product/ProductDescription';
 import { ProductMedia } from '@/components/product/ProductMedia';
 import { ProductShipping } from '@/components/product/ProductShipping';
 import { ProductShopInfo } from '@/components/product/ProductShopInfo';
+import { TDiscountedProduct } from '@/types/discounted-product.type';
 import { TProduct } from '@/types/product.types';
 import { useState } from 'react';
 
 type TProductDetailPageProps = {
     product: TProduct;
+    discountedProduct: TDiscountedProduct | null;
 }
 
-export const ProductDetail = ({ product }: TProductDetailPageProps) => {
+export const ProductDetail = ({ product, discountedProduct }: TProductDetailPageProps) => {
     const [selectedImage, setSelectedImage] = useState<string | null>(null);
     const {
         id, name, category, shop, skus, retailPrice, tierVariations,
@@ -59,7 +61,8 @@ export const ProductDetail = ({ product }: TProductDetailPageProps) => {
                         <div className="w-7/15">
                             <ProductBuyBox
                                 onSelectPhoto={setSelectedImage}
-                                product={{ id, name, shop, skus, retailPrice, tierVariations }} />
+                                product={{ id, name, shop, skus, retailPrice, tierVariations }}
+                                discountedProduct={discountedProduct} />
                         </div>
                     </div>
 

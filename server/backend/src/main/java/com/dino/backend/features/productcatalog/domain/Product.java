@@ -3,6 +3,7 @@ package com.dino.backend.features.productcatalog.domain;
 import com.dino.backend.features.productcatalog.domain.model.ProductMeta;
 import com.dino.backend.features.productcatalog.domain.model.ProductSpecification;
 import com.dino.backend.features.productcatalog.domain.model.ProductTierVariation;
+import com.dino.backend.features.promotion.domain.DiscountedProduct;
 import com.dino.backend.features.shop.domain.Shop;
 import com.dino.backend.shared.model.BaseEntity;
 import io.hypersistence.utils.hibernate.type.json.JsonType;
@@ -53,6 +54,10 @@ public class Product extends BaseEntity {
 
     Integer retailPrice;
 
+    Integer minRetailPrice;
+
+    Integer maxRetailPrice;
+
     @Column(columnDefinition = "text")
     String description;
 
@@ -70,6 +75,9 @@ public class Product extends BaseEntity {
 
     @OneToMany(mappedBy = "product", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true) // NOTE: orphanRemoval: xóa các child mồ coi
     List<Sku> skus;
+
+    @OneToMany(mappedBy = "product", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true) // NOTE: orphanRemoval: xóa các child mồ coi
+    List<DiscountedProduct> discountedProducts;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "categoryId", nullable = false)

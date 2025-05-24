@@ -7,6 +7,7 @@ import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.server.ServerHttpRequest;
 import org.springframework.http.server.ServerHttpResponse;
 import org.springframework.http.server.ServletServerHttpResponse;
+import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
 
@@ -19,25 +20,25 @@ public class ApiDataHandler implements ResponseBodyAdvice<Object> {
 
     @Override
     public Object beforeBodyWrite(
-            Object body,
+            @Nullable Object body,
             MethodParameter returnType,
             MediaType selectedContentType,
             Class<? extends HttpMessageConverter<?>> selectedConverterType,
             ServerHttpRequest request,
             ServerHttpResponse response) {
-        //case: body is a string
+        // case: body is a string
         if (!MediaType.APPLICATION_JSON.equals(selectedContentType))
             return body;
-        //case: throw exception
+        // case: throw exception
         HttpServletResponse servletResponse = ((ServletServerHttpResponse) response).getServletResponse();
         int apiCode = servletResponse.getStatus();
         if (apiCode >= 400)
             return body;
-        //case: swagger
+        // case: swagger
         String path = request.getURI().getPath();
         if (path.startsWith("/sshop/v3/api-docs") || path.startsWith("/sshop/swagger-ui"))
             return body;
-        //case: success
+        // case: success
         return ApiResponse.builder()
                 .success(true)
                 .status(200)

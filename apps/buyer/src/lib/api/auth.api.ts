@@ -50,5 +50,3 @@ export const authApi = {
         method: HttpMethod.POST,
     }),
 }
-
-

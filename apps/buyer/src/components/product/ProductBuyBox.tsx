@@ -2,20 +2,27 @@
 import { TProductBuyBox } from '@/types/product.types';
 import { TSku } from '@/types/sku.types';
 import { MessageCircle, Store, TicketCheck } from 'lucide-react';
-import { useState } from 'react';
+import { Fragment, useState } from 'react';
 import { ProductSelector } from './ProductSelector';
+import { TDiscountedProduct } from '@/types/discounted-product.type';
 
-type TProductActionsProps = {
+type TProductBuyBoxProps = {
     onSelectPhoto: (photo: string) => void;
     product: TProductBuyBox;
+    discountedProduct: TDiscountedProduct | null;
 };
 
 // select the first variant: ${selectedColor === code ? 'border-[var(--dino-red-1)] text-black' : 'border-gray-200'}
 // hover variants: 'hover:border-black'
-export const ProductBuyBox = ({ onSelectPhoto, product }: TProductActionsProps) => {
+export const ProductBuyBox = ({ onSelectPhoto, product, discountedProduct }: TProductBuyBoxProps) => {
     const [selectedSku, setSelectedSku] = useState<TSku | null>(null);
 
-    // Max of Actions area is 100vh - header - breadcrumb - padding of ProductClientSide (referencing)
+    const { discountPercent, dealPrice, minDealPrice, maxDealPrice } = discountedProduct || {};
+    const isDiscounted = Boolean(discountedProduct);
+    const isFixedPrice = Boolean(dealPrice);
+    const isFlatPrice = Boolean(minDealPrice === maxDealPrice);
+
+    // REFERENCE: Max of Actions area is 100vh - header - breadcrumb - padding of ProductClientSide
     return (
         <div className='max-h-[calc(100vh-65px-33px-16px)] flex flex-col transition-all duration-300 sticky top-20 self-start divide-y divide-gray-200'>
             {/* Summary */}
@@ -27,6 +34,34 @@ export const ProductBuyBox = ({ onSelectPhoto, product }: TProductActionsProps) 
                 </div>
 
                 {/* Product price */}
+                <div className='p-1 bg-gray-50 flex flex-col gap-1'>
+                    {/* Discounted price */}
+                    <div className='flex items-center text-3xl text-[var(--dino-red-1)] font-semibold tracking-tighter gap-0.5'>
+                        {!isDiscounted
+                            ? (<Fragment><span className='text-xl'>₫</span>{product.retailPrice}</Fragment>)
+                            // TODO: case !isDiscounted, retailPrice isFlatPrice ?
+                            : null}
+                        {/* <span className='text-xl'>₫</span>
+                        400.000
+                        <span className='text-xl'>- ₫</span>
+                        600.000 */}
+                    </div>
+
+                    {/* Retail price + Discount figures */}
+                    <div className='flex gap-1'>
+
+                        <div className='flex items-center text-sm text-gray-400 line-through'>
+                            {
+                                //`₫${selectedSku.retailPrice}`
+                            }
+                        </div>
+
+                        <div className='inline-flex justify-center items-center text-xs text-red-500 bg-red-100 rounded-sm px-1.5 py-0.5 animate-pulse'>
+                            <TicketCheck className='w-4 h-4 mx-0.5' />-50% | -₫600.000
+                        </div>
+                    </div>
+                </div>
+
                 {selectedSku ? (
                     <div className='p-1 bg-gray-50 flex flex-col gap-1'>
                         {/* Discounted price */}
