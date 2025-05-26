@@ -11,7 +11,7 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import java.util.List;
 import java.util.Optional;
 
-public interface ICategoryInfraRepository extends JpaRepository<Category, String>, JpaSpecificationExecutor<Category> {
+public interface ICategoryRepository extends JpaRepository<Category, String>, JpaSpecificationExecutor<Category> {
     // READ //
 
     <T> List<T> findAllProjectedBy(Pageable pageable, Class<T> type); // #2

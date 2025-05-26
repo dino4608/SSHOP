@@ -3,7 +3,7 @@ package com.dino.backend.features.productcatalog.domain;
 import com.dino.backend.features.inventory.domain.Inventory;
 import com.dino.backend.features.ordering.domain.CartItem;
 import com.dino.backend.features.ordering.domain.OrderItem;
-import com.dino.backend.features.promotion.domain.DiscountedSku;
+import com.dino.backend.features.promotion.domain.DiscountItem;
 import com.dino.backend.shared.model.BaseEntity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
@@ -59,7 +59,7 @@ public class Sku extends BaseEntity {
     Product product;
 
     @OneToMany(mappedBy = "sku", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    List<DiscountedSku> discountedSkus;
+    List<DiscountItem> discountItems;
 
     @OneToMany(mappedBy = "sku", fetch = FetchType.LAZY)
     @JsonIgnore

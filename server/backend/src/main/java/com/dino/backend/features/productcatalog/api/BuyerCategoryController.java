@@ -1,7 +1,7 @@
 package com.dino.backend.features.productcatalog.api;
 
 import com.dino.backend.features.productcatalog.domain.model.CategoryProjection;
-import com.dino.backend.features.productcatalog.application.ICategoryQueryService;
+import com.dino.backend.features.productcatalog.application.ICategoryService;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -22,14 +22,14 @@ public class BuyerCategoryController {
     @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
     public static class BuyerPublicCategoryController {
 
-        ICategoryQueryService categoryQueryService;
+        ICategoryService categoryService;
 
         // READ //
         @GetMapping("/tree")
         public ResponseEntity<List<CategoryProjection>> getTree() {
             return ResponseEntity
                     .ok()
-                    .body(this.categoryQueryService.getTree());
+                    .body(this.categoryService.getTree());
         }
     }
 }

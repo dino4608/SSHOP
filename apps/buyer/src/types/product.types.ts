@@ -37,7 +37,9 @@ export type TProduct = {
     photos: string[];
     sizeGuidePhoto: string;
     video: string;
-    retailPrice: number;
+    retailPrice: number | null;
+    minRetailPrice: number | null;
+    maxRetailPrice: number | null;
     description: string;
     specifications: TProductSpecification[];
     tierVariations: TProductTierVariation[];
@@ -51,7 +53,10 @@ export type TProduct = {
 }
 
 export type TProductBuyBox = Pick<TProduct,
-    'id' | 'name' | 'shop' | 'skus' | 'retailPrice' | 'tierVariations'>;
+    'id' | 'name' | 'shop' | 'skus' | 'tierVariations' | 'retailPrice' | 'minRetailPrice' | 'maxRetailPrice'>;
+
+export type TProductPrice = Pick<TProductBuyBox,
+    'retailPrice' | 'minRetailPrice' | 'maxRetailPrice' | 'skus'>;
 
 export type TProductSelector = Pick<TProductBuyBox,
     'id' | 'skus' | 'tierVariations'>;

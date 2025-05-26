@@ -3,7 +3,7 @@ package com.dino.backend.features.shop.domain;
 import com.dino.backend.features.identity.domain.User;
 import com.dino.backend.features.ordering.domain.Order;
 import com.dino.backend.features.productcatalog.domain.Product;
-import com.dino.backend.features.promotion.domain.Discount;
+import com.dino.backend.features.promotion.domain.DiscountProgram;
 import com.dino.backend.shared.model.BaseEntity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
@@ -63,7 +63,8 @@ public class Shop extends BaseEntity {
     List<Product> products;
 
     @OneToMany(mappedBy = "shop", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    List<Discount> discounts;
+    @JsonIgnore
+    List<DiscountProgram> discountPrograms;
 
     @OneToMany(mappedBy = "shop", fetch = FetchType.LAZY)
     @JsonIgnore

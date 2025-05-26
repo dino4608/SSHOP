@@ -1,26 +1,26 @@
 'use client';
+import { applyPricing } from '@/helpers/product.helper';
+import { TDiscount } from '@/types/discount.type';
 import { TProductBuyBox } from '@/types/product.types';
 import { TSku } from '@/types/sku.types';
 import { MessageCircle, Store, TicketCheck } from 'lucide-react';
 import { Fragment, useState } from 'react';
 import { ProductSelector } from './ProductSelector';
-import { TDiscountedProduct } from '@/types/discounted-product.type';
 
 type TProductBuyBoxProps = {
     onSelectPhoto: (photo: string) => void;
     product: TProductBuyBox;
-    discountedProduct: TDiscountedProduct | null;
+    discount: TDiscount | null;
 };
 
 // select the first variant: ${selectedColor === code ? 'border-[var(--dino-red-1)] text-black' : 'border-gray-200'}
 // hover variants: 'hover:border-black'
-export const ProductBuyBox = ({ onSelectPhoto, product, discountedProduct }: TProductBuyBoxProps) => {
+export const ProductBuyBox = ({ onSelectPhoto, product, discount }: TProductBuyBoxProps) => {
     const [selectedSku, setSelectedSku] = useState<TSku | null>(null);
 
-    const { discountPercent, dealPrice, minDealPrice, maxDealPrice } = discountedProduct || {};
-    const isDiscounted = Boolean(discountedProduct);
-    const isFixedPrice = Boolean(dealPrice);
-    const isFlatPrice = Boolean(minDealPrice === maxDealPrice);
+    const priceType = applyPricing(product, discount);
+
+    const isDiscounted = true;
 
     // REFERENCE: Max of Actions area is 100vh - header - breadcrumb - padding of ProductClientSide
     return (
@@ -112,7 +112,7 @@ export const ProductBuyBox = ({ onSelectPhoto, product, discountedProduct }: TPr
                 <ProductSelector
                     onChangeSelectedSku={setSelectedSku}
                     onSelectPhoto={onSelectPhoto}
-                    product={{ id: product.id, skus: product.skus, tierVariations: product.tierVariations }} />
+                    product={{ ...product }} />
 
             </div>
 

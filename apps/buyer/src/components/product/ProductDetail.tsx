@@ -6,23 +6,21 @@ import { ProductDescription } from '@/components/product/ProductDescription';
 import { ProductMedia } from '@/components/product/ProductMedia';
 import { ProductShipping } from '@/components/product/ProductShipping';
 import { ProductShopInfo } from '@/components/product/ProductShopInfo';
-import { TDiscountedProduct } from '@/types/discounted-product.type';
+import { TDiscount } from '@/types/discount.type';
 import { TProduct } from '@/types/product.types';
 import { useState } from 'react';
 
 type TProductDetailPageProps = {
     product: TProduct;
-    discountedProduct: TDiscountedProduct | null;
+    discount: TDiscount | null;
 }
 
-export const ProductDetail = ({ product, discountedProduct }: TProductDetailPageProps) => {
+export const ProductDetail = ({ product, discount }: TProductDetailPageProps) => {
     const [selectedImage, setSelectedImage] = useState<string | null>(null);
     const {
-        id, name, category, shop, skus, retailPrice, tierVariations,
-        status, slug,
-        thumb, photos, video, sizeGuidePhoto: sizeChart,
-        description, specifications, meta,
-        createdAt, updatedAt, isDeleted
+        id, status, name, slug, tierVariations, retailPrice, minRetailPrice, maxRetailPrice,
+        thumb, photos, video, sizeGuidePhoto, description, specifications, meta,
+        category, shop, skus, createdAt, updatedAt, isDeleted
     } = product
 
 
@@ -41,7 +39,7 @@ export const ProductDetail = ({ product, discountedProduct }: TProductDetailPage
                             <ProductMedia
                                 selectedImage={selectedImage}
                                 setSelectedImage={setSelectedImage}
-                                product={{ id, thumb, photos, video, sizeGuidePhoto: sizeChart }} />
+                                product={{ id, thumb, photos, video, sizeGuidePhoto }} />
 
                             <ProductShipping />
 
@@ -61,8 +59,8 @@ export const ProductDetail = ({ product, discountedProduct }: TProductDetailPage
                         <div className="w-7/15">
                             <ProductBuyBox
                                 onSelectPhoto={setSelectedImage}
-                                product={{ id, name, shop, skus, retailPrice, tierVariations }}
-                                discountedProduct={discountedProduct} />
+                                product={{ id, name, shop, skus, tierVariations, retailPrice, minRetailPrice, maxRetailPrice }}
+                                discount={discount} />
                         </div>
                     </div>
 

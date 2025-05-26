@@ -12,12 +12,11 @@ const ProductDetailPage = async ({ params }: ProductDetailPageProps) => {
     const isAuthenticated = await getIsAuthenticated();
 
     const product = (await serverFetch(api.products.getById(id))).data;
-    const discountedProduct = isAuthenticated
-        ? (await serverFetch(api.discountedProduct.getByProductId(id))).data
-        : null;
+    const discount = isAuthenticated
+        ? (await serverFetch(api.discounts.getByProductId(id))).data : null;
 
     return (
-        <ProductDetail product={product} discountedProduct={discountedProduct} />
+        <ProductDetail product={product} discount={discount} />
     );
 };
 

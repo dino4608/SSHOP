@@ -5,7 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
 
-public interface ISkuInfraRepository extends JpaRepository<Sku, String> {
+public interface ISkuRepository extends JpaRepository<Sku, String> {
     // FIND//
     Optional<Sku> findByCode(String skuCode);
 }

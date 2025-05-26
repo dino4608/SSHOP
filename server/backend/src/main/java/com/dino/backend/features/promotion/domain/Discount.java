@@ -6,17 +6,16 @@ import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
+import org.springframework.util.CollectionUtils;
 
-import com.dino.backend.features.promotion.domain.model.DiscountStatusType;
-import com.dino.backend.features.shop.domain.Shop;
-import com.dino.backend.infrastructure.aop.AppException;
-import com.dino.backend.infrastructure.aop.ErrorCode;
+import com.dino.backend.features.productcatalog.domain.Product;
+import com.dino.backend.features.promotion.domain.model.LevelType;
+import com.dino.backend.infrastructure.web.model.CurrentUser;
+import com.dino.backend.shared.model.BaseEntity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
-import jakarta.persistence.DiscriminatorColumn;
-import jakarta.persistence.DiscriminatorType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -24,8 +23,6 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.Inheritance;
-import jakarta.persistence.InheritanceType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
@@ -38,9 +35,15 @@ import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.SuperBuilder;
 
+/**
+ * Represents a discount that:
+ * - Be part of a discount program,
+ * - Can be applied to a product or multiple skus.
+ *
+ * Note for properties:
+ * - totalLimit, buyerLimit == NULL is unlimited.
+ */
 @Entity
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@DiscriminatorColumn(name = "discount_type", discriminatorType = DiscriminatorType.STRING)
 @Table(name = "discounts")
 @DynamicInsert
 @DynamicUpdate
@@ -52,43 +55,76 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @SuperBuilder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public abstract class Discount extends Promotion {
+public class Discount extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "discount_id", updatable = false, nullable = false)
     String id;
 
+    Integer dealPrice;
+
+    Integer minDealPrice;
+
+    Integer maxDealPrice;
+
+    Integer discountPercent;
+
+    Integer minDiscountPercent;
+
+    Integer maxDiscountPercent;
+
+    Integer totalLimit;
+
+    Integer buyerLimit;
+
+    Integer usedCount;
+
+    List<String> usedBuyerIds;
+
     @Enumerated(EnumType.STRING)
-    @Column(name = "status_type")
-    DiscountStatusType statusType;
+    @Column(name = "level_type", nullable = false)
+    LevelType levelType;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "seller_id", updatable = false, nullable = false)
+    @JoinColumn(name = "discount_program_id", updatable = false, nullable = false)
     @JsonIgnore
-    Shop shop;
+    DiscountProgram discountProgram;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "product_id", updatable = false, nullable = false)
+    @JsonIgnore
+    Product product;
 
     @OneToMany(mappedBy = "discount", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    List<DiscountedProduct> discountedProducts;
+    List<DiscountItem> discountItems;
 
-    // getPriority //
-    public static int getPriority(Discount discount) {
-        if (discount instanceof FlashSaleDiscount)
-            return 0;
-        if (discount instanceof NewArrivalDiscount)
-            return 1;
-        if (discount instanceof ProductDiscount)
-            return 2;
+    // isWithinTotalLimit //
+    private boolean isWithinTotalLimit() {
+        if (this.totalLimit == null || this.usedCount == null)
+            return true;
 
-        throw new AppException(ErrorCode.SYSTEM__KEY_UNSUPPORTED);
+        return this.usedCount < this.totalLimit;
     }
 
-    public boolean isStatusActive() {
-        return this.statusType == DiscountStatusType.ONGOING;
+    // isWithinTotalLimit //
+    private boolean isWithinBuyerLimit(CurrentUser currentUser) {
+        if (this.buyerLimit == null || CollectionUtils.isEmpty(this.usedBuyerIds))
+            return true;
+
+        long count = this.usedBuyerIds.stream()
+                .filter(id -> id.equals(currentUser.id()))
+                .count();
+        return count < this.buyerLimit;
     }
 
-    public boolean isActive() {
-        return this.isPeriodActive() && this.isStatusActive();
-    }
+    // canApply //
+    public boolean canApply(CurrentUser currentUser) {
+        if (!this.isWithinTotalLimit() || !this.isWithinBuyerLimit(currentUser))
+            return false;
 
+        return this.discountProgram.isActive();
+
+        // TODO: Kiểm tra điều kiện áp dụng SKU (thông qua priceType, discountedSkus)
+    }
 }

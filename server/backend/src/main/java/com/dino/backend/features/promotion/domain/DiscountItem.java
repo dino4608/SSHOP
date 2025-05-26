@@ -13,10 +13,10 @@ import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
 
 @Entity
-@Table(name = "discounted_skus")
+@Table(name = "discount_items")
 @DynamicInsert
 @DynamicUpdate
-@SQLDelete(sql = "UPDATE discounted_skus SET is_deleted = true WHERE discounted_sku_id=?")
+@SQLDelete(sql = "UPDATE discount_items SET is_deleted = true WHERE discount_item_id=?")
 @SQLRestriction("is_deleted = false")
 @Getter
 @Setter
@@ -24,25 +24,25 @@ import org.hibernate.annotations.SQLRestriction;
 @NoArgsConstructor
 @SuperBuilder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class DiscountedSku extends BaseEntity {
+public class DiscountItem extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(name = "discounted_sku_id", updatable = false, nullable = false)
+    @Column(name = "discount_item_id", updatable = false, nullable = false)
     String id;
 
-    Integer discountPercent;
-
     Integer dealPrice;
+
+    Integer discountPercent;
 
     Integer totalLimit;
 
     Integer buyerLimit;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "discounted_product_id", updatable = false, nullable = false)
+    @JoinColumn(name = "discount_id", updatable = false, nullable = false)
     @JsonIgnore
-    DiscountedProduct discountedProduct;
+    Discount discount;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "sku_id", updatable = false, nullable = false)

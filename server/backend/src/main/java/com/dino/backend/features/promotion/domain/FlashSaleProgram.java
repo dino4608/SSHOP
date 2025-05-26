@@ -1,6 +1,6 @@
 package com.dino.backend.features.promotion.domain;
 
-import com.dino.backend.features.promotion.domain.model.DiscountChannelType;
+import com.dino.backend.features.promotion.domain.model.ChannelType;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -14,19 +14,23 @@ import org.hibernate.annotations.SQLRestriction;
 @DiscriminatorValue("FLASH_SALE")
 @DynamicInsert
 @DynamicUpdate
-@SQLDelete(sql = "UPDATE discount_promotions SET is_deleted = true WHERE promotion_id=?")
+@SQLDelete(sql = "UPDATE discount_programs SET is_deleted = true WHERE discount_program_id=?")
 @SQLRestriction("is_deleted = false")
-@Getter
-@Setter
+@SuperBuilder
 @AllArgsConstructor
 @NoArgsConstructor
-@SuperBuilder
+@Getter
+@Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class FlashSaleDiscount extends Discount {
+public class FlashSaleProgram extends DiscountProgram {
+    // max 3 days
 
     @Enumerated(EnumType.STRING)
     @Column(name = "channel_type")
-    DiscountChannelType channelType;
+    ChannelType channelType;
 
-    // max 3 days
+    @Override
+    public int getPriority() {
+        return 1;
+    }
 }

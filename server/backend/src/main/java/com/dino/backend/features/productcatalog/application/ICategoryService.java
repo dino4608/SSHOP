@@ -5,7 +5,7 @@ import com.dino.backend.features.productcatalog.domain.Category;
 
 import java.util.List;
 
-public interface ICategoryQueryService {
+public interface ICategoryService {
     // READ //
     List<CategoryProjection> getTree();
 

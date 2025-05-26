@@ -1,12 +1,5 @@
 package com.dino.backend.features.productcatalog.api;
 
-import com.dino.backend.features.productcatalog.application.IProductAppService;
-import com.dino.backend.features.productcatalog.domain.Product;
-import com.dino.backend.features.productcatalog.domain.model.ProductProjection;
-import com.dino.backend.shared.utils.PageRes;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.experimental.FieldDefaults;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
@@ -15,6 +8,16 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.dino.backend.features.productcatalog.application.IProductService;
+import com.dino.backend.features.productcatalog.domain.model.ProductProjection;
+import com.dino.backend.infrastructure.web.annotation.AuthUser;
+import com.dino.backend.infrastructure.web.model.CurrentUser;
+import com.dino.backend.shared.utils.PageRes;
+
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.experimental.FieldDefaults;
 
 @RestController
 public class BuyerProductController {
@@ -26,7 +29,7 @@ public class BuyerProductController {
     @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
     public static class BuyerPublicProductController {
 
-        IProductAppService productAppService;
+        IProductService productService;
 
         // QUERY //
 
@@ -34,13 +37,13 @@ public class BuyerProductController {
         @GetMapping("/list")
         public ResponseEntity<PageRes<ProductProjection>> list(
                 @PageableDefault(sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
-            return ResponseEntity.ok(this.productAppService.list(pageable));
+            return ResponseEntity.ok(this.productService.list(pageable));
         }
 
         @GetMapping("/{id}")
-        public ResponseEntity<Product> getById(@PathVariable String id) {
+        public ResponseEntity<Object> getById(@PathVariable String id, @AuthUser CurrentUser currentUser) {
 
-            return ResponseEntity.ok(this.productAppService.getById(id));
+            return ResponseEntity.ok(this.productService.getById(id, currentUser));
         }
 
     }

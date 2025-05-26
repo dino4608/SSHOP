@@ -12,11 +12,11 @@ import org.springframework.lang.NonNull;
 
 import java.util.Optional;
 
-public interface IProductInfraRepository extends JpaRepository<Product, String>, JpaSpecificationExecutor<Product> {
+public interface IProductRepository extends JpaRepository<Product, String>, JpaSpecificationExecutor<Product> {
 
     Page<ProductProjection> findAllProjectedBy(Pageable pageable);
 
-    @EntityGraph(attributePaths = { "category", "skus", "skus.inventory", "shop" })
+    @EntityGraph(attributePaths = { "skus", "skus.inventory", "category", "shop" })
     Optional<Product> findEagerById(@NonNull String id);
 
 }
