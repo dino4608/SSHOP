@@ -6,6 +6,7 @@ import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
+import org.springframework.lang.Nullable;
 import org.springframework.util.CollectionUtils;
 
 import com.dino.backend.features.productcatalog.domain.Product;
@@ -119,8 +120,11 @@ public class Discount extends BaseEntity {
     }
 
     // canApply //
-    public boolean canApply(CurrentUser currentUser) {
-        if (!this.isWithinTotalLimit() || !this.isWithinBuyerLimit(currentUser))
+    public boolean canApply(@Nullable CurrentUser currentUser) {
+        if (!this.isWithinTotalLimit())
+            return false;
+
+        if (currentUser != null && !this.isWithinBuyerLimit(currentUser))
             return false;
 
         return this.discountProgram.isActive();

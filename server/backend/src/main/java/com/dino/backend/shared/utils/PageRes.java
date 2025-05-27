@@ -33,7 +33,8 @@ public class PageRes<T> {
 
     /**
      * Map PageRes from PageJpa
-     * @param pageJpa Page
+     *
+     * @param pageJpa
      * @return PageRes
      */
     public static <T> PageRes<T> from(Page<T> pageJpa) {
@@ -47,6 +48,20 @@ public class PageRes<T> {
         return PageRes.<T>builder()
                 .pagination(pagination)
                 .items(pageJpa.getContent())
+                .build();
+    }
+
+    public static <T> PageRes<T> from(Page<?> pageJpa, List<T> items) {
+        Pagination pagination = Pagination.builder()
+                .totalPages(pageJpa.getTotalPages())
+                .totalElements(pageJpa.getTotalElements())
+                .page(pageJpa.getNumber() + 1) // Page of client starts 1. But PageNumber of Jpa starts from 0
+                .size(pageJpa.getSize())
+                .build();
+
+        return PageRes.<T>builder()
+                .pagination(pagination)
+                .items(items)
                 .build();
     }
 }

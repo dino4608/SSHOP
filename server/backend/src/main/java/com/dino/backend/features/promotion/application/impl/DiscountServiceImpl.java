@@ -4,6 +4,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 
 import com.dino.backend.features.promotion.application.IDiscountService;
@@ -31,7 +32,7 @@ public class DiscountServiceImpl implements IDiscountService {
 
     // canApply to product //
     @Override
-    public Optional<Discount> canApply(String productId, CurrentUser currentUser) {
+    public Optional<Discount> canApply(String productId, @Nullable CurrentUser currentUser) {
         Id.from(productId).orElseThrow(() -> new AppException(ErrorCode.PRODUCT__NOT_FOUND));
 
         var discounts = this.discountRepository.findByProductId(productId);
@@ -41,18 +42,17 @@ public class DiscountServiceImpl implements IDiscountService {
 
     // canApply by discounts //
     @Override
-    public Optional<Discount> canApply(List<Discount> discounts, CurrentUser currentUser) {
+    public Optional<Discount> canApply(List<Discount> discounts, @Nullable CurrentUser currentUser) {
         var applicableDiscounts = discounts.stream()
                 .filter(dp -> dp.canApply(currentUser))
                 .toList();
 
-        if (applicableDiscounts.isEmpty()) {
+        if (applicableDiscounts.isEmpty())
             return Optional.empty();
-        }
 
-        if (applicableDiscounts.size() == 1) {
+        if (applicableDiscounts.size() == 1)
             return Optional.of(applicableDiscounts.getFirst());
-        }
+
         return applicableDiscounts.stream()
                 .min(Comparator.comparingInt(dp -> dp.getDiscountProgram().getPriority()));
     }

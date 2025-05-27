@@ -5,8 +5,8 @@ import org.springframework.stereotype.Service;
 
 import com.dino.backend.features.productcatalog.application.IProductService;
 import com.dino.backend.features.productcatalog.application.mapper.IProductMapper;
+import com.dino.backend.features.productcatalog.application.model.ProductItemRes;
 import com.dino.backend.features.productcatalog.application.model.ProductRes;
-import com.dino.backend.features.productcatalog.domain.model.ProductProjection;
 import com.dino.backend.features.productcatalog.domain.repository.IProductRepository;
 import com.dino.backend.features.promotion.application.IDiscountService;
 import com.dino.backend.infrastructure.aop.AppException;
@@ -34,8 +34,22 @@ public class ProductServiceImpl implements IProductService {
 
     // list //
     @Override
-    public PageRes<ProductProjection> list(Pageable pageable) {
-        return PageRes.from(this.productRepository.findAllProjectedBy(pageable));
+    public PageRes<ProductItemRes> list(Pageable pageable) {
+        var page = this.productRepository.findAllProjectedBy(pageable);
+        var products = page.getContent().parallelStream()
+                .map(p -> {
+                    var product = this.productMapper.toProductItemRes(p);
+                    var discount = this.discountService.canApply(p.getId(), null);
+                    discount.ifPresent(d -> {
+                        product.setDealPrice(
+                                d.getDealPrice() != null ? d.getDealPrice() : d.getMinDealPrice());
+                        product.setDiscountPercent(
+                                d.getDiscountPercent() != null ? d.getDiscountPercent() : d.getMinDiscountPercent());
+                    });
+                    return product;
+                })
+                .toList();
+        return PageRes.from(page, products);
     }
 
     // getById //

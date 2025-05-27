@@ -1,6 +1,5 @@
 import { TApiResponse } from "@/types/base.types";
 
-export * from "../env";
 export * from "./string";
 export * from "./resources";
 

@@ -75,6 +75,7 @@ public abstract class DiscountProgram extends Promotion {
     List<Discount> discounts;
 
     // getPriority //
+    // - Open-closed principle in SOLID //
     public abstract int getPriority();
 
     // isStatusActive //

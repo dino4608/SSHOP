@@ -10,10 +10,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.dino.backend.features.productcatalog.application.IProductService;
-import com.dino.backend.features.productcatalog.domain.model.ProductProjection;
 import com.dino.backend.infrastructure.web.annotation.AuthUser;
 import com.dino.backend.infrastructure.web.model.CurrentUser;
-import com.dino.backend.shared.utils.PageRes;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -35,7 +33,7 @@ public class BuyerProductController {
 
         // list //
         @GetMapping("/list")
-        public ResponseEntity<PageRes<ProductProjection>> list(
+        public ResponseEntity<Object> list(
                 @PageableDefault(sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
             return ResponseEntity.ok(this.productService.list(pageable));
         }

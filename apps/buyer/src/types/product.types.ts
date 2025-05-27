@@ -1,4 +1,5 @@
 import { TCategory } from "./category.types";
+import { TDiscount } from "./discount.type";
 import { TShop } from "./shop.types";
 import { TSku } from "./sku.types";
 
@@ -40,6 +41,8 @@ export type TProduct = {
     retailPrice: number | null;
     minRetailPrice: number | null;
     maxRetailPrice: number | null;
+    dealPrice: number | null;
+    discountPercent: number | null;
     description: string;
     specifications: TProductSpecification[];
     tierVariations: TProductTierVariation[];
@@ -47,16 +50,17 @@ export type TProduct = {
     skus: TSku[];
     category: TCategory;
     shop: TShop;
+    discount: TDiscount | null;
     createdAt: Date;
     updatedAt: Date;
     isDeleted: boolean;
 }
 
 export type TProductBuyBox = Pick<TProduct,
-    'id' | 'name' | 'shop' | 'skus' | 'tierVariations' | 'retailPrice' | 'minRetailPrice' | 'maxRetailPrice'>;
+    'id' | 'name' | 'shop' | 'skus' | 'tierVariations' | 'retailPrice' | 'minRetailPrice' | 'maxRetailPrice' | 'discount'>;
 
 export type TProductPrice = Pick<TProductBuyBox,
-    'retailPrice' | 'minRetailPrice' | 'maxRetailPrice' | 'skus'>;
+    'retailPrice' | 'minRetailPrice' | 'maxRetailPrice' | 'discount'>;
 
 export type TProductSelector = Pick<TProductBuyBox,
     'id' | 'skus' | 'tierVariations'>;
@@ -70,14 +74,5 @@ export type TProductMedia = Pick<TProduct,
 export type TProductDescription = Pick<TProduct,
     'description' | 'specifications'>;
 
-export type TProductItem = {
-    id: string;
-    name: string;
-    status: ProductStatusType;
-    meta: {
-        isCodEnabled: boolean;
-    };
-    thumb: string;
-    updatedAt: Date;
-    retailPrice: number;
-};
+export type TProductItem = Pick<TProduct,
+    'id' | 'name' | 'status' | 'meta' | 'thumb' | 'updatedAt' | 'retailPrice' | 'dealPrice' | 'discountPercent'>;

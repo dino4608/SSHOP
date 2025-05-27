@@ -2,62 +2,68 @@
 import { TDiscountPrice } from "@/types/discount.type";
 import { TProductPrice, TProductSelector } from "@/types/product.types";
 
-export const applyPricing = (product: TProductPrice, discount: TDiscountPrice | null) => {
-    const { retailPrice, minRetailPrice, maxRetailPrice } = product;
-    const isDiscounted = Boolean(discount);
-    if (!isDiscounted) {
-        const isSingleRetailPrice = Boolean(minRetailPrice === maxRetailPrice);
-        return isSingleRetailPrice ? {
-            type: 'SINGLE_RETAIL_PRICE',
+export const applyPricing = (product: TProductPrice): {
+    type:
+    'FIXED_RETAIL_PRICE' | 'MULTI_RETAIL_PRICES' |
+    'FIXED_DEAL_PRICE' | 'MULTI_DEAL_PRICES_FIXED_PERCENT' | 'FIXED_DEAL_PRICE_MULTI_PERCENTS',
+    price: {
+        main?: number,
+        minMain?: number,
+        maxMain?: number,
+        side?: number,
+        minSide?: number,
+        maxSide?: number,
+        percent?: number,
+        minPercent?: number,
+        maxPercent?: number
+    }
+} => {
+    const { retailPrice, minRetailPrice, maxRetailPrice, discount } = product;
+    const isRetail = Boolean(!discount);
+    if (isRetail) {
+        const isFixed = Boolean(retailPrice !== null);
+        return isFixed ? {
+            type: 'FIXED_RETAIL_PRICE',
             price: {
-                retail: retailPrice || minRetailPrice
+                main: retailPrice as number
             }
         } : {
             type: 'MULTI_RETAIL_PRICES',
             price: {
-                minRetail: minRetailPrice,
-                maxRetail: maxRetailPrice
+                minMain: minRetailPrice as number,
+                maxMain: maxRetailPrice as number
             }
         };
     }
 
     const { dealPrice, minDealPrice, maxDealPrice, discountPercent, minDiscountPercent, maxDiscountPercent } = discount as TDiscountPrice;
-    const isFixedPrice = Boolean(dealPrice !== null);
-    if (isFixedPrice) {
-        const isSinglePercent = Boolean(minDiscountPercent === maxDiscountPercent);
-        return isSinglePercent ? {
-            type: 'SINGLE_DEAL_PRICE_SINGLE_PERCENT',
-            price: {
-                deal: dealPrice as number,
-                percent: (1 - (dealPrice as number) / (retailPrice !== null ? retailPrice as number : minRetailPrice as number)) * 100
-            }
-        } : {
-            type: 'SINGLE_DEAL_PRICE_MULTI_PERCENTS',
-            price: {
-                deal: dealPrice as number,
-                minPercent: minDiscountPercent as number,
-                maxDealPrice: maxDiscountPercent as number
-            }
-        };
-    }
-
-    const isSingleDealPrice = Boolean(minDealPrice === maxDealPrice);
-    return isSingleDealPrice ? {
-        type: 'SINGLE_DEAL_PRICE_SINGLE_PERCENT',
+    const isFixed = Boolean(dealPrice !== null && discountPercent !== null);
+    return isFixed ? {
+        type: 'FIXED_DEAL_PRICE',
         price: {
-            deal: (retailPrice !== null ? retailPrice as number : minRetailPrice as number) as number * (1 - discountPercent / 100),
-            percent: discountPercent
+            main: dealPrice as number,
+            side: retailPrice as number,
+            percent: discountPercent as number
+        }
+    } : dealPrice === null ? {
+        type: 'MULTI_DEAL_PRICES_FIXED_PERCENT',
+        price: {
+            minMain: minDealPrice as number,
+            maxMain: maxDealPrice as number,
+            minSide: minRetailPrice as number,
+            maxSide: maxRetailPrice as number,
+            percent: discountPercent as number
         }
     } : {
-        type: 'MULTI_DEAL_PRICES_SINGLE_PERCENT',
+        type: 'FIXED_DEAL_PRICE_MULTI_PERCENTS',
         price: {
-            minDeal: minDealPrice as number,
-            maxDeal: maxDealPrice as number,
-            percent: discountPercent
+            main: dealPrice as number,
+            minSide: minRetailPrice as number,
+            maxSide: maxRetailPrice as number,
+            minPercent: minDiscountPercent as number,
+            maxPercent: maxDiscountPercent as number
         }
     };
-
-
 }
 
 export const getDisabledOptionsMatrix = (product: TProductSelector, selected: (number | null)[]): boolean[][] => {

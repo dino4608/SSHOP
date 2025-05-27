@@ -11,6 +11,7 @@ import { HttpMethod } from "@/lib/constants";
 export type TApiDefinition<T> = {
     route: string;
     method: HttpMethod;
+    withAuth?: boolean;
     query?: object;
     body?: object;
 };

@@ -1,5 +1,6 @@
 import { TApiDefinition, TApiResponse } from "@/types/base.types";
-import { env, HttpMethod } from "../constants";
+import { HttpMethod } from "../constants";
+import { env } from "../env";
 
 export function buildEndpoint(domain: string, route: string, query?: any): RequestInfo {
     const endpoint = `${domain}/api/v1${route}`;
@@ -19,15 +20,14 @@ export function buildOptions(method: HttpMethod, body?: any): RequestInit {
     }
 }
 
-export function withAuth(route: string) {
-    if (!route || typeof route !== 'string')
-        throw new Error('>>> withAuth: invalid endpoint');
+export function shouldAuth(route: string, withAuth: boolean = false): boolean {
+    if (withAuth) return true;
 
+    if (!route || typeof route !== 'string') throw new Error('>>> shouldAuth: invalid endpoint');
     const normalized = route.toLowerCase().trim();
+    if (normalized.startsWith('/public')) return false;
 
-    if (normalized.startsWith('/public')) return false; // no auth
-
-    return true; // requires auth
+    return true;
 }
 
 export const normalizeResponse = async <T>(response: Response) => {
@@ -67,15 +67,14 @@ export const fetchSafely = async <T = any>(
 ): Promise<TApiResponse<T>> => {
 
     const domain = env.BACKEND_URL;
-    const { route, method, query, body } = api
+    const { route, method, withAuth, query, body } = api
 
     try {
         const response = await fetchCore(
             buildEndpoint(domain, route, query),
             buildOptions(method, body),
-            withAuth(route),
+            shouldAuth(route, withAuth),
         );
-
         return normalizeResponse<T>(response)
 
     } catch (error: any) {
