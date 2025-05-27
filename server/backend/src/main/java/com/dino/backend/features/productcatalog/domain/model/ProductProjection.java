@@ -1,27 +1,38 @@
 package com.dino.backend.features.productcatalog.domain.model;
 
 import java.time.Instant;
+import java.util.List;
+
+import com.dino.backend.features.promotion.domain.Discount;
 
 public interface ProductProjection {
     String getId();
+
     String getStatus();
+
     Instant getUpdatedAt();
+
     String getName();
+
     String getThumb();
+
     Integer getRetailPrice();
+
     ProductMeta getMeta();
 
-//    List<ISkuProjection> getSkus();
+    List<Discount> getDiscounts();
 
-//    interface ISkuProjection {
-//        String getStatus();
-//        String getSkuCode();
-//        Integer[] getTierIndex();
-//        Integer getRetailPrice();
-//        IInventoryProjection getInventory();
-//    }
+    // List<ISkuProjection> getSkus();
 
-//    interface IInventoryProjection {
-//        Integer getStocks();
-//    }
+    // interface ISkuProjection {
+    // String getStatus();
+    // String getSkuCode();
+    // Integer[] getTierIndex();
+    // Integer getRetailPrice();
+    // IInventoryProjection getInventory();
+    // }
+
+    // interface IInventoryProjection {
+    // Integer getStocks();
+    // }
 }

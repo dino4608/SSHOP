@@ -41,7 +41,7 @@ export const buildHeader = async (
 const fetchCore = async (
     endpoint: RequestInfo,
     options: RequestInit = {},
-    withAuth: boolean = true
+    withAuth: boolean = false
 ) => {
     // config header: include a pair of token
     const headers = await buildHeader(options, withAuth);

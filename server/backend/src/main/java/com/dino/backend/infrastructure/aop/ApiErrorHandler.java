@@ -3,11 +3,14 @@ package com.dino.backend.infrastructure.aop;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.validation.FieldError;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
+
+import java.util.Optional;
 
 @ControllerAdvice
 @Slf4j
@@ -47,8 +50,7 @@ public class ApiErrorHandler {
                         .status(error.getStatus().value())
                         .code(error.getCode())
                         .error(error.getMessage())
-                        .build()
-                );
+                        .build());
     }
 
     /**
@@ -59,13 +61,11 @@ public class ApiErrorHandler {
      */
     @ExceptionHandler(value = MethodArgumentNotValidException.class)
     ResponseEntity<ApiResponse<Object>> handleException(MethodArgumentNotValidException exception) {
-        String enumKey = exception.getFieldError().getDefaultMessage();
+        String key = Optional.ofNullable(exception.getFieldError())
+                .map(FieldError::getDefaultMessage)
+                .orElse(ErrorCode.SYSTEM__KEY_UNSUPPORTED.name());
 
-        ErrorCode error = ErrorCode.SYSTEM__KEY_UNSUPPORTED;
-        try {
-            error = ErrorCode.valueOf(enumKey);
-        } catch (IllegalArgumentException ignored) {
-        }
+        ErrorCode error = ErrorCode.valueOf(key);
 
         return ResponseEntity
                 .status(error.getStatus())
@@ -76,7 +76,6 @@ public class ApiErrorHandler {
                         .error(error.getMessage())
                         .build());
     }
-
 
     /**
      * Handle exception threw in the service tier by spring security
@@ -94,8 +93,7 @@ public class ApiErrorHandler {
                         .status(error.getStatus().value())
                         .code(error.getCode())
                         .error(error.getMessage())
-                        .build()
-                );
+                        .build());
     }
 
     @ExceptionHandler(value = HttpRequestMethodNotSupportedException.class)
@@ -108,8 +106,7 @@ public class ApiErrorHandler {
                         .status(error.getStatus().value())
                         .code(error.getCode())
                         .error(String.format(error.getMessage(), exception.getMethod()))
-                        .build()
-                );
+                        .build());
     }
 
     @ExceptionHandler(value = NoResourceFoundException.class)
@@ -122,7 +119,6 @@ public class ApiErrorHandler {
                         .status(error.getStatus().value())
                         .code(error.getCode())
                         .error(String.format(error.getMessage(), exception.getResourcePath()))
-                        .build()
-                );
+                        .build());
     }
 }

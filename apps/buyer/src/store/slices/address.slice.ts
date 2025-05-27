@@ -1,9 +1,8 @@
 // store/address.slice.ts (Tạo file mới này)
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-
 import { DEFAULT_ADDRESS } from "@/lib/constants";
 import clientLocal from "@/lib/storage/local.client";
 import { TAddress } from "@/types/address.types";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 type TAddressState = {
     defaultAddress: TAddress | null;

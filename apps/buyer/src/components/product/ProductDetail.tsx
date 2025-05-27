@@ -16,11 +16,9 @@ type TProductDetailPageProps = {
 export const ProductDetail = ({ product }: TProductDetailPageProps) => {
     const [selectedImage, setSelectedImage] = useState<string | null>(null);
     const {
-        id, name, category, shop, skus, retailPrice, tierVariations,
-        status, slug,
-        thumb, photos, video, sizeGuidePhoto: sizeChart,
-        description, specifications, meta,
-        createdAt, updatedAt, isDeleted
+        id, status, name, slug, tierVariations, retailPrice, minRetailPrice, maxRetailPrice,
+        thumb, photos, video, sizeGuidePhoto, description, specifications, meta,
+        skus, category, shop, discount, createdAt, updatedAt, isDeleted
     } = product
 
 
@@ -39,7 +37,7 @@ export const ProductDetail = ({ product }: TProductDetailPageProps) => {
                             <ProductMedia
                                 selectedImage={selectedImage}
                                 setSelectedImage={setSelectedImage}
-                                product={{ id, thumb, photos, video, sizeGuidePhoto: sizeChart }} />
+                                product={{ id, thumb, photos, video, sizeGuidePhoto }} />
 
                             <ProductShipping />
 
@@ -59,7 +57,8 @@ export const ProductDetail = ({ product }: TProductDetailPageProps) => {
                         <div className="w-7/15">
                             <ProductBuyBox
                                 onSelectPhoto={setSelectedImage}
-                                product={{ id, name, shop, skus, retailPrice, tierVariations }} />
+                                product={{ id, name, shop, skus, tierVariations, retailPrice, minRetailPrice, maxRetailPrice, discount }}
+                            />
                         </div>
                     </div>
 

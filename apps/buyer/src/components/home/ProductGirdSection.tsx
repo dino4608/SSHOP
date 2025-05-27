@@ -7,11 +7,11 @@ import { useEffect, useState } from "react";
 import HomeContainer from "./HomeContainer";
 import { ProductItem } from "./ProductItem";
 
-type ProductGridSectionProps = {
+type TProductGridSectionProps = {
     selectedCategory: string | null;
 }
 
-export const ProductGridSection = ({ selectedCategory }: ProductGridSectionProps) => {
+export const ProductGridSection = ({ selectedCategory }: TProductGridSectionProps) => {
     const [products, setProducts] = useState<TProductItem[]>([]);
     const [loading, setLoading] = useState(true);
     const [pagination, setPagination] = useState<TPagination>({} as TPagination);

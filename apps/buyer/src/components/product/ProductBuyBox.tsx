@@ -1,21 +1,27 @@
 'use client';
+import { applyPricing } from '@/helpers/product.helper';
 import { TProductBuyBox } from '@/types/product.types';
 import { TSku } from '@/types/sku.types';
-import { MessageCircle, Store, TicketCheck } from 'lucide-react';
+import { MessageCircleIcon, StoreIcon, TicketCheckIcon } from 'lucide-react';
 import { useState } from 'react';
 import { ProductSelector } from './ProductSelector';
+import { formatPercent, formatPrice } from '@/lib/utils';
 
-type TProductActionsProps = {
+type TProductBuyBoxProps = {
     onSelectPhoto: (photo: string) => void;
     product: TProductBuyBox;
 };
 
 // select the first variant: ${selectedColor === code ? 'border-[var(--dino-red-1)] text-black' : 'border-gray-200'}
 // hover variants: 'hover:border-black'
-export const ProductBuyBox = ({ onSelectPhoto, product }: TProductActionsProps) => {
+export const ProductBuyBox = ({ onSelectPhoto, product }: TProductBuyBoxProps) => {
     const [selectedSku, setSelectedSku] = useState<TSku | null>(null);
 
-    // Max of Actions area is 100vh - header - breadcrumb - padding of ProductClientSide (referencing)
+    const pricing = applyPricing(product);
+
+    const isDiscounted = true;
+
+    // REFERENCE: Max of Actions area is 100vh - header - breadcrumb - padding of ProductClientSide
     return (
         <div className='max-h-[calc(100vh-65px-33px-16px)] flex flex-col transition-all duration-300 sticky top-20 self-start divide-y divide-gray-200'>
             {/* Summary */}
@@ -27,57 +33,54 @@ export const ProductBuyBox = ({ onSelectPhoto, product }: TProductActionsProps) 
                 </div>
 
                 {/* Product price */}
-                {selectedSku ? (
-                    <div className='p-1 bg-gray-50 flex flex-col gap-1'>
-                        {/* Discounted price */}
-                        <div className='flex items-center text-3xl text-[var(--dino-red-1)] font-semibold tracking-tighter gap-0.5'>
-                            <span className='text-xl'>₫</span>
-                            400.000
-                            <span className='text-xl'>- ₫</span>
-                            600.000
-                        </div>
-
-                        {/* Retail price + Discount figures */}
-                        <div className='flex gap-1'>
-
-                            <div className='flex items-center text-sm text-gray-400 line-through'>
-                                {`₫${selectedSku.retailPrice}`}
-                            </div>
-
-                            <div className='inline-flex justify-center items-center text-xs text-red-500 bg-red-100 rounded-sm px-1.5 py-0.5 animate-pulse'>
-                                <TicketCheck className='w-4 h-4 mx-0.5' />-50% | -₫600.000
+                {pricing.type === 'FIXED_RETAIL_PRICE'
+                    ? (
+                        <div className='p-1 bg-gray-50 flex flex-col gap-1'>
+                            <div className='flex items-center text-3xl text-[var(--dino-red-1)] font-semibold tracking-tighter gap-0.5'>
+                                <span className='text-xl'>₫</span>{pricing.price.main as number}
                             </div>
                         </div>
-                    </div>
-                ) : (
-                    <div className='p-1 bg-gray-50 flex flex-col gap-1'>
-                        {/* Discounted price */}
-                        <div className='flex items-center text-3xl text-[var(--dino-red-1)] font-semibold tracking-tighter gap-0.5'>
-                            <span className='text-xl'>₫</span>
-                            400.000
-                            <span className='text-xl'>- ₫</span>
-                            600.000
-                        </div>
+                    )
+                    : pricing.type === 'FIXED_DEAL_PRICE'
+                        ? (
+                            <div className='p-1 bg-gray-50 flex flex-col gap-1'>
+                                <div className='flex items-center text-3xl text-[var(--dino-red-1)] font-semibold tracking-tighter gap-0.5'>
+                                    {formatPrice(pricing.price.main as number)}
+                                </div>
 
-                        {/* Retail price + Discount figures */}
-                        <div className='flex gap-1'>
-
-                            <div className='flex items-center text-sm text-gray-400 line-through'>
-                                {`₫${product.retailPrice}-₫${product.retailPrice}`}
+                                <div className='flex gap-1'>
+                                    <div className='flex items-center text-sm text-gray-400 line-through'>
+                                        {formatPrice(pricing.price.side as number)}
+                                    </div>
+                                    <div className='inline-flex justify-center items-center text-xs text-red-500 bg-red-100 rounded-sm px-1.5 py-0.5 animate-pulse'>
+                                        <TicketCheckIcon className='w-4 h-4 mx-0.5' />{formatPercent(pricing.price.percent as number)}
+                                    </div>
+                                </div>
                             </div>
-
-                            <div className='inline-flex justify-center items-center text-xs text-red-500 bg-red-100 rounded-sm px-1.5 py-0.5 animate-pulse'>
-                                <TicketCheck className='w-4 h-4 mx-0.5' />-50% | -₫600.000
-                            </div>
-                        </div>
-                    </div>
-                )}
+                        )
+                        : (
+                            // Unimplemented: MULTI_RETAIL_PRICES, MULTI_DEAL_PRICES_FIXED_PERCENT, FIXED_DEAL_PRICE_MULTI_PERCENTS
+                            <div className='p-1 bg-gray-50 flex flex-col gap-1'>
+                                <div className='flex items-center text-3xl text-[var(--dino-red-1)] font-semibold tracking-tighter gap-0.5'>
+                                    <span className='text-xl'>₫</span>400.000
+                                    <span className='text-xl'>- ₫</span>600.000
+                                </div>
+                                <div className='flex gap-1'>
+                                    <div className='flex items-center text-sm text-gray-400 line-through'>
+                                        {`₫${product.retailPrice}-₫${product.retailPrice}`}
+                                    </div>
+                                    <div className='inline-flex justify-center items-center text-xs text-red-500 bg-red-100 rounded-sm px-1.5 py-0.5 animate-pulse'>
+                                        <TicketCheckIcon className='w-4 h-4 mx-0.5' />-50% | -₫600.000
+                                    </div>
+                                </div>
+                            </div>)
+                }
 
                 {/* Variations and quantity */}
                 <ProductSelector
                     onChangeSelectedSku={setSelectedSku}
                     onSelectPhoto={onSelectPhoto}
-                    product={{ id: product.id, skus: product.skus, tierVariations: product.tierVariations }} />
+                    product={{ ...product }} />
 
             </div>
 
@@ -86,12 +89,12 @@ export const ProductBuyBox = ({ onSelectPhoto, product }: TProductActionsProps) 
                 {/* Visit + Chat with shop buttons */}
                 <div className="flex gap-4">
                     <button className="flex flex-col items-center text-sm text-black">
-                        <Store className="w-5 h-5" />
+                        <StoreIcon className="w-5 h-5" />
                         <span className='text-sm'>Shop</span>
                     </button>
 
                     <button className="relative flex flex-col items-center text-sm text-black">
-                        <MessageCircle className="w-5 h-5" />
+                        <MessageCircleIcon className="w-5 h-5" />
                         <span>Chat</span>
                         <span className="absolute -top-2 -right-1 bg-[var(--dino-red-1)] text-white text-xs font-semibold w-5 h-5 rounded-full flex items-center justify-center">
                             1

@@ -3,6 +3,8 @@ import { TApiDefinition } from "@/types/base.types";
 import { HttpMethod, RESOURCES } from "../constants";
 
 export const addressesApi = {
+    // BUYER PUBLIC //
+
     // BUYER PRIVATE //
 
     // QUERY //
