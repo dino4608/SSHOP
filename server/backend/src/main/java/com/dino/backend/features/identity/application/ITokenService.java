@@ -4,7 +4,7 @@ import com.dino.backend.features.identity.domain.Token;
 
 import java.time.Instant;
 
-public interface ITokenAppService {
+public interface ITokenService {
 
     Token getById(String userId);
 

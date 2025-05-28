@@ -1,0 +1,12 @@
+package com.dino.backend.features.identity.application;
+
+import com.dino.backend.features.identity.domain.User;
+import com.dino.backend.infrastructure.web.model.CurrentUser;
+
+public interface IUserService {
+
+    User getById(String userId);
+
+    User get(CurrentUser currentUser);
+
+}

@@ -1,20 +1,33 @@
 package com.dino.backend.features.identity.domain;
 
-import com.dino.backend.infrastructure.aop.AppException;
-import com.dino.backend.infrastructure.aop.ErrorCode;
-import com.dino.backend.shared.model.BaseEntity;
-import com.dino.backend.shared.utils.Required;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import jakarta.persistence.*;
-import lombok.*;
-import lombok.experimental.FieldDefaults;
-import lombok.experimental.SuperBuilder;
+import java.time.Instant;
+import java.util.Optional;
+
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
 
-import java.time.Instant;
+import com.dino.backend.infrastructure.aop.AppException;
+import com.dino.backend.infrastructure.aop.ErrorCode;
+import com.dino.backend.shared.model.BaseEntity;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.MapsId;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.experimental.FieldDefaults;
+import lombok.experimental.SuperBuilder;
 
 @Entity
 @Table(name = "tokens")
@@ -35,7 +48,7 @@ public class Token extends BaseEntity {
 
     @MapsId
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "userId", updatable = false, nullable = false)
+    @JoinColumn(name = "user_id", updatable = false, nullable = false)
     @JsonIgnore
     User user;
 
@@ -45,28 +58,27 @@ public class Token extends BaseEntity {
     Instant refreshTokenExpiry;
 
     public static Token createToken(User user) {
-        return Token.builder()
-                .user(user)
-                .build();
+        var newToken = Token.builder().build();
+
+        newToken.setUser(user); // REFERENCE
+
+        return newToken;
     }
 
-    // NOTE:
-    // Should set each property, because it changes clearly, doesn't depend on old state, is proper to DDD
     public static Token updateRefreshToken(Token token, String refreshToken, Instant refreshTokenExpiry) {
-        try {
-            Required.notNull(token.getId());
+        Optional.of(token.getId())
+                .orElseThrow(() -> new AppException(ErrorCode.TOKEN__UPDATE_FAILED));
 
-            return Token.builder()
-                    .id(token.getId())
-                    .user(User.builder().id(token.getId()).build())
-                    .refreshToken(refreshToken)
-                    .refreshTokenExpiry(refreshTokenExpiry)
-                    .createdAt(token.getCreatedAt())
-                    .isDeleted(token.getIsDeleted())
-                    .build();
+        Token newToken = Token.builder()
+                .id(token.getId())
+                .refreshToken(refreshToken)
+                .refreshTokenExpiry(refreshTokenExpiry)
+                .createdAt(token.getCreatedAt())
+                .isDeleted(token.getIsDeleted())
+                .build();
 
-        } catch (Exception e) {
-            throw new AppException(ErrorCode.TOKEN__UPDATE_FAILED);
-        }
+        newToken.setUser(User.builder().id(token.getId()).build()); // REFERENCE
+
+        return newToken;
     }
 }

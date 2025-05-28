@@ -35,7 +35,7 @@ public class User extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(name = "userId", updatable = false, nullable = false)
+    @Column(name = "user_id", updatable = false, nullable = false)
     String id;
 
     String status;
@@ -91,10 +91,10 @@ public class User extends BaseEntity {
     @ToString.Exclude
     List<Order> orders;
 
+    // EXP: the validation layer ensured:
+    // - email: ensure the format
+    // - password: ensure the size of 6
     public static User createSignupUser(User user, String hashPassword) {
-        // EXP: the validation layer ensured:
-        // - email: ensure the format
-        // - password: ensure the size of 6
         User newUser = User.builder()
                 .status(UserStatusType.LACK_INFO.toString())
                 .roles(new HashSet<>(Collections.singletonList(UserRoleType.BUYER.toString())))
@@ -106,10 +106,10 @@ public class User extends BaseEntity {
                 .build();
 
         Token newToken = Token.createToken(newUser);
-        newUser.setToken(newToken);
+        newUser.setToken(newToken); // CASCADE
 
         Cart newCart = Cart.createCart(newUser);
-        newUser.setCart(newCart);
+        newUser.setCart(newCart); // CASCADE
 
         return newUser;
     }

@@ -51,7 +51,7 @@ public class Product extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(name = "productId", updatable = false, nullable = false)
+    @Column(name = "product_id", updatable = false, nullable = false)
     String id;
 
     String status;
@@ -99,11 +99,11 @@ public class Product extends BaseEntity {
     List<Discount> discounts;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "categoryId", nullable = false)
+    @JoinColumn(name = "category_id", nullable = false)
     Category category;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "shopId", updatable = false, nullable = false)
+    @JoinColumn(name = "shop_id", updatable = false, nullable = false)
     Shop shop;
 
     // stars => review

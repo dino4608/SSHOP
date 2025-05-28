@@ -1,6 +1,7 @@
 package com.dino.backend.features.ordering.domain;
 
 import com.dino.backend.features.identity.domain.User;
+import com.dino.backend.features.productcatalog.domain.Sku;
 import com.dino.backend.shared.model.BaseEntity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
@@ -19,7 +20,7 @@ import java.util.List;
 @Table(name = "carts")
 @DynamicInsert
 @DynamicUpdate
-@SQLDelete(sql = "UPDATE carts SET is_deleted = true WHERE cart_id=?")
+@SQLDelete(sql = "UPDATE carts SET is_deleted = true WHERE buyer_id=?")
 @SQLRestriction("is_deleted = false")
 @Getter
 @Setter
@@ -28,25 +29,55 @@ import java.util.List;
 @SuperBuilder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Cart extends BaseEntity {
+
     @Id
     String id;
 
     @MapsId
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "buyerId", updatable = false, nullable = false)
+    @JoinColumn(name = "buyer_id", nullable = false, updatable = false)
     @JsonIgnore
     User buyer;
 
     @OneToMany(mappedBy = "cart", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    List<CartItem> items;
+    List<CartItem> cartItems;
 
     int count;
 
     public static Cart createCart(User buyer) {
-        return Cart.builder()
-                .buyer(buyer)
-                .items(new ArrayList<>())
+        Cart newCart = Cart.builder()
+                .cartItems(new ArrayList<>())
                 .count(0)
                 .build();
+
+        newCart.setBuyer(buyer); // REFERENCE
+
+        return newCart;
+    }
+
+    public static void addCartItem(Cart cart, Sku sku, int quantity) {
+        CartItem item = CartItem.builder()
+                .cart(cart) // REFERENCE
+                .sku(sku) // REFERENCE
+                .quantity(quantity)
+                .build();
+
+        cart.getCartItems().add(item);
+        cart.setCount(cart.getCount() + 1);
+    }
+
+    public static void removeCartItem(Cart cart, List<CartItem> cartItemsToRemove) {
+        // NOTE: orphanRemoval
+        // removeAll items => JPA note they are orphan => orphanRemoval auto delete
+        cart.getCartItems().removeAll(cartItemsToRemove);
+        cart.setCount(cart.getCount() - cartItemsToRemove.size());
+    }
+
+    public static void increaseQuantity(CartItem item, int increment) {
+        item.setQuantity(item.getQuantity() + increment);
+    }
+
+    public static void decreaseQuantity(CartItem item, int decrement) {
+        item.setQuantity(item.getQuantity() - decrement);
     }
 }

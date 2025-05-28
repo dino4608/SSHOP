@@ -19,6 +19,7 @@ import java.time.Instant;
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class BaseEntity {
+
     @CreationTimestamp
     Instant createdAt;
 

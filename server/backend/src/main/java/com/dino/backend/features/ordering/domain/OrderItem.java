@@ -26,7 +26,7 @@ import org.hibernate.annotations.SQLRestriction;
 public class OrderItem extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(name = "itemId", updatable = false, nullable = false)
+    @Column(name = "item_id", updatable = false, nullable = false)
     String id;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)

@@ -21,18 +21,4 @@ public interface ProductProjection {
     ProductMeta getMeta();
 
     List<Discount> getDiscounts();
-
-    // List<ISkuProjection> getSkus();
-
-    // interface ISkuProjection {
-    // String getStatus();
-    // String getSkuCode();
-    // Integer[] getTierIndex();
-    // Integer getRetailPrice();
-    // IInventoryProjection getInventory();
-    // }
-
-    // interface IInventoryProjection {
-    // Integer getStocks();
-    // }
 }

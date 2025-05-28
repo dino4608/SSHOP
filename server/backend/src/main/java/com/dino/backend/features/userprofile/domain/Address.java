@@ -28,7 +28,7 @@ public class Address extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(name = "addressId", updatable = false, nullable = false)
+    @Column(name = "address_id", updatable = false, nullable = false)
     String id;
 
     String contactName;
@@ -46,7 +46,7 @@ public class Address extends BaseEntity {
     Boolean isDefault;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "userId", updatable = false, nullable = false)
+    @JoinColumn(name = "user_id", updatable = false, nullable = false)
     @JsonIgnore
     User user;
 }

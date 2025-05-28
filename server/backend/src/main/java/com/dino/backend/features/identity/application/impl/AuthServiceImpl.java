@@ -1,12 +1,12 @@
 package com.dino.backend.features.identity.application.impl;
 
-import com.dino.backend.features.identity.application.IAuthAppService;
-import com.dino.backend.features.identity.application.ITokenAppService;
-import com.dino.backend.features.identity.application.IUserAppService;
+import com.dino.backend.features.identity.application.IAuthService;
+import com.dino.backend.features.identity.application.ITokenService;
+import com.dino.backend.features.identity.application.IUserService;
 import com.dino.backend.features.identity.application.mapper.IUserMapper;
 import com.dino.backend.features.identity.application.model.*;
 import com.dino.backend.features.identity.domain.User;
-import com.dino.backend.features.identity.domain.repository.IUserDomainRepository;
+import com.dino.backend.features.identity.domain.repository.IUserRepository;
 import com.dino.backend.infrastructure.aop.AppException;
 import com.dino.backend.infrastructure.aop.ErrorCode;
 import com.dino.backend.infrastructure.security.IOauth2InfraProvider;
@@ -31,13 +31,13 @@ import java.util.Optional;
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @Slf4j
-public class AuthAppServiceImpl implements IAuthAppService {
+public class AuthServiceImpl implements IAuthService {
 
-    ITokenAppService tokenAppService;
+    ITokenService tokenService;
 
-    IUserAppService userAppService;
+    IUserService userService;
 
-    IUserDomainRepository userDomainRepository;
+    IUserRepository userRepository;
 
     IUserMapper userMapper;
 
@@ -51,7 +51,7 @@ public class AuthAppServiceImpl implements IAuthAppService {
 
     // findUserByIdentifier //
     private Optional<User> findUserByIdentifier(String email) {
-        return this.userDomainRepository.findByEmail(email);
+        return this.userRepository.findByEmail(email);
     }
 
     // LookupIdentifierResponse //
@@ -69,9 +69,10 @@ public class AuthAppServiceImpl implements IAuthAppService {
     @Override
     public CurrentUserResponse getCurrentUser(CurrentUser currentUser) {
         // 1. Retrieve user from database based on the current user's ID.
-        User user = this.userAppService.getUserById(currentUser.id());
+        User user = this.userService.getById(currentUser.id());
 
-        // 2. Return the user object after processing sensitive information (password, roles, etc.).
+        // 2. Return the user object after processing sensitive information (password,
+        // roles, etc.).
         return this.userMapper.toCurrentUserResponse(user);
     }
 
@@ -86,10 +87,10 @@ public class AuthAppServiceImpl implements IAuthAppService {
         Instant refreshTokenExpiry = this.securityInfraProvider.getExpiry(JwtType.REFRESH_TOKEN);
 
         // update refresh token to database
-        this.tokenAppService.updateRefreshToken(refreshToken, refreshTokenExpiry, user.getId());
+        this.tokenService.updateRefreshToken(refreshToken, refreshTokenExpiry, user.getId());
 
         // set refresh token to cookie
-        this.cookieProvider.attachRefreshToken(headers, refreshToken,refreshTokenTtl);
+        this.cookieProvider.attachRefreshToken(headers, refreshToken, refreshTokenTtl);
 
         return AuthResponse.builder()
                 .isAuthenticated(true)
@@ -101,7 +102,7 @@ public class AuthAppServiceImpl implements IAuthAppService {
     // unauthenticate //
     private AuthResponse unauthenticate(HttpHeaders headers) {
         this.cookieProvider.clearRefreshToken(headers);
-        
+
         return AuthResponse.builder()
                 .isAuthenticated(false)
                 .build();
@@ -135,9 +136,8 @@ public class AuthAppServiceImpl implements IAuthAppService {
         // create
         User user = User.createSignupUser(
                 this.userMapper.toUser(request),
-                this.securityInfraProvider.hashPassword(request.getPassword())
-        );
-        user = this.userDomainRepository.save(user);
+                this.securityInfraProvider.hashPassword(request.getPassword()));
+        user = this.userRepository.save(user);
 
         // license token
 
@@ -152,9 +152,8 @@ public class AuthAppServiceImpl implements IAuthAppService {
                         .name(request.getName())
                         .gender(request.getGender())
                         .build(),
-                null
-        );
-        user = this.userDomainRepository.save(user);
+                null);
+        user = this.userRepository.save(user);
 
         return this.authenticate(user, headers);
     }
@@ -166,7 +165,8 @@ public class AuthAppServiceImpl implements IAuthAppService {
         GoogleTokenResponse googleTokenResponse = this.oauth2InfraProvider.getGoogleToken(request.getCode());
 
         // get user //
-        GoogleUserResponse googleUserResponse = this.oauth2InfraProvider.getGoogleUser(googleTokenResponse.getAccessToken());
+        GoogleUserResponse googleUserResponse = this.oauth2InfraProvider
+                .getGoogleUser(googleTokenResponse.getAccessToken());
         var userOpt = this.findUserByIdentifier(googleUserResponse.getEmail());
 
         // signup or login //
@@ -196,12 +196,12 @@ public class AuthAppServiceImpl implements IAuthAppService {
         }
 
         // 3. Check if refresh token matches DB (to prevent reuse)
-        if (!this.tokenAppService.isRefreshTokenValid(refreshToken, userId)) {
+        if (!this.tokenService.isRefreshTokenValid(refreshToken, userId)) {
             return this.unauthenticate(headers);
         }
 
         // 4. Get user
-        User user = this.userAppService.getUserById(userId);
+        User user = this.userService.getById(userId);
 
         // 5. authenticate successfully (license tokens, update DB & set cookie)
         return this.authenticate(user, headers);
@@ -223,12 +223,12 @@ public class AuthAppServiceImpl implements IAuthAppService {
         }
 
         // 3. Check if refresh token matches DB (to prevent reuse)
-        if (!this.tokenAppService.isRefreshTokenValid(refreshToken, userId)) {
+        if (!this.tokenService.isRefreshTokenValid(refreshToken, userId)) {
             return this.unauthenticate(headers);
         }
 
         // 4. Remove refresh token from DB (or set it as null)
-        this.tokenAppService.updateRefreshToken("", null, userId);
+        this.tokenService.updateRefreshToken("", null, userId);
 
         // 5. Clear refresh token in cookies
         this.cookieProvider.clearRefreshToken(headers);
@@ -237,4 +237,3 @@ public class AuthAppServiceImpl implements IAuthAppService {
         return AuthResponse.builder().isAuthenticated(true).build();
     }
 }
-

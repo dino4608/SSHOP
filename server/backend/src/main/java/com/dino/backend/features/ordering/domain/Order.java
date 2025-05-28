@@ -33,7 +33,7 @@ public class Order extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(name = "orderId", nullable = false, updatable = false)
+    @Column(name = "order_id", nullable = false, updatable = false)
     String id;
 
     String status;
@@ -68,18 +68,22 @@ public class Order extends BaseEntity {
     ArrayList<OrderItem> items;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "buyerId", updatable = false, nullable = false)
+    @JoinColumn(name = "buyer_id", updatable = false, nullable = false)
     @JsonIgnore
     User buyer;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "shopId", updatable = false, nullable = false)
+    @JoinColumn(name = "shop_id", updatable = false, nullable = false)
     @JsonIgnore
     Shop shop;
 
-    //NESTED OBJECTS//
-    public enum StatusType {DRAFT, UNPAID, PREPARING, TRANSIT, DELIVERING, DELIVERED, RETURN, CANCELED,}
+    // NESTED OBJECTS//
+    public enum StatusType {
+        DRAFT, UNPAID, PREPARING, TRANSIT, DELIVERING, DELIVERED, RETURN, CANCELED,
+    }
 
-    public enum PaymentMethodType {COD, ZALOPAY, MONO, VNPAY,}
+    public enum PaymentMethodType {
+        COD, ZALOPAY, MONO, VNPAY,
+    }
 
 }

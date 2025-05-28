@@ -9,7 +9,7 @@ import com.dino.backend.features.identity.application.model.LookupIdentifierResp
 import com.dino.backend.features.identity.application.model.PasswordLoginRequest;
 import com.dino.backend.infrastructure.web.model.CurrentUser;
 
-public interface IAuthAppService {
+public interface IAuthService {
 
     // QUERY //
 

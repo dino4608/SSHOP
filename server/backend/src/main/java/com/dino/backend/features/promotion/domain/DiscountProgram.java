@@ -67,7 +67,7 @@ public abstract class DiscountProgram extends Promotion {
     PricingType pricingType;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "seller_id", updatable = false, nullable = false)
+    @JoinColumn(name = "shop_id", updatable = false, nullable = false)
     @JsonIgnore
     Shop shop;
 

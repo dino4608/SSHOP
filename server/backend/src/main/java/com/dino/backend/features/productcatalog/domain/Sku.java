@@ -33,7 +33,7 @@ public class Sku extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(name = "skuId", updatable = false, nullable = false)
+    @Column(name = "sku_id", updatable = false, nullable = false)
     String id;
 
     String status;
@@ -50,15 +50,15 @@ public class Sku extends BaseEntity {
 
     Integer productionCost;
 
-    @OneToOne(mappedBy = "sku", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "sku", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     Inventory inventory;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "productId", updatable = false, nullable = false)
+    @JoinColumn(name = "product_id", updatable = false, nullable = false)
     @JsonIgnore
     Product product;
 
-    @OneToMany(mappedBy = "sku", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "sku", fetch = FetchType.LAZY)
     List<DiscountItem> discountItems;
 
     @OneToMany(mappedBy = "sku", fetch = FetchType.LAZY)

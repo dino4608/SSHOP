@@ -14,6 +14,6 @@ export const productsApi = {
         route: `${RESOURCES.PRODUCTS.PUBLIC}/${productId}`,
         method: HttpMethod.GET,
         withAuth: true,
-        // getById is public, but withAuth that means can include access token with benefits plus or not
+        // getById is public, but withAuth that means can include access token with benefits or not
     })
 }

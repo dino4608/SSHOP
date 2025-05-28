@@ -9,7 +9,8 @@ public class Required<T> {
 
     private final T value;
 
-    // Private constructor to ensure that an instance can only be created through static methods.
+    // Private constructor to ensure that an instance can only be created through
+    // static methods.
     private Required(T value) {
         this.value = value;
     }

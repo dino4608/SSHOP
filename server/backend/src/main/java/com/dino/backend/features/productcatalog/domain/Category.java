@@ -29,7 +29,7 @@ public class Category extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(name = "categoryId", updatable = false, nullable = false)
+    @Column(name = "category_id", updatable = false, nullable = false)
     String id;
 
     @Column(length = 40, nullable = false, unique = true)
@@ -44,9 +44,13 @@ public class Category extends BaseEntity {
 
     Integer position;
 
-    @OneToMany(mappedBy = "category", fetch =  FetchType.LAZY)
+    @OneToMany(mappedBy = "category", fetch = FetchType.LAZY)
     @JsonIgnore
     List<Product> products;
+
+    @OneToMany(mappedBy = "category", fetch = FetchType.LAZY)
+    @JsonIgnore
+    List<Specification> specifications;
 
     // nested categories => list / array
 }

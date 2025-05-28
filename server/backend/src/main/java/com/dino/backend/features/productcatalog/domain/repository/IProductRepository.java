@@ -14,7 +14,7 @@ import java.util.Optional;
 
 public interface IProductRepository extends JpaRepository<Product, String>, JpaSpecificationExecutor<Product> {
 
-    Page<ProductProjection> findAllProjectedBy(Pageable pageable);
+    Page<ProductProjection> findAllProjectedBy(@NonNull Pageable pageable);
 
     @EntityGraph(attributePaths = { "skus", "skus.inventory", "category", "shop" })
     Optional<Product> findEagerById(@NonNull String id);

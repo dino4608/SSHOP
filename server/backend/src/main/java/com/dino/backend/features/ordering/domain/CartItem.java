@@ -16,7 +16,7 @@ import org.hibernate.annotations.SQLRestriction;
 @Table(name = "cart_items")
 @DynamicInsert
 @DynamicUpdate
-@SQLDelete(sql = "UPDATE cart_items SET is_deleted = true WHERE item_id=?")
+@SQLDelete(sql = "UPDATE cart_items SET is_deleted = true WHERE cart_item_id=?")
 @SQLRestriction("is_deleted = false")
 @Getter
 @Setter
@@ -25,17 +25,18 @@ import org.hibernate.annotations.SQLRestriction;
 @SuperBuilder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class CartItem extends BaseEntity {
-    @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(name = "itemId", updatable = false, nullable = false)
-    String id;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "cart_id", updatable = false, nullable = false)
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @Column(name = "cart_item_id", nullable = false, updatable = false)
+    Long id;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "cart_id", nullable = false, updatable = false)
     @JsonIgnore
     Cart cart;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "sku_id", nullable = false)
     Sku sku;
 

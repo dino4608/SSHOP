@@ -27,7 +27,9 @@ import lombok.extern.slf4j.Slf4j;
 public class ProductServiceImpl implements IProductService {
 
     IDiscountService discountService;
+
     IProductRepository productRepository;
+
     IProductMapper productMapper;
 
     // QUERY //
@@ -64,7 +66,7 @@ public class ProductServiceImpl implements IProductService {
         var discount = this.discountService.canApply(productId, currentUser);
 
         var res = this.productMapper.toProductRes(product);
-        res.setDiscount(discount.isPresent() ? discount.get() : null);
+        res.setDiscount(discount.orElse(null));
         return res;
 
     }

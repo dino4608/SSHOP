@@ -1,8 +1,8 @@
 package com.dino.backend.features.identity.application.impl;
 
-import com.dino.backend.features.identity.application.ITokenAppService;
+import com.dino.backend.features.identity.application.ITokenService;
 import com.dino.backend.features.identity.domain.Token;
-import com.dino.backend.features.identity.domain.repository.ITokenDomainRepository;
+import com.dino.backend.features.identity.domain.repository.ITokenRepository;
 import com.dino.backend.infrastructure.aop.AppException;
 import com.dino.backend.infrastructure.aop.ErrorCode;
 import lombok.AccessLevel;
@@ -17,16 +17,16 @@ import java.time.Instant;
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @Slf4j
-public class TokenAppServiceImpl implements ITokenAppService {
+public class TokenServiceImpl implements ITokenService {
 
-    ITokenDomainRepository tokenDomainRepository;
+    ITokenRepository tokenRepository;
 
     // QUERY //
 
     // getById //
     @Override
     public Token getById(String userId) {
-        return this.tokenDomainRepository.findById(userId)
+        return this.tokenRepository.findById(userId)
                 .orElseThrow(() -> new AppException(ErrorCode.TOKEN__FIND_FAILED));
     }
 
@@ -39,7 +39,7 @@ public class TokenAppServiceImpl implements ITokenAppService {
 
         token = Token.updateRefreshToken(token, refreshToken, refreshTokenExpiry);
 
-        this.tokenDomainRepository.save(token);
+        this.tokenRepository.save(token);
     }
 
     // isValidRefreshToken //
@@ -50,4 +50,3 @@ public class TokenAppServiceImpl implements ITokenAppService {
         return refreshToken.equals(token.getRefreshToken());
     }
 }
-

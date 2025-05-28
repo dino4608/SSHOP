@@ -30,7 +30,7 @@ public class Inventory extends BaseEntity {
 
     @MapsId
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "skuId", updatable = false, nullable = false)
+    @JoinColumn(name = "sku_id", updatable = false, nullable = false)
     @JsonIgnore
     Sku sku;
 
