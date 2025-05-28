@@ -1,23 +1,42 @@
 package com.dino.backend.features.identity.domain;
 
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.SQLRestriction;
+
 import com.dino.backend.features.identity.domain.model.UserRoleType;
 import com.dino.backend.features.identity.domain.model.UserStatusType;
 import com.dino.backend.features.ordering.domain.Cart;
 import com.dino.backend.features.ordering.domain.Order;
 import com.dino.backend.features.shop.domain.Shop;
 import com.dino.backend.features.userprofile.domain.Address;
-import com.dino.backend.shared.model.BaseEntity;
+import com.dino.backend.shared.domain.model.BaseEntity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import jakarta.persistence.*;
-import lombok.*;
+
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.SuperBuilder;
-import org.hibernate.annotations.DynamicInsert;
-import org.hibernate.annotations.DynamicUpdate;
-import org.hibernate.annotations.SQLDelete;
-import org.hibernate.annotations.SQLRestriction;
-
-import java.util.*;
 
 @Entity
 @Table(name = "users")
@@ -34,9 +53,9 @@ import java.util.*;
 public class User extends BaseEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(name = "userId", updatable = false, nullable = false)
-    String id;
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @Column(name = "user_id")
+    Long id;
 
     String status;
 
@@ -66,35 +85,35 @@ public class User extends BaseEntity {
 
     Boolean isPhoneVerified;
 
-    @OneToOne(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore
     @ToString.Exclude
-    Token token;
+    List<Token> tokens;
+
+    @OneToMany(mappedBy = "buyer", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
+    @ToString.Exclude
+    List<Cart> carts;
+
+    @OneToMany(mappedBy = "seller", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
+    @ToString.Exclude
+    List<Shop> shops;
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore
     @ToString.Exclude
     List<Address> addresses;
 
-    @OneToOne(mappedBy = "seller", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonIgnore
-    @ToString.Exclude
-    Shop shop;
-
-    @OneToOne(mappedBy = "buyer", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonIgnore
-    @ToString.Exclude
-    Cart cart;
-
     @OneToMany(mappedBy = "buyer", fetch = FetchType.LAZY)
     @JsonIgnore
     @ToString.Exclude
     List<Order> orders;
 
+    // EXP: the validation layer ensured:
+    // - email: ensure the format
+    // - password: ensure the size of 6
     public static User createSignupUser(User user, String hashPassword) {
-        // EXP: the validation layer ensured:
-        // - email: ensure the format
-        // - password: ensure the size of 6
         User newUser = User.builder()
                 .status(UserStatusType.LACK_INFO.toString())
                 .roles(new HashSet<>(Collections.singletonList(UserRoleType.BUYER.toString())))
@@ -106,10 +125,10 @@ public class User extends BaseEntity {
                 .build();
 
         Token newToken = Token.createToken(newUser);
-        newUser.setToken(newToken);
+        newUser.setTokens(List.of(newToken));
 
         Cart newCart = Cart.createCart(newUser);
-        newUser.setCart(newCart);
+        newUser.setCarts(List.of(newCart));
 
         return newUser;
     }

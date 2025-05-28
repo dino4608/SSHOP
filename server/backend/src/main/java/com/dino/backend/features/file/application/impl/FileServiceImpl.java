@@ -1,0 +1,29 @@
+package com.dino.backend.features.file.application.impl;
+
+import com.dino.backend.features.file.application.IFileService;
+import com.dino.backend.features.file.application.model.UploadRes;
+import com.dino.backend.features.file.application.provider.IFileProvider;
+
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.experimental.FieldDefaults;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
+@Service
+@AllArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@Slf4j
+public class FileServiceImpl implements IFileService {
+
+    IFileProvider fileProvider;
+
+    // COMMAND //
+
+    // upload //
+    @Override
+    public UploadRes upload(MultipartFile file, String folder) {
+        return this.fileProvider.upload(file, folder);
+    }
+}

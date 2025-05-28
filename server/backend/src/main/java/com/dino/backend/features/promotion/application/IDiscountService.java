@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import com.dino.backend.features.promotion.domain.Discount;
-import com.dino.backend.infrastructure.web.model.CurrentUser;
+import com.dino.backend.shared.api.model.CurrentUser;
 
 public interface IDiscountService {
     // QUERY //

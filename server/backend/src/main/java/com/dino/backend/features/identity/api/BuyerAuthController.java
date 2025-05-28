@@ -1,9 +1,10 @@
 package com.dino.backend.features.identity.api;
 
-import com.dino.backend.features.identity.application.IAuthAppService;
+import com.dino.backend.features.identity.application.IAuthService;
 import com.dino.backend.features.identity.application.model.*;
-import com.dino.backend.infrastructure.web.annotation.AuthUser;
-import com.dino.backend.infrastructure.web.model.CurrentUser;
+import com.dino.backend.shared.api.annotation.AuthUser;
+import com.dino.backend.shared.api.model.CurrentUser;
+
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -22,7 +23,7 @@ public class BuyerAuthController {
     @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
     public static class PublicBuyerAuthController {
 
-        IAuthAppService authAppService;
+        IAuthService authService;
 
         // QUERY //
 
@@ -30,7 +31,7 @@ public class BuyerAuthController {
         @GetMapping("/lookup")
         public ResponseEntity<LookupIdentifierResponse> lookupIdentifier(
                 @RequestParam("email") String email) {
-            return ResponseEntity.ok(this.authAppService.lookupIdentifier(email));
+            return ResponseEntity.ok(this.authService.lookupIdentifier(email));
         }
 
         // COMMAND //
@@ -40,7 +41,7 @@ public class BuyerAuthController {
         public ResponseEntity<AuthResponse> loginWithPassword(
                 @Valid @RequestBody PasswordLoginRequest request) {
             HttpHeaders headers = new HttpHeaders();
-            AuthResponse body = this.authAppService.login(request, headers);
+            AuthResponse body = this.authService.login(request, headers);
 
             return ResponseEntity
                     .ok()
@@ -53,7 +54,7 @@ public class BuyerAuthController {
         public ResponseEntity<AuthResponse> signupWithPassword(
                 @Valid @RequestBody PasswordLoginRequest request) {
             HttpHeaders headers = new HttpHeaders();
-            AuthResponse body = this.authAppService.signup(request, headers);
+            AuthResponse body = this.authService.signup(request, headers);
 
             return ResponseEntity
                     .ok()
@@ -66,7 +67,7 @@ public class BuyerAuthController {
         public ResponseEntity<AuthResponse> loginOrSignupWithGoogle(
                 @RequestBody GoogleOauth2Request request) {
             HttpHeaders headers = new HttpHeaders();
-            AuthResponse body = this.authAppService.loginOrSignup(request, headers);
+            AuthResponse body = this.authService.loginOrSignup(request, headers);
 
             return ResponseEntity
                     .ok()
@@ -79,7 +80,7 @@ public class BuyerAuthController {
         public ResponseEntity<AuthResponse> refresh(
                 @CookieValue(name = "REFRESH_TOKEN", required = false) String refreshToken) {
             HttpHeaders headers = new HttpHeaders();
-            AuthResponse authResponse = authAppService.refresh(refreshToken, headers);
+            AuthResponse authResponse = authService.refresh(refreshToken, headers);
 
             return ResponseEntity
                     .ok()
@@ -96,14 +97,14 @@ public class BuyerAuthController {
     @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
     public static class PrivateBuyerAuthController {
 
-        IAuthAppService authAppService;
+        IAuthService authService;
 
         // QUERY //
 
         // getCurrentUser //
         @GetMapping("/me")
         public ResponseEntity<CurrentUserResponse> getCurrentUser(@AuthUser CurrentUser currentUser) {
-            return ResponseEntity.ok(this.authAppService.getCurrentUser(currentUser));
+            return ResponseEntity.ok(this.authService.getCurrentUser(currentUser));
         }
 
         // COMMAND //
@@ -112,7 +113,7 @@ public class BuyerAuthController {
         public ResponseEntity<AuthResponse> logout(
                 @CookieValue(name = "REFRESH_TOKEN", required = false) String refreshToken) {
             HttpHeaders headers = new HttpHeaders();
-            AuthResponse authResponse = this.authAppService.logout(refreshToken, headers);
+            AuthResponse authResponse = this.authService.logout(refreshToken, headers);
 
             return ResponseEntity
                     .ok()

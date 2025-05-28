@@ -302,18 +302,18 @@
 									}
 								},
 								"url": {
-									"raw": "{{admin}}/{{category}}/find/:cateId",
+									"raw": "{{admin}}/{{category}}/find/:cate_id",
 									"host": [
 										"{{admin}}"
 									],
 									"path": [
 										"{{category}}",
 										"find",
-										":cateId"
+										":cate_id"
 									],
 									"variable": [
 										{
-											"key": "cateId",
+											"key": "cate_id",
 											"value": "f71d9048-0012-47bc-b3a5-639c25152396"
 										}
 									]
@@ -327,18 +327,18 @@
 								"method": "DELETE",
 								"header": [],
 								"url": {
-									"raw": "{{admin}}/{{category}}/delete/:cateId",
+									"raw": "{{admin}}/{{category}}/delete/:cate_id",
 									"host": [
 										"{{admin}}"
 									],
 									"path": [
 										"{{category}}",
 										"delete",
-										":cateId"
+										":cate_id"
 									],
 									"variable": [
 										{
-											"key": "cateId",
+											"key": "cate_id",
 											"value": "d5b2f8e2-76d9-456f-95ef-86af6df9eab0"
 										}
 									]

@@ -10,8 +10,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.dino.backend.features.productcatalog.application.IProductService;
-import com.dino.backend.infrastructure.web.annotation.AuthUser;
-import com.dino.backend.infrastructure.web.model.CurrentUser;
+import com.dino.backend.shared.api.annotation.AuthUser;
+import com.dino.backend.shared.api.model.CurrentUser;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;

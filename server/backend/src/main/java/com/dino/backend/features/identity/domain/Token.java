@@ -1,26 +1,37 @@
 package com.dino.backend.features.identity.domain;
 
-import com.dino.backend.infrastructure.aop.AppException;
-import com.dino.backend.infrastructure.aop.ErrorCode;
-import com.dino.backend.shared.model.BaseEntity;
-import com.dino.backend.shared.utils.Required;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import jakarta.persistence.*;
-import lombok.*;
-import lombok.experimental.FieldDefaults;
-import lombok.experimental.SuperBuilder;
+import java.time.Instant;
+
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
 
-import java.time.Instant;
+import com.dino.backend.shared.domain.model.BaseEntity;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.experimental.FieldDefaults;
+import lombok.experimental.SuperBuilder;
 
 @Entity
 @Table(name = "tokens")
 @DynamicInsert
 @DynamicUpdate
-@SQLDelete(sql = "UPDATE tokens SET is_deleted = true WHERE user_id=?")
+@SQLDelete(sql = "UPDATE tokens SET is_deleted = true WHERE token_id=?")
 @SQLRestriction("is_deleted = false")
 @SuperBuilder
 @Getter
@@ -31,42 +42,30 @@ import java.time.Instant;
 public class Token extends BaseEntity {
 
     @Id
-    String id;
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @Column(name = "token_id")
+    Long id;
 
-    @MapsId
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "userId", updatable = false, nullable = false)
-    @JsonIgnore
-    User user;
-
-    @Column(columnDefinition = "VARCHAR(1000)")
+    @Column(columnDefinition = "text")
     String refreshToken;
 
     Instant refreshTokenExpiry;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false, updatable = false)
+    @JsonIgnore
+    User user;
+
     public static Token createToken(User user) {
-        return Token.builder()
+        var newToken = Token.builder()
                 .user(user)
                 .build();
+
+        return newToken;
     }
 
-    // NOTE:
-    // Should set each property, because it changes clearly, doesn't depend on old state, is proper to DDD
-    public static Token updateRefreshToken(Token token, String refreshToken, Instant refreshTokenExpiry) {
-        try {
-            Required.notNull(token.getId());
-
-            return Token.builder()
-                    .id(token.getId())
-                    .user(User.builder().id(token.getId()).build())
-                    .refreshToken(refreshToken)
-                    .refreshTokenExpiry(refreshTokenExpiry)
-                    .createdAt(token.getCreatedAt())
-                    .isDeleted(token.getIsDeleted())
-                    .build();
-
-        } catch (Exception e) {
-            throw new AppException(ErrorCode.TOKEN__UPDATE_FAILED);
-        }
+    public static void updateRefreshToken(Token token, String refreshToken, Instant refreshTokenExpiry) {
+        token.setRefreshToken(refreshToken);
+        token.setRefreshTokenExpiry(refreshTokenExpiry);
     }
 }

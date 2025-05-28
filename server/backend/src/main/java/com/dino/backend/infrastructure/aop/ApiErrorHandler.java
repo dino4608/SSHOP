@@ -10,6 +10,9 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 
+import com.dino.backend.shared.domain.exception.AppException;
+import com.dino.backend.shared.domain.exception.ErrorCode;
+
 import java.util.Optional;
 
 @ControllerAdvice
@@ -65,7 +68,8 @@ public class ApiErrorHandler {
                 .map(FieldError::getDefaultMessage)
                 .orElse(ErrorCode.SYSTEM__KEY_UNSUPPORTED.name());
 
-        ErrorCode error = ErrorCode.valueOf(key);
+        ErrorCode error = ErrorCode.safeValueOf(key)
+                .orElse(ErrorCode.SYSTEM__KEY_UNSUPPORTED);
 
         return ResponseEntity
                 .status(error.getStatus())

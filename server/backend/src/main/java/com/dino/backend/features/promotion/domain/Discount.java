@@ -11,8 +11,8 @@ import org.springframework.util.CollectionUtils;
 
 import com.dino.backend.features.productcatalog.domain.Product;
 import com.dino.backend.features.promotion.domain.model.LevelType;
-import com.dino.backend.infrastructure.web.model.CurrentUser;
-import com.dino.backend.shared.model.BaseEntity;
+import com.dino.backend.shared.api.model.CurrentUser;
+import com.dino.backend.shared.domain.model.BaseEntity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.CascadeType;
@@ -59,9 +59,9 @@ import lombok.experimental.SuperBuilder;
 public class Discount extends BaseEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(name = "discount_id", updatable = false, nullable = false)
-    String id;
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @Column(name = "discount_id")
+    Long id;
 
     Integer dealPrice;
 

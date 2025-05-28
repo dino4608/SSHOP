@@ -1,7 +1,7 @@
 package com.dino.backend.features.inventory.domain;
 
 import com.dino.backend.features.productcatalog.domain.Sku;
-import com.dino.backend.shared.model.BaseEntity;
+import com.dino.backend.shared.domain.model.BaseEntity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
@@ -16,7 +16,7 @@ import org.hibernate.annotations.SQLRestriction;
 @Table(name = "inventories")
 @DynamicInsert
 @DynamicUpdate
-@SQLDelete(sql = "UPDATE inventories SET is_deleted = true WHERE sku_id = ?")
+@SQLDelete(sql = "UPDATE inventories SET is_deleted = true WHERE inventory_id = ?")
 @SQLRestriction("is_deleted = false")
 @SuperBuilder
 @Getter
@@ -25,18 +25,20 @@ import org.hibernate.annotations.SQLRestriction;
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Inventory extends BaseEntity {
-    @Id
-    String id;
 
-    @MapsId
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "skuId", updatable = false, nullable = false)
-    @JsonIgnore
-    Sku sku;
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @Column(name = "inventory_id")
+    Long id;
 
     Integer stocks;
 
     Integer sales;
 
     Integer total;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "sku_id", nullable = false, updatable = false)
+    @JsonIgnore
+    Sku sku;
 }

@@ -1,7 +1,7 @@
 package com.dino.backend.features.userprofile.domain;
 
 import com.dino.backend.features.identity.domain.User;
-import com.dino.backend.shared.model.BaseEntity;
+import com.dino.backend.shared.domain.model.BaseEntity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
@@ -27,9 +27,9 @@ import org.hibernate.annotations.SQLRestriction;
 public class Address extends BaseEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(name = "addressId", updatable = false, nullable = false)
-    String id;
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @Column(name = "address_id")
+    Long id;
 
     String contactName;
 
@@ -46,7 +46,7 @@ public class Address extends BaseEntity {
     Boolean isDefault;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "userId", updatable = false, nullable = false)
+    @JoinColumn(name = "user_id", updatable = false, nullable = false)
     @JsonIgnore
     User user;
 }

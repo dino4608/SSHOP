@@ -1,27 +1,44 @@
 package com.dino.backend.features.shop.domain;
 
-import com.dino.backend.features.identity.domain.User;
-import com.dino.backend.features.ordering.domain.Order;
-import com.dino.backend.features.productcatalog.domain.Product;
-import com.dino.backend.features.promotion.domain.DiscountProgram;
-import com.dino.backend.shared.model.BaseEntity;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import jakarta.persistence.*;
-import lombok.*;
-import lombok.experimental.FieldDefaults;
-import lombok.experimental.SuperBuilder;
+import java.util.List;
+
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
 
-import java.util.List;
+import com.dino.backend.features.identity.domain.User;
+import com.dino.backend.features.ordering.domain.Order;
+import com.dino.backend.features.productcatalog.domain.Product;
+import com.dino.backend.features.promotion.domain.DiscountProgram;
+import com.dino.backend.shared.domain.model.BaseEntity;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+import lombok.experimental.FieldDefaults;
+import lombok.experimental.SuperBuilder;
 
 @Entity
 @Table(name = "shops")
 @DynamicInsert
 @DynamicUpdate
-@SQLDelete(sql = "UPDATE shops SET is_deleted = true WHERE account_id=?")
+@SQLDelete(sql = "UPDATE shops SET is_deleted = true WHERE shop_id=?")
 @SQLRestriction("is_deleted = false")
 @SuperBuilder
 @Getter
@@ -32,14 +49,9 @@ import java.util.List;
 public class Shop extends BaseEntity {
 
     @Id
-    String id;
-
-    @MapsId
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinColumn(name = "seller_id", updatable = false, nullable = false)
-    @JsonIgnore
-    @ToString.Exclude
-    User seller;
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @Column(name = "shop_id")
+    Long id;
 
     String status;
 
@@ -57,7 +69,13 @@ public class Shop extends BaseEntity {
 
     String sellerType;
 
-    @OneToMany(mappedBy = "shop", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "seller_id", nullable = false, updatable = false)
+    @JsonIgnore
+    @ToString.Exclude
+    User seller;
+
+    @OneToMany(mappedBy = "shop", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore
     @ToString.Exclude
     List<Product> products;

@@ -4,7 +4,7 @@ import com.dino.backend.features.inventory.domain.Inventory;
 import com.dino.backend.features.ordering.domain.CartItem;
 import com.dino.backend.features.ordering.domain.OrderItem;
 import com.dino.backend.features.promotion.domain.DiscountItem;
-import com.dino.backend.shared.model.BaseEntity;
+import com.dino.backend.shared.domain.model.BaseEntity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
@@ -32,9 +32,9 @@ import java.util.List;
 public class Sku extends BaseEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(name = "skuId", updatable = false, nullable = false)
-    String id;
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @Column(name = "sku_id")
+    Long id;
 
     String status;
 
@@ -50,15 +50,15 @@ public class Sku extends BaseEntity {
 
     Integer productionCost;
 
-    @OneToOne(mappedBy = "sku", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "sku", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     Inventory inventory;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "productId", updatable = false, nullable = false)
+    @JoinColumn(name = "product_id", updatable = false, nullable = false)
     @JsonIgnore
     Product product;
 
-    @OneToMany(mappedBy = "sku", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "sku", fetch = FetchType.LAZY)
     List<DiscountItem> discountItems;
 
     @OneToMany(mappedBy = "sku", fetch = FetchType.LAZY)
