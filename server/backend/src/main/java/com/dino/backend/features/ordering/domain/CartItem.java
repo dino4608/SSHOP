@@ -1,6 +1,8 @@
 package com.dino.backend.features.ordering.domain;
 
 import com.dino.backend.features.productcatalog.domain.Sku;
+import com.dino.backend.infrastructure.aop.AppException;
+import com.dino.backend.infrastructure.aop.ErrorCode;
 import com.dino.backend.shared.model.BaseEntity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
@@ -41,4 +43,13 @@ public class CartItem extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "sku_id", nullable = false)
     Sku sku;
+
+    public void setQuantity(int quantity) {
+        if (quantity < 1)
+            throw new AppException(ErrorCode.CART_QUANTITY_MIN_INVALID);
+        if (quantity > 100)
+            throw new AppException(ErrorCode.CART_QUANTITY_MAX_INVALID);
+
+        this.quantity = quantity;
+    }
 }

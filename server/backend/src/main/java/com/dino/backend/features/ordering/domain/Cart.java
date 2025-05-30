@@ -2,6 +2,8 @@ package com.dino.backend.features.ordering.domain;
 
 import com.dino.backend.features.identity.domain.User;
 import com.dino.backend.features.productcatalog.domain.Sku;
+import com.dino.backend.infrastructure.aop.AppException;
+import com.dino.backend.infrastructure.aop.ErrorCode;
 import com.dino.backend.shared.model.BaseEntity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
@@ -35,7 +37,7 @@ public class Cart extends BaseEntity {
     @Column(name = "cart_id")
     Long id;
 
-    int count;
+    int total;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "buyer_id", nullable = false, updatable = false)
@@ -46,12 +48,26 @@ public class Cart extends BaseEntity {
     // @OrderBy("id ASC")
     List<CartItem> cartItems;
 
+    // Setter method //
+
+    public void setTotal(int total) {
+        if (total < 0)
+            throw new AppException(ErrorCode.CART_TOTAL_MIN_INVALID);
+        if (total > 100)
+            throw new AppException(ErrorCode.CART_TOTAL_MAX_INVALID);
+
+        this.total = total;
+    }
+
+    // Static method //
     public static Cart createCart(User buyer) {
+
         Cart newCart = Cart.builder()
                 .cartItems(new ArrayList<>())
-                .count(0)
                 .buyer(buyer)
                 .build();
+
+        newCart.setTotal(0);
 
         return newCart;
     }
@@ -64,14 +80,14 @@ public class Cart extends BaseEntity {
                 .build();
 
         cart.getCartItems().add(item);
-        cart.setCount(cart.getCount() + 1);
+        cart.setTotal(cart.getTotal() + 1);
     }
 
     public static void removeCartItem(Cart cart, List<CartItem> cartItemsToRemove) {
         // NOTE: orphanRemoval
         // removeAll items => JPA note they are orphan => orphanRemoval auto delete
         cart.getCartItems().removeAll(cartItemsToRemove);
-        cart.setCount(cart.getCount() - cartItemsToRemove.size());
+        cart.setTotal(cart.getTotal() - cartItemsToRemove.size());
     }
 
     public static void increaseQuantity(CartItem item, int increment) {
@@ -82,5 +98,7 @@ public class Cart extends BaseEntity {
         item.setQuantity(item.getQuantity() - decrement);
     }
 
-    // TODO: setQuantity > 0
+    public static void updateQuantity(CartItem item, int quantity) {
+        item.setQuantity(quantity);
+    }
 }

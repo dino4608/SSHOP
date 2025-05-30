@@ -19,6 +19,6 @@ import java.util.List;
 public class CartRes {
 
     Long buyerId;
-    int count;
+    int total;
     List<CartItemRes> cartItems;
 }

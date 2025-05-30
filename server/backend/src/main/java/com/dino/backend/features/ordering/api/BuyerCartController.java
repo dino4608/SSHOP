@@ -17,6 +17,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -56,6 +57,15 @@ public class BuyerCartController {
             return ResponseEntity.ok(addedItem);
         }
 
+        // updateQuantity //
+        @PatchMapping("/quantity/update")
+        public ResponseEntity<CartItemAddRes> updateQuantity(
+                @Valid @RequestBody CartItemAddReq request,
+                @AuthUser CurrentUser currentUser) {
+            var updatedItem = this.cartService.updateQuantity(request, currentUser);
+            return ResponseEntity.ok(updatedItem);
+        }
+
         // removeCartItems //
         @DeleteMapping("/items/remove")
         public ResponseEntity<Void> removeCartItems(
@@ -63,6 +73,7 @@ public class BuyerCartController {
                 @AuthUser CurrentUser currentUser) {
             this.cartService.removeCartItems(request, currentUser);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            // TODO: return NO_CONTENT
         }
     }
 }

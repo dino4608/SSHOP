@@ -1,7 +1,8 @@
 package com.dino.backend.features.ordering.application.model;
 
+import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -18,9 +19,12 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class CartItemAddReq {
 
-    @NotBlank(message = "Sku ID must not be blank")
+    @NotNull(message = "CART_SKU_ID_NULL")
     Long skuId;
 
-    @Min(value = 1, message = "Quantity must be at least 1")
+    @Min(value = 1, message = "CART_QUANTITY_MIN_INVALID")
+    @Max(value = 100, message = "CART_QUANTITY_MAX_INVALID")
     int quantity;
+
+    // TODO: create ErrorCode for validate
 }

@@ -84,22 +84,56 @@ public class CartServiceImpl implements ICartService {
     @Override
     @Transactional
     public CartItemAddRes addCartItem(CartItemAddReq request, CurrentUser currentUser) {
-        // 1. get Cart, Sku
+        // 1. get Cart
         var cart = this.getOrCreateCart(currentUser);
-        var sku = this.skuService.getSku(request.getSkuId());
 
-        // 3. check CartItem is existing => increaseQuantity or addCartItem
+        // 2. check CartItem is existing => increaseQuantity or addCartItem
         var existingCartItem = cart.getCartItems().stream()
-                .filter(cartItem -> cartItem.getSku().getId().equals(sku.getId()))
+                .filter(cartItem -> cartItem.getSku().getId().equals(request.getSkuId()))
                 .findFirst();
         existingCartItem.ifPresentOrElse(
-                cartItem -> Cart.increaseQuantity(cartItem, request.getQuantity()),
-                () -> Cart.addCartItem(cart, sku, request.getQuantity()));
+                cartItem -> {
+                    Cart.increaseQuantity(cartItem, request.getQuantity());
+                },
+                () -> {
+                    var sku = this.skuService.getSku(request.getSkuId());
+                    Cart.addCartItem(cart, sku, request.getQuantity());
+                });
         var updatedCart = this.save(cart);
 
-        // 4. get CartItem again to map to response
+        // 3. get CartItem again to map to response
         var savedCartItem = updatedCart.getCartItems().stream()
-                .filter(item -> item.getSku().getId().equals(sku.getId()))
+                .filter(item -> item.getSku().getId().equals(request.getSkuId()))
+                .findFirst()
+                .orElseThrow(() -> new AppException(ErrorCode.CART__ADD_ITEM_FAIL));
+        return this.cartMapper.toCartItemAddedRes(savedCartItem);
+    }
+
+    /**
+     * updateQuantity
+     */
+    @Override
+    public CartItemAddRes updateQuantity(CartItemAddReq request, CurrentUser currentUser) {
+        // 1. get Cart
+        var cart = this.getOrCreateCart(currentUser);
+
+        // 2. check CartItem is existing => updateQuantity or addCartItem
+        var existingCartItem = cart.getCartItems().stream()
+                .filter(cartItem -> cartItem.getSku().getId().equals(request.getSkuId()))
+                .findFirst();
+        existingCartItem.ifPresentOrElse(
+                cartItem -> {
+                    Cart.updateQuantity(cartItem, request.getQuantity());
+                },
+                () -> {
+                    var sku = this.skuService.getSku(request.getSkuId());
+                    Cart.addCartItem(cart, sku, request.getQuantity());
+                });
+        var updatedCart = this.save(cart);
+
+        // 3. get CartItem again to map to response
+        var savedCartItem = updatedCart.getCartItems().stream()
+                .filter(item -> item.getSku().getId().equals(request.getSkuId()))
                 .findFirst()
                 .orElseThrow(() -> new AppException(ErrorCode.CART__ADD_ITEM_FAIL));
         return this.cartMapper.toCartItemAddedRes(savedCartItem);

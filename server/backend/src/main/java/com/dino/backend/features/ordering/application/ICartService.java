@@ -15,5 +15,7 @@ public interface ICartService {
 
     CartItemAddRes addCartItem(CartItemAddReq request, CurrentUser currentUser);
 
+    CartItemAddRes updateQuantity(CartItemAddReq request, CurrentUser currentUser);
+
     void removeCartItems(CartItemRemoveReq request, CurrentUser currentUser);
 }

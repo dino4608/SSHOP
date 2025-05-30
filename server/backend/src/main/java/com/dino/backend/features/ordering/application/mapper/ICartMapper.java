@@ -18,8 +18,6 @@ import com.dino.backend.features.ordering.domain.CartItem;
 public interface ICartMapper {
 
     @Mapping(source = "buyer.id", target = "buyerId")
-    //@Mapping(target = "totalCount", expression = "java(calculateTotalCount(cart.getCartItems()))")
-    //@Mapping(source = "cartItems", target = "cartItems") // Map list of CartItem to CartItemRes
     CartRes toCartRes(Cart cart);
 
     @Mapping(source = "sku.id", target = "skuId")

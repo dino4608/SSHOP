@@ -1,14 +1,14 @@
 package com.dino.backend.infrastructure.aop;
 
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.experimental.FieldDefaults;
-
 import java.util.Optional;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
+
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.experimental.FieldDefaults;
 
 @Getter
 @AllArgsConstructor
@@ -80,7 +80,13 @@ public enum ErrorCode {
     // ORDERING 1500+ //
     // CART //
     CART__ADD_ITEM_FAIL(1501, "Thêm vào giỏ hàng thất bại", HttpStatus.BAD_REQUEST),
-    CART__FIND_FAIL(1502, "Lấy giỏ hàng thất bại", HttpStatus.INTERNAL_SERVER_ERROR);
+    CART__FIND_FAIL(1502, "Lấy giỏ hàng thất bại", HttpStatus.INTERNAL_SERVER_ERROR),
+    CART_QUANTITY_MIN_INVALID(1503, "Số lượng tối thiểu là 1", HttpStatus.BAD_REQUEST),
+    CART_QUANTITY_MAX_INVALID(1504, "Số lượng tối đa là 100", HttpStatus.BAD_REQUEST),
+    CART_SKU_ID_NULL(1505, "Thiếu Sku", HttpStatus.BAD_REQUEST),
+    CART_TOTAL_MIN_INVALID(1506, "Giở hàng đã có 0 sản phẩm", HttpStatus.BAD_REQUEST),
+    CART_TOTAL_MAX_INVALID(1507, "Giỏ hàng đã có 100 sản phẩm", HttpStatus.BAD_REQUEST),
+    ;
 
     int code;
     String message;
