@@ -59,7 +59,7 @@ public class BuyerCartController {
 
         // updateQuantity //
         @PatchMapping("/items/quantity/update")
-        public ResponseEntity<CartItemRes> updateQuantity(
+        public ResponseEntity<CartItemRes> updateCartItemQuantity(
                 @Valid @RequestBody AddCartItemReq request,
                 @AuthUser CurrentUser currentUser) {
             var updatedItem = this.cartService.updateQuantity(request, currentUser);

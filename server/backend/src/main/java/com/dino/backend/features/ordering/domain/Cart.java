@@ -5,7 +5,7 @@ import com.dino.backend.features.productcatalog.domain.Sku;
 import com.dino.backend.infrastructure.aop.AppException;
 import com.dino.backend.infrastructure.aop.ErrorCode;
 import com.dino.backend.shared.model.BaseEntity;
-import com.dino.backend.shared.utils.DeleteRes;
+import com.dino.backend.shared.utils.Deleted;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
@@ -83,7 +83,7 @@ public class Cart extends BaseEntity {
         return item;
     }
 
-    public static DeleteRes removeCartItems(Cart cart, List<Long> skuIds) {
+    public static Deleted removeCartItems(Cart cart, List<Long> skuIds) {
         // NOTE: orphanRemoval
         // 1. filter CartItems (objects on memory) to remove
         var cartItemsToRemove = cart.getCartItems().stream()
@@ -94,7 +94,7 @@ public class Cart extends BaseEntity {
         cart.getCartItems().removeAll(cartItemsToRemove);
         cart.setTotal(cart.getTotal() - cartItemsToRemove.size());
 
-        return DeleteRes.success();
+        return Deleted.success();
     }
 
     public static void increaseQuantity(CartItem item, int increment) {

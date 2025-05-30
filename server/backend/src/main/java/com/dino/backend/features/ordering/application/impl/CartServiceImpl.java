@@ -104,7 +104,6 @@ public class CartServiceImpl implements ICartService {
                 });
         this.saveCart(cart);
 
-        // 3. map toCartItemRes
         return this.cartMapper.toCartItemRes(upsertedCartItem);
     }
 
@@ -130,7 +129,6 @@ public class CartServiceImpl implements ICartService {
                 });
         this.saveCart(cart);
 
-        // 3. map toCartItemRes
         return this.cartMapper.toCartItemRes(upsertedCartItem);
     }
 
