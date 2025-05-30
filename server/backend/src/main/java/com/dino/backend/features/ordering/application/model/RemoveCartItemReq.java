@@ -1,5 +1,8 @@
 package com.dino.backend.features.ordering.application.model;
 
+import java.util.List;
+
+import jakarta.validation.constraints.NotEmpty;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -14,13 +17,8 @@ import lombok.experimental.FieldDefaults;
 @Getter
 @Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class CartItemRes {
+public class RemoveCartItemReq {
 
-    Long skuId;
-    String skuCode;
-    String skuTierOptionValue;
-    Integer retailPrice;
-    int quantity;
-    String productName;
-    String productThumb;
+    @NotEmpty(message = "CART__SKU_EMPTY")
+    List<Long> skuIds;
 }

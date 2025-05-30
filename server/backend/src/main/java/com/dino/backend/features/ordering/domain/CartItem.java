@@ -46,9 +46,9 @@ public class CartItem extends BaseEntity {
 
     public void setQuantity(int quantity) {
         if (quantity < 1)
-            throw new AppException(ErrorCode.CART_QUANTITY_MIN_INVALID);
+            throw new AppException(ErrorCode.CART__QUANTITY_MIN_INVALID);
         if (quantity > 100)
-            throw new AppException(ErrorCode.CART_QUANTITY_MAX_INVALID);
+            throw new AppException(ErrorCode.CART__QUANTITY_MAX_INVALID);
 
         this.quantity = quantity;
     }

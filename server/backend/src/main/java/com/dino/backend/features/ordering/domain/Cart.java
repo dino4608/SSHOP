@@ -5,6 +5,7 @@ import com.dino.backend.features.productcatalog.domain.Sku;
 import com.dino.backend.infrastructure.aop.AppException;
 import com.dino.backend.infrastructure.aop.ErrorCode;
 import com.dino.backend.shared.model.BaseEntity;
+import com.dino.backend.shared.utils.DeleteRes;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
@@ -48,54 +49,56 @@ public class Cart extends BaseEntity {
     // @OrderBy("id ASC")
     List<CartItem> cartItems;
 
-    // Setter method //
+    // SETTER METHODS //
 
     public void setTotal(int total) {
         if (total < 0)
-            throw new AppException(ErrorCode.CART_TOTAL_MIN_INVALID);
+            throw new AppException(ErrorCode.CART__TOTAL_MIN_INVALID);
         if (total > 100)
-            throw new AppException(ErrorCode.CART_TOTAL_MAX_INVALID);
+            throw new AppException(ErrorCode.CART__TOTAL_MAX_INVALID);
 
         this.total = total;
     }
 
-    // Static method //
+    // STATIC METHODS //
+
     public static Cart createCart(User buyer) {
+        Cart cart = new Cart();
+        cart.setCartItems(new ArrayList<>());
+        cart.setTotal(0);
+        cart.setBuyer(buyer);
 
-        Cart newCart = Cart.builder()
-                .cartItems(new ArrayList<>())
-                .buyer(buyer)
-                .build();
-
-        newCart.setTotal(0);
-
-        return newCart;
+        return cart;
     }
 
-    public static void addCartItem(Cart cart, Sku sku, int quantity) {
-        CartItem item = CartItem.builder()
-                .quantity(quantity)
-                .cart(cart)
-                .sku(sku)
-                .build();
+    public static CartItem addCartItem(Cart cart, Sku sku, int quantity) {
+        CartItem item = new CartItem();
+        item.setQuantity(quantity);
+        item.setCart(cart);
+        item.setSku(sku);
 
         cart.getCartItems().add(item);
         cart.setTotal(cart.getTotal() + 1);
+
+        return item;
     }
 
-    public static void removeCartItem(Cart cart, List<CartItem> cartItemsToRemove) {
+    public static DeleteRes removeCartItems(Cart cart, List<Long> skuIds) {
         // NOTE: orphanRemoval
-        // removeAll items => JPA note they are orphan => orphanRemoval auto delete
+        // 1. filter CartItems (objects on memory) to remove
+        var cartItemsToRemove = cart.getCartItems().stream()
+                .filter(cartItem -> skuIds.contains(cartItem.getSku().getId()))
+                .toList();
+
+        // 2. removeAll items => JPA note they are orphan => orphanRemoval auto delete
         cart.getCartItems().removeAll(cartItemsToRemove);
         cart.setTotal(cart.getTotal() - cartItemsToRemove.size());
+
+        return DeleteRes.success();
     }
 
     public static void increaseQuantity(CartItem item, int increment) {
         item.setQuantity(item.getQuantity() + increment);
-    }
-
-    public static void decreaseQuantity(CartItem item, int decrement) {
-        item.setQuantity(item.getQuantity() - decrement);
     }
 
     public static void updateQuantity(CartItem item, int quantity) {

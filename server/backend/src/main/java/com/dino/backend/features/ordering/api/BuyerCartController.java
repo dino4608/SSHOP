@@ -1,19 +1,5 @@
 package com.dino.backend.features.ordering.api;
 
-import com.dino.backend.features.ordering.application.ICartService;
-import com.dino.backend.features.ordering.application.model.CartItemAddReq;
-import com.dino.backend.features.ordering.application.model.CartItemAddRes;
-import com.dino.backend.features.ordering.application.model.CartItemRemoveReq;
-import com.dino.backend.features.ordering.application.model.CartRes;
-import com.dino.backend.infrastructure.web.annotation.AuthUser;
-import com.dino.backend.infrastructure.web.model.CurrentUser;
-
-import jakarta.validation.Valid;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.experimental.FieldDefaults;
-
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,6 +8,20 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.dino.backend.features.ordering.application.ICartService;
+import com.dino.backend.features.ordering.application.model.AddCartItemReq;
+import com.dino.backend.features.ordering.application.model.CartItemRes;
+import com.dino.backend.features.ordering.application.model.CartRes;
+import com.dino.backend.features.ordering.application.model.RemoveCartItemReq;
+import com.dino.backend.infrastructure.web.annotation.AuthUser;
+import com.dino.backend.infrastructure.web.model.CurrentUser;
+import com.dino.backend.shared.utils.Deleted;
+
+import jakarta.validation.Valid;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.experimental.FieldDefaults;
 
 @RestController
 public class BuyerCartController {
@@ -50,17 +50,17 @@ public class BuyerCartController {
 
         // addCartItem //
         @PostMapping("/items/add")
-        public ResponseEntity<CartItemAddRes> addCartItem(
-                @Valid @RequestBody CartItemAddReq request,
+        public ResponseEntity<CartItemRes> addCartItem(
+                @Valid @RequestBody AddCartItemReq request,
                 @AuthUser CurrentUser currentUser) {
             var addedItem = this.cartService.addCartItem(request, currentUser);
             return ResponseEntity.ok(addedItem);
         }
 
         // updateQuantity //
-        @PatchMapping("/quantity/update")
-        public ResponseEntity<CartItemAddRes> updateQuantity(
-                @Valid @RequestBody CartItemAddReq request,
+        @PatchMapping("/items/quantity/update")
+        public ResponseEntity<CartItemRes> updateQuantity(
+                @Valid @RequestBody AddCartItemReq request,
                 @AuthUser CurrentUser currentUser) {
             var updatedItem = this.cartService.updateQuantity(request, currentUser);
             return ResponseEntity.ok(updatedItem);
@@ -68,12 +68,11 @@ public class BuyerCartController {
 
         // removeCartItems //
         @DeleteMapping("/items/remove")
-        public ResponseEntity<Void> removeCartItems(
-                @Valid @RequestBody CartItemRemoveReq request,
+        public ResponseEntity<Deleted> removeCartItems(
+                @Valid @RequestBody RemoveCartItemReq request,
                 @AuthUser CurrentUser currentUser) {
-            this.cartService.removeCartItems(request, currentUser);
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-            // TODO: return NO_CONTENT
+            var deleteRes = this.cartService.removeCartItems(request, currentUser);
+            return ResponseEntity.ok(deleteRes);
         }
     }
 }

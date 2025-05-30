@@ -1,24 +1,27 @@
 package com.dino.backend.features.ordering.application.impl;
 
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.dino.backend.features.identity.application.IUserService;
 import com.dino.backend.features.ordering.application.ICartService;
 import com.dino.backend.features.ordering.application.mapper.ICartMapper;
-import com.dino.backend.features.ordering.application.model.CartItemAddReq;
-import com.dino.backend.features.ordering.application.model.CartItemAddRes;
-import com.dino.backend.features.ordering.application.model.CartItemRemoveReq;
+import com.dino.backend.features.ordering.application.model.AddCartItemReq;
+import com.dino.backend.features.ordering.application.model.CartItemRes;
 import com.dino.backend.features.ordering.application.model.CartRes;
+import com.dino.backend.features.ordering.application.model.RemoveCartItemReq;
 import com.dino.backend.features.ordering.domain.Cart;
 import com.dino.backend.features.ordering.domain.repository.ICartRepository;
 import com.dino.backend.features.productcatalog.application.ISkuService;
 import com.dino.backend.infrastructure.aop.AppException;
 import com.dino.backend.infrastructure.aop.ErrorCode;
 import com.dino.backend.infrastructure.web.model.CurrentUser;
+import com.dino.backend.shared.utils.Deleted;
+
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @AllArgsConstructor
@@ -45,7 +48,7 @@ public class CartServiceImpl implements ICartService {
      * getCart (get and join CartItems)
      */
     private Cart getCart(CurrentUser currentUser) {
-        return this.cartRepository.findJoinItemsByBuyerId(currentUser.id())
+        return this.cartRepository.findJoinAllByBuyerId(currentUser.id())
                 .orElseThrow(() -> new AppException(ErrorCode.CART__FIND_FAIL));
     }
 
@@ -55,13 +58,13 @@ public class CartServiceImpl implements ICartService {
     private Cart createCart(CurrentUser currentUser) {
         var buyer = this.userService.get(currentUser);
         var newCart = Cart.createCart(buyer);
-        return this.save(newCart);
+        return this.saveCart(newCart);
     }
 
     /**
      * save
      */
-    private Cart save(Cart cart) {
+    private Cart saveCart(Cart cart) {
         return this.cartRepository.save(cart);
     }
 
@@ -83,78 +86,66 @@ public class CartServiceImpl implements ICartService {
      */
     @Override
     @Transactional
-    public CartItemAddRes addCartItem(CartItemAddReq request, CurrentUser currentUser) {
+    public CartItemRes addCartItem(AddCartItemReq request, CurrentUser currentUser) {
         // 1. get Cart
         var cart = this.getOrCreateCart(currentUser);
 
         // 2. check CartItem is existing => increaseQuantity or addCartItem
-        var existingCartItem = cart.getCartItems().stream()
+        var upsertedCartItem = cart.getCartItems().stream()
                 .filter(cartItem -> cartItem.getSku().getId().equals(request.getSkuId()))
-                .findFirst();
-        existingCartItem.ifPresentOrElse(
-                cartItem -> {
-                    Cart.increaseQuantity(cartItem, request.getQuantity());
-                },
-                () -> {
-                    var sku = this.skuService.getSku(request.getSkuId());
-                    Cart.addCartItem(cart, sku, request.getQuantity());
-                });
-        var updatedCart = this.save(cart);
-
-        // 3. get CartItem again to map to response
-        var savedCartItem = updatedCart.getCartItems().stream()
-                .filter(item -> item.getSku().getId().equals(request.getSkuId()))
                 .findFirst()
-                .orElseThrow(() -> new AppException(ErrorCode.CART__ADD_ITEM_FAIL));
-        return this.cartMapper.toCartItemAddedRes(savedCartItem);
+                .map(cartItem -> {
+                    Cart.increaseQuantity(cartItem, request.getQuantity());
+                    return cartItem;
+                })
+                .orElseGet(() -> {
+                    var sku = this.skuService.getSku(request.getSkuId());
+                    return Cart.addCartItem(cart, sku, request.getQuantity());
+                });
+        this.saveCart(cart);
+
+        // 3. map toCartItemRes
+        return this.cartMapper.toCartItemRes(upsertedCartItem);
     }
 
     /**
      * updateQuantity
      */
     @Override
-    public CartItemAddRes updateQuantity(CartItemAddReq request, CurrentUser currentUser) {
+    public CartItemRes updateQuantity(AddCartItemReq request, CurrentUser currentUser) {
         // 1. get Cart
-        var cart = this.getOrCreateCart(currentUser);
+        var cart = this.getCart(currentUser);
 
         // 2. check CartItem is existing => updateQuantity or addCartItem
-        var existingCartItem = cart.getCartItems().stream()
+        var upsertedCartItem = cart.getCartItems().stream()
                 .filter(cartItem -> cartItem.getSku().getId().equals(request.getSkuId()))
-                .findFirst();
-        existingCartItem.ifPresentOrElse(
-                cartItem -> {
-                    Cart.updateQuantity(cartItem, request.getQuantity());
-                },
-                () -> {
-                    var sku = this.skuService.getSku(request.getSkuId());
-                    Cart.addCartItem(cart, sku, request.getQuantity());
-                });
-        var updatedCart = this.save(cart);
-
-        // 3. get CartItem again to map to response
-        var savedCartItem = updatedCart.getCartItems().stream()
-                .filter(item -> item.getSku().getId().equals(request.getSkuId()))
                 .findFirst()
-                .orElseThrow(() -> new AppException(ErrorCode.CART__ADD_ITEM_FAIL));
-        return this.cartMapper.toCartItemAddedRes(savedCartItem);
+                .map(cartItem -> {
+                    Cart.updateQuantity(cartItem, request.getQuantity());
+                    return cartItem;
+                })
+                .orElseGet(() -> {
+                    var sku = this.skuService.getSku(request.getSkuId());
+                    return Cart.addCartItem(cart, sku, request.getQuantity());
+                });
+        this.saveCart(cart);
+
+        // 3. map toCartItemRes
+        return this.cartMapper.toCartItemRes(upsertedCartItem);
     }
 
     /**
      * removeCartItems
      */
     @Override
-    @Transactional
-    public void removeCartItems(CartItemRemoveReq request, CurrentUser currentUser) {
+    public Deleted removeCartItems(RemoveCartItemReq request, CurrentUser currentUser) {
         // 1. get Cart
         var cart = this.getCart(currentUser);
 
-        // 2. filter CartItem to remove
-        var cartItemsToRemove = cart.getCartItems().stream()
-                .filter(cartItem -> request.getCartItemIds().contains(cartItem.getId()))
-                .toList();
+        // 2. removeCartItem
+        var deleted = Cart.removeCartItems(cart, request.getSkuIds());
+        this.saveCart(cart);
 
-        // 3. remove CartItem from Cart
-        Cart.removeCartItem(cart, cartItemsToRemove);
-        this.save(cart);
+        return deleted;
     }
 }

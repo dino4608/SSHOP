@@ -1,7 +1,8 @@
 package com.dino.backend.features.ordering.application.model;
 
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -10,17 +11,18 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 
-import java.util.List;
-
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class CartItemRemoveReq {
+public class AddCartItemReq {
 
-    @NotEmpty(message = "Cart item IDs cannot be empty")
-    @Size(min = 1, message = "At least one cart item ID is required")
-    List<Long> cartItemIds;
+    @NotNull(message = "CART__SKU_EMPTY")
+    Long skuId;
+
+    @Min(value = 1, message = "CART__QUANTITY_MIN_INVALID")
+    @Max(value = 100, message = "CART__QUANTITY_MAX_INVALID")
+    int quantity;
 }
