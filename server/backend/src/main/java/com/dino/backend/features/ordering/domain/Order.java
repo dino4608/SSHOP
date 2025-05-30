@@ -32,9 +32,9 @@ import java.util.ArrayList;
 public class Order extends BaseEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(name = "order_id", nullable = false, updatable = false)
-    String id;
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @Column(name = "order_id")
+    Long id;
 
     String status;
 
@@ -64,18 +64,18 @@ public class Order extends BaseEntity {
     @Column(columnDefinition = "jsonb")
     Address address;
 
-    @OneToMany(mappedBy = "order", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    ArrayList<OrderItem> items;
-
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "buyer_id", updatable = false, nullable = false)
+    @JoinColumn(name = "buyer_id", nullable = false, updatable = false)
     @JsonIgnore
     User buyer;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "shop_id", updatable = false, nullable = false)
+    @JoinColumn(name = "shop_id", nullable = false, updatable = false)
     @JsonIgnore
     Shop shop;
+
+    @OneToMany(mappedBy = "order", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    ArrayList<OrderItem> orderItems;
 
     // NESTED OBJECTS//
     public enum StatusType {

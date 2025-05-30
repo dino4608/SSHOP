@@ -28,9 +28,9 @@ import java.util.List;
 public class Category extends BaseEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(name = "category_id", updatable = false, nullable = false)
-    String id;
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @Column(name = "category_id")
+    Long id;
 
     @Column(length = 40, nullable = false, unique = true)
     String name;
@@ -52,5 +52,5 @@ public class Category extends BaseEntity {
     @JsonIgnore
     List<Specification> specifications;
 
-    // nested categories => list / array
+    // TODO: nested categories => list / array
 }

@@ -28,8 +28,10 @@ public class CartItem extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    @Column(name = "cart_item_id", nullable = false, updatable = false)
+    @Column(name = "cart_item_id")
     Long id;
+
+    int quantity;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "cart_id", nullable = false, updatable = false)
@@ -39,6 +41,4 @@ public class CartItem extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "sku_id", nullable = false)
     Sku sku;
-
-    int quantity;
 }

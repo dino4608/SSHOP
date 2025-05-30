@@ -5,6 +5,7 @@ import com.dino.backend.features.productcatalog.application.ICategoryService;
 import com.dino.backend.features.productcatalog.domain.Category;
 import com.dino.backend.infrastructure.aop.AppException;
 import com.dino.backend.infrastructure.aop.ErrorCode;
+import com.dino.backend.shared.utils.Id;
 import com.dino.backend.features.productcatalog.domain.repository.ICategoryRepository;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -34,8 +35,10 @@ public class CategoryServiceImpl implements ICategoryService {
 
     // HELP //
     @Override
-    public Category findOrErrorById(String cateId) {
-        Category category = this.categoryRepository.findById(cateId)
+    public Category findOrErrorById(String categoryId) {
+        Id id = Id.from(categoryId)
+                .orElseThrow(() -> new AppException(ErrorCode.CATEGORY__NOT_FOUND));
+        Category category = this.categoryRepository.findById(id.value())
                 .orElseThrow(() -> new AppException(ErrorCode.CATEGORY__NOT_FOUND));
         return category;
     }

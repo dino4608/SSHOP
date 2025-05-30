@@ -5,7 +5,7 @@ import com.dino.backend.infrastructure.web.model.CurrentUser;
 
 public interface IUserService {
 
-    User getById(String userId);
+    User getById(Long userId);
 
     User get(CurrentUser currentUser);
 

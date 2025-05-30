@@ -7,11 +7,11 @@ import org.springframework.lang.NonNull;
 
 import java.util.Optional;
 
-public interface ICartRepository extends JpaRepository<Cart, String> {
+public interface ICartRepository extends JpaRepository<Cart, Long> {
 
     @EntityGraph(attributePaths = { "cartItems", "cartItems.sku" })
-    Optional<Cart> findJoinAllById(@NonNull String id);
+    Optional<Cart> findJoinAllByBuyerId(@NonNull Long id);
 
     @EntityGraph(attributePaths = { "cartItems" })
-    Optional<Cart> findJoinItemsById(@NonNull String id);
+    Optional<Cart> findJoinItemsByBuyerId(@NonNull Long id);
 }

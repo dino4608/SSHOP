@@ -16,8 +16,8 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class CartItemRes {
 
-    String id;
-    String skuId;
+    Long id;
+    Long skuId;
     String skuCode;
     String skuTierOptionValue;
     Integer retailPrice;

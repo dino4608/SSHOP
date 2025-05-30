@@ -18,7 +18,7 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class CartRes {
 
-    String buyerId;
-    List<CartItemRes> cartItems;
+    Long buyerId;
     int count;
+    List<CartItemRes> cartItems;
 }

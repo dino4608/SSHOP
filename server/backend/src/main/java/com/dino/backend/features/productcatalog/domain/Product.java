@@ -50,9 +50,9 @@ import lombok.experimental.SuperBuilder;
 public class Product extends BaseEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(name = "product_id", updatable = false, nullable = false)
-    String id;
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @Column(name = "product_id")
+    Long id;
 
     String status;
 
@@ -105,6 +105,8 @@ public class Product extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "shop_id", updatable = false, nullable = false)
     Shop shop;
+
+    // TODO: product props
 
     // stars => review
 

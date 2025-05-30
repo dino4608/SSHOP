@@ -57,10 +57,10 @@ public class ProductServiceImpl implements IProductService {
     // getById //
     @Override
     public ProductRes getById(String productId, CurrentUser currentUser) {
-        Id.from(productId)
+        Id id = Id.from(productId)
                 .orElseThrow(() -> new AppException((ErrorCode.PRODUCT__NOT_FOUND)));
 
-        var product = this.productRepository.findEagerById(productId)
+        var product = this.productRepository.findEagerById(id.value())
                 .orElseThrow(() -> new AppException(ErrorCode.PRODUCT__NOT_FOUND));
 
         var discount = this.discountService.canApply(productId, currentUser);

@@ -20,7 +20,7 @@ import java.util.List;
 @Table(name = "carts")
 @DynamicInsert
 @DynamicUpdate
-@SQLDelete(sql = "UPDATE carts SET is_deleted = true WHERE buyer_id=?")
+@SQLDelete(sql = "UPDATE carts SET is_deleted = true WHERE cart_id=?")
 @SQLRestriction("is_deleted = false")
 @Getter
 @Setter
@@ -31,35 +31,36 @@ import java.util.List;
 public class Cart extends BaseEntity {
 
     @Id
-    String id;
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @Column(name = "cart_id")
+    Long id;
 
-    @MapsId
-    @OneToOne(fetch = FetchType.LAZY)
+    int count;
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "buyer_id", nullable = false, updatable = false)
     @JsonIgnore
     User buyer;
 
     @OneToMany(mappedBy = "cart", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    // @OrderBy("id ASC")
     List<CartItem> cartItems;
-
-    int count;
 
     public static Cart createCart(User buyer) {
         Cart newCart = Cart.builder()
                 .cartItems(new ArrayList<>())
                 .count(0)
+                .buyer(buyer)
                 .build();
-
-        newCart.setBuyer(buyer); // REFERENCE
 
         return newCart;
     }
 
     public static void addCartItem(Cart cart, Sku sku, int quantity) {
         CartItem item = CartItem.builder()
-                .cart(cart) // REFERENCE
-                .sku(sku) // REFERENCE
                 .quantity(quantity)
+                .cart(cart)
+                .sku(sku)
                 .build();
 
         cart.getCartItems().add(item);
@@ -80,4 +81,6 @@ public class Cart extends BaseEntity {
     public static void decreaseQuantity(CartItem item, int decrement) {
         item.setQuantity(item.getQuantity() - decrement);
     }
+
+    // TODO: setQuantity > 0
 }

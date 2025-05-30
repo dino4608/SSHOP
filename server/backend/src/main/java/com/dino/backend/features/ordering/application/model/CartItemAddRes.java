@@ -18,8 +18,8 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class CartItemAddRes { // Đặt tên là CartItemAddedRes để phân biệt rõ ràng
 
-    String id; // CartItem ID
-    String skuId;
+    Long id; // CartItem ID
+    Long skuId;
     String skuCode;
     String skuTierOptionValue;
     Integer retailPrice;

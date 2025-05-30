@@ -19,7 +19,7 @@ import lombok.experimental.FieldDefaults;
 public class CartItemAddReq {
 
     @NotBlank(message = "Sku ID must not be blank")
-    String skuId;
+    Long skuId;
 
     @Min(value = 1, message = "Quantity must be at least 1")
     int quantity;

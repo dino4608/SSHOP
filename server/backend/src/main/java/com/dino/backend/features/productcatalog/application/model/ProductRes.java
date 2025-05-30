@@ -26,7 +26,7 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ProductRes {
 
-    String id;
+    Long id;
     String status;
     String name;
     String slug;

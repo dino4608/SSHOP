@@ -34,20 +34,18 @@ public class CartServiceImpl implements ICartService {
     // DOMAIN //
 
     /**
-     * getOrCreateCart
-     * @des get and join all
+     * getOrCreateCart (get and join all)
      */
     private Cart getOrCreateCart(CurrentUser currentUser) {
-        return this.cartRepository.findJoinAllById(currentUser.id())
+        return this.cartRepository.findJoinAllByBuyerId(currentUser.id())
                 .orElseGet(() -> this.createCart(currentUser));
     }
 
     /**
-     * getCart
-     * @des get and join CartItems
+     * getCart (get and join CartItems)
      */
     private Cart getCart(CurrentUser currentUser) {
-        return this.cartRepository.findJoinItemsById(currentUser.id())
+        return this.cartRepository.findJoinItemsByBuyerId(currentUser.id())
                 .orElseThrow(() -> new AppException(ErrorCode.CART__FIND_FAIL));
     }
 

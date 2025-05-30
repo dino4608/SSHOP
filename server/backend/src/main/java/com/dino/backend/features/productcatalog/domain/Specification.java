@@ -42,7 +42,7 @@ public class Specification extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    @Column(name = "specification_id", updatable = false, nullable = false)
+    @Column(name = "specification_id")
     Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)

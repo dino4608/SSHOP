@@ -6,6 +6,7 @@ import com.dino.backend.infrastructure.aop.ErrorCode;
 import com.dino.backend.infrastructure.security.ISecurityInfraProvider;
 import com.dino.backend.infrastructure.security.model.JwtType;
 import com.dino.backend.infrastructure.common.Env;
+import com.dino.backend.shared.utils.Id;
 import com.nimbusds.jose.*;
 import com.nimbusds.jose.crypto.MACSigner;
 import com.nimbusds.jwt.JWTClaimsSet;
@@ -108,18 +109,18 @@ public class SecurityInfraProviderImpl implements ISecurityInfraProvider {
     // - 1 byte = 8 bit. 1 bit = 1 binary
     // - serialize:  chuyển đổi dữ liệu thành định dạng có thể lưu trữ hoặc gửi đi
     @Override
-    public String genToken(User account, JwtType jwtType) {
+    public String genToken(User user, JwtType jwtType) {
         // 1. create a header: algorithm HS512 + type JWT
         JWSHeader header = new JWSHeader(JWSAlgorithm.HS512);
 
         // 2. create a payload: set of claims, must have the subject
         Payload payload = new Payload(
                 new JWTClaimsSet.Builder()
-                        .subject(account.getId())
+                        .subject(user.getId().toString())
                         .issuer("deal.dino.com")
                         .issueTime(new Date())
                         .expirationTime(new Date(this.getExpiry(jwtType).toEpochMilli()))
-                        .claim("scope", this.buildScope(account.getRoles()))
+                        .claim("scope", this.buildScope(user.getRoles()))
                         .build()
                         .toJSONObject()
         );
@@ -142,7 +143,7 @@ public class SecurityInfraProviderImpl implements ISecurityInfraProvider {
     // - should only throw internal system errors => safe code
     // - for the services will process logic => single responsibility
     @Override
-    public Optional<String> verifyToken(String token, JwtType jwtType) {
+    public Optional<Id> verifyToken(String token, JwtType jwtType) {
         SecretKeySpec secretKeySpec = new SecretKeySpec(
                 this.getSecretKey(jwtType),
                 JWSAlgorithm.HS512.getName());
@@ -157,7 +158,7 @@ public class SecurityInfraProviderImpl implements ISecurityInfraProvider {
 
             String subject = jwt.getSubject();
 
-            return Optional.of(subject);
+            return Id.from(subject);
 
         } catch (JwtException e) {
             log.warn(">>> WARNING: verifyToken: {}", e.getMessage());

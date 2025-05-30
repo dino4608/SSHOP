@@ -27,9 +27,9 @@ import org.hibernate.annotations.SQLRestriction;
 public class DiscountItem extends BaseEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(name = "discount_item_id", updatable = false, nullable = false)
-    String id;
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @Column(name = "discount_item_id")
+    Long id;
 
     Integer dealPrice;
 

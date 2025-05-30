@@ -2,6 +2,7 @@ package com.dino.backend.infrastructure.security;
 
 import com.dino.backend.features.identity.domain.User;
 import com.dino.backend.infrastructure.security.model.JwtType;
+import com.dino.backend.shared.utils.Id;
 
 import java.time.Duration;
 import java.time.Instant;
@@ -22,5 +23,5 @@ public interface ISecurityInfraProvider {
 
     String genToken(User account, JwtType jwtType);
 
-    Optional<String> verifyToken(String token, JwtType jwtType);
+    Optional<Id> verifyToken(String token, JwtType jwtType);
 }

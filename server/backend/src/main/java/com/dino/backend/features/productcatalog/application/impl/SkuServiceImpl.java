@@ -26,13 +26,13 @@ public class SkuServiceImpl implements ISkuService {
     // DOMAIN //
 
     @Override
-    public Sku getSku(String skuId) {
+    public Sku getSku(Long skuId) {
         return this.findSku(skuId)
                 .orElseThrow(() -> new AppException(ErrorCode.SKU__FIND_FAILED));
     }
 
     @Override
-    public Optional<Sku> findSku(String skuId) {
+    public Optional<Sku> findSku(Long skuId) {
         return this.skuRepository.findById(skuId);
     }
 }

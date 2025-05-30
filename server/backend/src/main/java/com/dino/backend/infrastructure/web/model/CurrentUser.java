@@ -4,5 +4,5 @@ import java.util.Set;
 
 import lombok.NonNull;
 
-public record CurrentUser(@NonNull String id, Set<String> roles) {
+public record CurrentUser(@NonNull Long id, Set<String> roles) {
 }

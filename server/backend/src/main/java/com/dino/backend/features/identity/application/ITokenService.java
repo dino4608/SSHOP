@@ -1,14 +1,14 @@
 package com.dino.backend.features.identity.application;
 
-import com.dino.backend.features.identity.domain.Token;
-
 import java.time.Instant;
+
+import com.dino.backend.features.identity.domain.Token;
 
 public interface ITokenService {
 
-    Token getById(String userId);
+    Token getByUserId(Long userId);
 
-    void updateRefreshToken(String refreshToken, Instant refreshTokenExpiry, String userId);
+    void updateRefreshToken(String refreshToken, Instant refreshTokenExpiry, Long userId);
 
-    boolean isRefreshTokenValid(String refreshToken, String userId);
+    boolean isRefreshTokenValid(String refreshToken, Long userId);
 }

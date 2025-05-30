@@ -33,9 +33,9 @@ public class DiscountServiceImpl implements IDiscountService {
     // canApply to product //
     @Override
     public Optional<Discount> canApply(String productId, @Nullable CurrentUser currentUser) {
-        Id.from(productId).orElseThrow(() -> new AppException(ErrorCode.PRODUCT__NOT_FOUND));
+        Id id = Id.from(productId).orElseThrow(() -> new AppException(ErrorCode.PRODUCT__NOT_FOUND));
 
-        var discounts = this.discountRepository.findByProductId(productId);
+        var discounts = this.discountRepository.findByProductId(id.value());
 
         return this.canApply(discounts, currentUser);
     }

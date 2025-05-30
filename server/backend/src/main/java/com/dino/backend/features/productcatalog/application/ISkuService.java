@@ -7,7 +7,7 @@ import com.dino.backend.features.productcatalog.domain.Sku;
 public interface ISkuService {
     // DOMAIN //
 
-    Sku getSku(String skuId);
+    Sku getSku(Long skuId);
 
-    Optional<Sku> findSku(String skuId);
+    Optional<Sku> findSku(Long skuId);
 }

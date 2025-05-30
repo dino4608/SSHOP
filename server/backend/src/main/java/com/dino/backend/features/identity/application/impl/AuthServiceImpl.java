@@ -16,6 +16,7 @@ import com.dino.backend.infrastructure.security.model.GoogleUserResponse;
 import com.dino.backend.infrastructure.security.model.JwtType;
 import com.dino.backend.infrastructure.web.ICookieProvider;
 import com.dino.backend.infrastructure.web.model.CurrentUser;
+import com.dino.backend.shared.utils.Id;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -189,19 +190,20 @@ public class AuthServiceImpl implements IAuthService {
         }
 
         // 2. Verify & extract user ID
-        String userId = this.securityInfraProvider.verifyToken(refreshToken, JwtType.REFRESH_TOKEN)
+        Id userId = this.securityInfraProvider.verifyToken(refreshToken, JwtType.REFRESH_TOKEN)
                 .orElse(null);
+
         if (userId == null) {
             return this.unauthenticate(headers);
         }
 
         // 3. Check if refresh token matches DB (to prevent reuse)
-        if (!this.tokenService.isRefreshTokenValid(refreshToken, userId)) {
+        if (!this.tokenService.isRefreshTokenValid(refreshToken, userId.value())) {
             return this.unauthenticate(headers);
         }
 
         // 4. Get user
-        User user = this.userService.getById(userId);
+        User user = this.userService.getById(userId.value());
 
         // 5. authenticate successfully (license tokens, update DB & set cookie)
         return this.authenticate(user, headers);
@@ -216,19 +218,19 @@ public class AuthServiceImpl implements IAuthService {
         }
 
         // 2. Verify & extract user ID
-        String userId = this.securityInfraProvider.verifyToken(refreshToken, JwtType.REFRESH_TOKEN)
+        Id userId = this.securityInfraProvider.verifyToken(refreshToken, JwtType.REFRESH_TOKEN)
                 .orElse(null);
         if (userId == null) {
             return this.unauthenticate(headers);
         }
 
         // 3. Check if refresh token matches DB (to prevent reuse)
-        if (!this.tokenService.isRefreshTokenValid(refreshToken, userId)) {
+        if (!this.tokenService.isRefreshTokenValid(refreshToken, userId.value())) {
             return this.unauthenticate(headers);
         }
 
         // 4. Remove refresh token from DB (or set it as null)
-        this.tokenService.updateRefreshToken("", null, userId);
+        this.tokenService.updateRefreshToken("", null, userId.value());
 
         // 5. Clear refresh token in cookies
         this.cookieProvider.clearRefreshToken(headers);

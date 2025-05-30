@@ -32,9 +32,9 @@ import java.util.List;
 public class Sku extends BaseEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(name = "sku_id", updatable = false, nullable = false)
-    String id;
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @Column(name = "sku_id")
+    Long id;
 
     String status;
 

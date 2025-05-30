@@ -22,7 +22,7 @@ public class UserServiceImpl implements IUserService {
     IUserRepository userRepository;
 
     @Override
-    public User getById(String userId) {
+    public User getById(Long userId) {
         return this.userRepository.findById(userId)
                 .orElseThrow(() -> new AppException(ErrorCode.USER__FIND_FAILED));
     }

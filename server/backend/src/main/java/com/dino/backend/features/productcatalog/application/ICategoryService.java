@@ -10,5 +10,5 @@ public interface ICategoryService {
     List<CategoryProjection> getTree();
 
     // HELP //
-    Category findOrErrorById(String cateId);
+    Category findOrErrorById(String categoryId);
 }

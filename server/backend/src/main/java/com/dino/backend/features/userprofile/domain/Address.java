@@ -27,9 +27,9 @@ import org.hibernate.annotations.SQLRestriction;
 public class Address extends BaseEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(name = "address_id", updatable = false, nullable = false)
-    String id;
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @Column(name = "address_id")
+    Long id;
 
     String contactName;
 

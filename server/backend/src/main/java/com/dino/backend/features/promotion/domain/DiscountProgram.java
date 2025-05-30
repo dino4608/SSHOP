@@ -54,9 +54,9 @@ import lombok.experimental.SuperBuilder;
 public abstract class DiscountProgram extends Promotion {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(name = "discount_program_id", updatable = false, nullable = false)
-    String id;
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @Column(name = "discount_program_id")
+    Long id;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status_type")
