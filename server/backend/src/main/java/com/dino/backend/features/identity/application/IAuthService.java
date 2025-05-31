@@ -7,7 +7,7 @@ import com.dino.backend.features.identity.application.model.CurrentUserResponse;
 import com.dino.backend.features.identity.application.model.GoogleOauth2Request;
 import com.dino.backend.features.identity.application.model.LookupIdentifierResponse;
 import com.dino.backend.features.identity.application.model.PasswordLoginRequest;
-import com.dino.backend.infrastructure.web.model.CurrentUser;
+import com.dino.backend.shared.api.model.CurrentUser;
 
 public interface IAuthService {
 

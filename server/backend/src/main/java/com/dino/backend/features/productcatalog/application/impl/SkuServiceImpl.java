@@ -7,8 +7,8 @@ import org.springframework.stereotype.Service;
 import com.dino.backend.features.productcatalog.application.ISkuService;
 import com.dino.backend.features.productcatalog.domain.Sku;
 import com.dino.backend.features.productcatalog.domain.repository.ISkuRepository;
-import com.dino.backend.infrastructure.aop.AppException;
-import com.dino.backend.infrastructure.aop.ErrorCode;
+import com.dino.backend.shared.domain.exception.AppException;
+import com.dino.backend.shared.domain.exception.ErrorCode;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;

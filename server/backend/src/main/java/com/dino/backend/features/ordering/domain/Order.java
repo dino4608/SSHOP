@@ -3,7 +3,7 @@ package com.dino.backend.features.ordering.domain;
 import com.dino.backend.features.identity.domain.User;
 import com.dino.backend.features.shop.domain.Shop;
 import com.dino.backend.features.userprofile.domain.Address;
-import com.dino.backend.shared.model.BaseEntity;
+import com.dino.backend.shared.domain.model.BaseEntity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.hypersistence.utils.hibernate.type.json.JsonType;
 import jakarta.persistence.*;

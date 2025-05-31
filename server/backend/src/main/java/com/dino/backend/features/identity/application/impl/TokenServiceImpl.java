@@ -7,8 +7,8 @@ import org.springframework.stereotype.Service;
 import com.dino.backend.features.identity.application.ITokenService;
 import com.dino.backend.features.identity.domain.Token;
 import com.dino.backend.features.identity.domain.repository.ITokenRepository;
-import com.dino.backend.infrastructure.aop.AppException;
-import com.dino.backend.infrastructure.aop.ErrorCode;
+import com.dino.backend.shared.domain.exception.AppException;
+import com.dino.backend.shared.domain.exception.ErrorCode;
 
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;

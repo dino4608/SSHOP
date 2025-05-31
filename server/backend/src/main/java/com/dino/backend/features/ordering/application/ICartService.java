@@ -4,8 +4,9 @@ import com.dino.backend.features.ordering.application.model.AddCartItemReq;
 import com.dino.backend.features.ordering.application.model.CartItemRes;
 import com.dino.backend.features.ordering.application.model.CartRes;
 import com.dino.backend.features.ordering.application.model.RemoveCartItemReq;
-import com.dino.backend.infrastructure.web.model.CurrentUser;
-import com.dino.backend.shared.utils.Deleted;
+import com.dino.backend.features.ordering.application.model.UpdateQuantityReq;
+import com.dino.backend.shared.api.model.CurrentUser;
+import com.dino.backend.shared.application.utils.Deleted;
 
 public interface ICartService {
     // QUERY //
@@ -16,7 +17,7 @@ public interface ICartService {
 
     CartItemRes addCartItem(AddCartItemReq request, CurrentUser currentUser);
 
-    CartItemRes updateQuantity(AddCartItemReq request, CurrentUser currentUser);
+    CartItemRes updateQuantity(UpdateQuantityReq request, CurrentUser currentUser);
 
     Deleted removeCartItems(RemoveCartItemReq request, CurrentUser currentUser);
 }

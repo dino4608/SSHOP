@@ -14,9 +14,10 @@ import com.dino.backend.features.ordering.application.model.AddCartItemReq;
 import com.dino.backend.features.ordering.application.model.CartItemRes;
 import com.dino.backend.features.ordering.application.model.CartRes;
 import com.dino.backend.features.ordering.application.model.RemoveCartItemReq;
-import com.dino.backend.infrastructure.web.annotation.AuthUser;
-import com.dino.backend.infrastructure.web.model.CurrentUser;
-import com.dino.backend.shared.utils.Deleted;
+import com.dino.backend.features.ordering.application.model.UpdateQuantityReq;
+import com.dino.backend.shared.api.annotation.AuthUser;
+import com.dino.backend.shared.api.model.CurrentUser;
+import com.dino.backend.shared.application.utils.Deleted;
 
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
@@ -60,7 +61,7 @@ public class BuyerCartController {
         // updateQuantity //
         @PatchMapping("/items/quantity/update")
         public ResponseEntity<CartItemRes> updateCartItemQuantity(
-                @Valid @RequestBody AddCartItemReq request,
+                @Valid @RequestBody UpdateQuantityReq request,
                 @AuthUser CurrentUser currentUser) {
             var updatedItem = this.cartService.updateQuantity(request, currentUser);
             return ResponseEntity.ok(updatedItem);

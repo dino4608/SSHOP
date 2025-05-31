@@ -10,13 +10,14 @@ import com.dino.backend.features.ordering.application.model.AddCartItemReq;
 import com.dino.backend.features.ordering.application.model.CartItemRes;
 import com.dino.backend.features.ordering.application.model.CartRes;
 import com.dino.backend.features.ordering.application.model.RemoveCartItemReq;
+import com.dino.backend.features.ordering.application.model.UpdateQuantityReq;
 import com.dino.backend.features.ordering.domain.Cart;
 import com.dino.backend.features.ordering.domain.repository.ICartRepository;
 import com.dino.backend.features.productcatalog.application.ISkuService;
-import com.dino.backend.infrastructure.aop.AppException;
-import com.dino.backend.infrastructure.aop.ErrorCode;
-import com.dino.backend.infrastructure.web.model.CurrentUser;
-import com.dino.backend.shared.utils.Deleted;
+import com.dino.backend.shared.api.model.CurrentUser;
+import com.dino.backend.shared.application.utils.Deleted;
+import com.dino.backend.shared.domain.exception.AppException;
+import com.dino.backend.shared.domain.exception.ErrorCode;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -37,19 +38,19 @@ public class CartServiceImpl implements ICartService {
     // DOMAIN //
 
     /**
-     * getOrCreateCart (get and join all)
+     * getCart. (get and join all)
+     */
+    private Cart getCart(CurrentUser currentUser) {
+        return this.cartRepository.findJoinAllByBuyerId(currentUser.id())
+                .orElseThrow(() -> new AppException(ErrorCode.CART__NOT_FOUND));
+    }
+
+    /**
+     * getOrCreateCart. (get and join all)
      */
     private Cart getOrCreateCart(CurrentUser currentUser) {
         return this.cartRepository.findJoinAllByBuyerId(currentUser.id())
                 .orElseGet(() -> this.createCart(currentUser));
-    }
-
-    /**
-     * getCart (get and join CartItems)
-     */
-    private Cart getCart(CurrentUser currentUser) {
-        return this.cartRepository.findJoinAllByBuyerId(currentUser.id())
-                .orElseThrow(() -> new AppException(ErrorCode.CART__FIND_FAIL));
     }
 
     /**
@@ -58,14 +59,7 @@ public class CartServiceImpl implements ICartService {
     private Cart createCart(CurrentUser currentUser) {
         var buyer = this.userService.get(currentUser);
         var newCart = Cart.createCart(buyer);
-        return this.saveCart(newCart);
-    }
-
-    /**
-     * save
-     */
-    private Cart saveCart(Cart cart) {
-        return this.cartRepository.save(cart);
+        return this.cartRepository.save(newCart);
     }
 
     // QUERY //
@@ -87,22 +81,13 @@ public class CartServiceImpl implements ICartService {
     @Override
     @Transactional
     public CartItemRes addCartItem(AddCartItemReq request, CurrentUser currentUser) {
-        // 1. get Cart
+        // 1. get Cart and Sku
         var cart = this.getOrCreateCart(currentUser);
+        var sku = this.skuService.getSku(request.getSkuId());
 
-        // 2. check CartItem is existing => increaseQuantity or addCartItem
-        var upsertedCartItem = cart.getCartItems().stream()
-                .filter(cartItem -> cartItem.getSku().getId().equals(request.getSkuId()))
-                .findFirst()
-                .map(cartItem -> {
-                    Cart.increaseQuantity(cartItem, request.getQuantity());
-                    return cartItem;
-                })
-                .orElseGet(() -> {
-                    var sku = this.skuService.getSku(request.getSkuId());
-                    return Cart.addCartItem(cart, sku, request.getQuantity());
-                });
-        this.saveCart(cart);
+        // 2. addOrUpdateCartItem
+        var upsertedCartItem = cart.addOrUpdateCartItem(sku, request.getQuantity());
+        this.cartRepository.save(cart);
 
         return this.cartMapper.toCartItemRes(upsertedCartItem);
     }
@@ -111,25 +96,15 @@ public class CartServiceImpl implements ICartService {
      * updateQuantity
      */
     @Override
-    public CartItemRes updateQuantity(AddCartItemReq request, CurrentUser currentUser) {
+    public CartItemRes updateQuantity(UpdateQuantityReq request, CurrentUser currentUser) {
         // 1. get Cart
         var cart = this.getCart(currentUser);
 
-        // 2. check CartItem is existing => updateQuantity or addCartItem
-        var upsertedCartItem = cart.getCartItems().stream()
-                .filter(cartItem -> cartItem.getSku().getId().equals(request.getSkuId()))
-                .findFirst()
-                .map(cartItem -> {
-                    Cart.updateQuantity(cartItem, request.getQuantity());
-                    return cartItem;
-                })
-                .orElseGet(() -> {
-                    var sku = this.skuService.getSku(request.getSkuId());
-                    return Cart.addCartItem(cart, sku, request.getQuantity());
-                });
-        this.saveCart(cart);
+        // 2. updateQuantity
+        var updatedCartItem = cart.updateQuantity(request.getCartItemId(), request.getQuantity());
+        this.cartRepository.save(cart);
 
-        return this.cartMapper.toCartItemRes(upsertedCartItem);
+        return this.cartMapper.toCartItemRes(updatedCartItem);
     }
 
     /**
@@ -141,9 +116,9 @@ public class CartServiceImpl implements ICartService {
         var cart = this.getCart(currentUser);
 
         // 2. removeCartItem
-        var deleted = Cart.removeCartItems(cart, request.getSkuIds());
-        this.saveCart(cart);
+        var removedCartItems = cart.removeCartItems(request.getSkuIds());
+        this.cartRepository.save(cart);
 
-        return deleted;
+        return Deleted.success(removedCartItems.size());
     }
 }

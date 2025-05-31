@@ -13,7 +13,7 @@ import com.dino.backend.features.productcatalog.domain.model.ProductSpecificatio
 import com.dino.backend.features.productcatalog.domain.model.ProductTierVariation;
 import com.dino.backend.features.promotion.domain.Discount;
 import com.dino.backend.features.shop.domain.Shop;
-import com.dino.backend.shared.model.BaseEntity;
+import com.dino.backend.shared.domain.model.BaseEntity;
 
 import io.hypersistence.utils.hibernate.type.json.JsonType;
 import jakarta.persistence.CascadeType;

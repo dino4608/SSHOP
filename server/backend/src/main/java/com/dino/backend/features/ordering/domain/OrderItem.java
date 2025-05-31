@@ -1,7 +1,8 @@
 package com.dino.backend.features.ordering.domain;
 
 import com.dino.backend.features.productcatalog.domain.Sku;
-import com.dino.backend.shared.model.BaseEntity;
+import com.dino.backend.shared.domain.model.BaseEntity;
+
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;

@@ -11,8 +11,8 @@ import org.springframework.util.CollectionUtils;
 
 import com.dino.backend.features.productcatalog.domain.Product;
 import com.dino.backend.features.promotion.domain.model.LevelType;
-import com.dino.backend.infrastructure.web.model.CurrentUser;
-import com.dino.backend.shared.model.BaseEntity;
+import com.dino.backend.shared.api.model.CurrentUser;
+import com.dino.backend.shared.domain.model.BaseEntity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.CascadeType;

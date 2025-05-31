@@ -5,18 +5,19 @@ import com.dino.backend.features.identity.application.ITokenService;
 import com.dino.backend.features.identity.application.IUserService;
 import com.dino.backend.features.identity.application.mapper.IUserMapper;
 import com.dino.backend.features.identity.application.model.*;
+import com.dino.backend.features.identity.application.provider.IIdentityCookieProvider;
+import com.dino.backend.features.identity.application.provider.IIdentityOauth2Provider;
+import com.dino.backend.features.identity.application.provider.IIdentitySecurityProvider;
 import com.dino.backend.features.identity.domain.User;
 import com.dino.backend.features.identity.domain.repository.IUserRepository;
-import com.dino.backend.infrastructure.aop.AppException;
-import com.dino.backend.infrastructure.aop.ErrorCode;
-import com.dino.backend.infrastructure.security.IOauth2InfraProvider;
-import com.dino.backend.infrastructure.security.ISecurityInfraProvider;
 import com.dino.backend.infrastructure.security.model.GoogleTokenResponse;
 import com.dino.backend.infrastructure.security.model.GoogleUserResponse;
 import com.dino.backend.infrastructure.security.model.JwtType;
-import com.dino.backend.infrastructure.web.ICookieProvider;
-import com.dino.backend.infrastructure.web.model.CurrentUser;
-import com.dino.backend.shared.utils.Id;
+import com.dino.backend.shared.api.model.CurrentUser;
+import com.dino.backend.shared.application.utils.Id;
+import com.dino.backend.shared.domain.exception.AppException;
+import com.dino.backend.shared.domain.exception.ErrorCode;
+
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -42,11 +43,11 @@ public class AuthServiceImpl implements IAuthService {
 
     IUserMapper userMapper;
 
-    ISecurityInfraProvider securityInfraProvider;
+    IIdentitySecurityProvider securityInfraProvider;
 
-    IOauth2InfraProvider oauth2InfraProvider;
+    IIdentityOauth2Provider oauth2InfraProvider;
 
-    ICookieProvider cookieProvider;
+    IIdentityCookieProvider cookieProvider;
 
     // QUERY //
 

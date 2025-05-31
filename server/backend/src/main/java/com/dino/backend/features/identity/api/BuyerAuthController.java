@@ -2,8 +2,9 @@ package com.dino.backend.features.identity.api;
 
 import com.dino.backend.features.identity.application.IAuthService;
 import com.dino.backend.features.identity.application.model.*;
-import com.dino.backend.infrastructure.web.annotation.AuthUser;
-import com.dino.backend.infrastructure.web.model.CurrentUser;
+import com.dino.backend.shared.api.annotation.AuthUser;
+import com.dino.backend.shared.api.model.CurrentUser;
+
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;

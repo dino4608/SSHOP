@@ -18,4 +18,3 @@ public class GoogleTokenResponse {
     String scope;
     String tokenType;
 }
-

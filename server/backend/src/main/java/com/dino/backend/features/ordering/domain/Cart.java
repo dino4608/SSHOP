@@ -1,23 +1,39 @@
 package com.dino.backend.features.ordering.domain;
 
-import com.dino.backend.features.identity.domain.User;
-import com.dino.backend.features.productcatalog.domain.Sku;
-import com.dino.backend.infrastructure.aop.AppException;
-import com.dino.backend.infrastructure.aop.ErrorCode;
-import com.dino.backend.shared.model.BaseEntity;
-import com.dino.backend.shared.utils.Deleted;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import jakarta.persistence.*;
-import lombok.*;
-import lombok.experimental.FieldDefaults;
-import lombok.experimental.SuperBuilder;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.dino.backend.features.identity.domain.User;
+import com.dino.backend.features.productcatalog.domain.Sku;
+import com.dino.backend.shared.domain.exception.AppException;
+import com.dino.backend.shared.domain.exception.ErrorCode;
+import com.dino.backend.shared.domain.model.BaseEntity;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.var;
+import lombok.experimental.FieldDefaults;
+import lombok.experimental.SuperBuilder;
 
 @Entity
 @Table(name = "carts")
@@ -60,8 +76,11 @@ public class Cart extends BaseEntity {
         this.total = total;
     }
 
-    // STATIC METHODS //
+    // FACTORY METHODS //
 
+    /**
+     * createCart.
+     */
     public static Cart createCart(User buyer) {
         Cart cart = new Cart();
         cart.setCartItems(new ArrayList<>());
@@ -71,37 +90,66 @@ public class Cart extends BaseEntity {
         return cart;
     }
 
-    public static CartItem addCartItem(Cart cart, Sku sku, int quantity) {
-        CartItem item = new CartItem();
-        item.setQuantity(quantity);
-        item.setCart(cart);
-        item.setSku(sku);
+    // INSTANCE METHODS //
 
-        cart.getCartItems().add(item);
-        cart.setTotal(cart.getTotal() + 1);
+    /**
+     * addCartItem.
+     */
+    public CartItem addCartItem(Sku sku, int quantity) {
+        CartItem item = CartItem.createCartItem(this, sku, quantity);
+
+        this.getCartItems().add(item);
+        this.setTotal(this.getTotal() + 1);
 
         return item;
     }
 
-    public static Deleted removeCartItems(Cart cart, List<Long> skuIds) {
+    /**
+     * addOrUpdateCartItem.
+     * (check CartItem is existing => increaseQuantity or addCartItem)
+     */
+    public CartItem addOrUpdateCartItem(Sku sku, int quantity) {
+        return this.cartItems.stream()
+                .filter(item -> item.getSku().getId().equals(sku.getId()))
+                .findFirst()
+                .map(cartItem -> {
+                    cartItem.increaseQuantity(quantity);
+                    return cartItem;
+                })
+                .orElseGet(() -> {
+                    return this.addCartItem(sku, quantity);
+                });
+    }
+
+    /**
+     * updateQuantity.
+     * (check CartItem is existing => updateQuantity or CART__ITEM_NOT_FOUND)
+     */
+    public CartItem updateQuantity(Long cartItemId, int quantity) {
+        return this.getCartItems().stream()
+                .filter(cartItem -> cartItem.getId().equals(cartItemId))
+                .findFirst()
+                .map(cartItem -> {
+                    cartItem.updateQuantity(quantity);
+                    return cartItem;
+                })
+                .orElseThrow(() -> new AppException(ErrorCode.CART__ITEM_NOT_FOUND));
+    }
+
+    /**
+     * removeCartItems.
+     */
+    public List<CartItem> removeCartItems(List<Long> skuIds) {
         // NOTE: orphanRemoval
         // 1. filter CartItems (objects on memory) to remove
-        var cartItemsToRemove = cart.getCartItems().stream()
+        var cartItemsToRemove = this.getCartItems().stream()
                 .filter(cartItem -> skuIds.contains(cartItem.getSku().getId()))
                 .toList();
 
         // 2. removeAll items => JPA note they are orphan => orphanRemoval auto delete
-        cart.getCartItems().removeAll(cartItemsToRemove);
-        cart.setTotal(cart.getTotal() - cartItemsToRemove.size());
+        this.getCartItems().removeAll(cartItemsToRemove);
+        this.setTotal(this.getTotal() - cartItemsToRemove.size());
 
-        return Deleted.success();
-    }
-
-    public static void increaseQuantity(CartItem item, int increment) {
-        item.setQuantity(item.getQuantity() + increment);
-    }
-
-    public static void updateQuantity(CartItem item, int quantity) {
-        item.setQuantity(quantity);
+        return cartItemsToRemove;
     }
 }

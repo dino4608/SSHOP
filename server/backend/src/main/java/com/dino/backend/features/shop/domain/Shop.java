@@ -11,7 +11,7 @@ import com.dino.backend.features.identity.domain.User;
 import com.dino.backend.features.ordering.domain.Order;
 import com.dino.backend.features.productcatalog.domain.Product;
 import com.dino.backend.features.promotion.domain.DiscountProgram;
-import com.dino.backend.shared.model.BaseEntity;
+import com.dino.backend.shared.domain.model.BaseEntity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.CascadeType;

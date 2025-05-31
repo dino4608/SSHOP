@@ -5,9 +5,9 @@ import org.springframework.stereotype.Service;
 import com.dino.backend.features.userprofile.application.IAddressAppService;
 import com.dino.backend.features.userprofile.domain.Address;
 import com.dino.backend.features.userprofile.domain.repository.IAddressDomainRepository;
-import com.dino.backend.infrastructure.aop.AppException;
-import com.dino.backend.infrastructure.aop.ErrorCode;
-import com.dino.backend.infrastructure.web.model.CurrentUser;
+import com.dino.backend.shared.api.model.CurrentUser;
+import com.dino.backend.shared.domain.exception.AppException;
+import com.dino.backend.shared.domain.exception.ErrorCode;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;

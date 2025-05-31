@@ -1,9 +1,9 @@
 package com.dino.backend.infrastructure.security.utils;
 
-import com.dino.backend.infrastructure.aop.AppException;
-import com.dino.backend.infrastructure.aop.ErrorCode;
-import com.dino.backend.infrastructure.web.model.CurrentUser;
-import com.dino.backend.shared.utils.Id;
+import com.dino.backend.shared.api.model.CurrentUser;
+import com.dino.backend.shared.application.utils.Id;
+import com.dino.backend.shared.domain.exception.AppException;
+import com.dino.backend.shared.domain.exception.ErrorCode;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;

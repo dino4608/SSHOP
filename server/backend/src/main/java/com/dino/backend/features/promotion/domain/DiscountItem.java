@@ -1,7 +1,7 @@
 package com.dino.backend.features.promotion.domain;
 
 import com.dino.backend.features.productcatalog.domain.Sku;
-import com.dino.backend.shared.model.BaseEntity;
+import com.dino.backend.shared.domain.model.BaseEntity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;

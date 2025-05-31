@@ -1,9 +1,9 @@
 package com.dino.backend.features.ordering.domain;
 
 import com.dino.backend.features.productcatalog.domain.Sku;
-import com.dino.backend.infrastructure.aop.AppException;
-import com.dino.backend.infrastructure.aop.ErrorCode;
-import com.dino.backend.shared.model.BaseEntity;
+import com.dino.backend.shared.domain.exception.AppException;
+import com.dino.backend.shared.domain.exception.ErrorCode;
+import com.dino.backend.shared.domain.model.BaseEntity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
@@ -44,6 +44,8 @@ public class CartItem extends BaseEntity {
     @JoinColumn(name = "sku_id", nullable = false)
     Sku sku;
 
+    // SETTER METHODS //
+
     public void setQuantity(int quantity) {
         if (quantity < 1)
             throw new AppException(ErrorCode.CART__QUANTITY_MIN_INVALID);
@@ -51,5 +53,24 @@ public class CartItem extends BaseEntity {
             throw new AppException(ErrorCode.CART__QUANTITY_MAX_INVALID);
 
         this.quantity = quantity;
+    }
+
+    // FACTORY METHODS //
+
+    public static CartItem createCartItem(Cart cart, Sku sku, int quantity) {
+        CartItem item = new CartItem();
+        item.setQuantity(quantity);
+        item.setCart(cart);
+        item.setSku(sku);
+
+        return item;
+    }
+
+    public void increaseQuantity(int increment) {
+        this.setQuantity(this.getQuantity() + increment);
+    }
+
+    public void updateQuantity(int quantity) {
+        this.setQuantity(quantity);
     }
 }
