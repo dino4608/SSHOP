@@ -2,13 +2,13 @@ package com.dino.backend.infrastructure.security;
 
 import org.springframework.stereotype.Service;
 
+import com.dino.backend.features.identity.application.model.GoogleUserResponse;
 import com.dino.backend.features.identity.application.provider.IIdentityOauth2Provider;
 import com.dino.backend.infrastructure.common.Env;
 import com.dino.backend.infrastructure.security.httpclient.GoogleTokenClient;
 import com.dino.backend.infrastructure.security.httpclient.GoogleUserClient;
 import com.dino.backend.infrastructure.security.model.GoogleTokenRequest;
 import com.dino.backend.infrastructure.security.model.GoogleTokenResponse;
-import com.dino.backend.infrastructure.security.model.GoogleUserResponse;
 import com.dino.backend.shared.domain.exception.AppException;
 import com.dino.backend.shared.domain.exception.ErrorCode;
 
@@ -36,8 +36,7 @@ public class Oauth2ProviderImpl implements IIdentityOauth2Provider {
      * @param authorizationCode: String
      * @return accessToken,...: GoogleTokenResponse
      */
-    @Override
-    public GoogleTokenResponse getGoogleToken(String authorizationCode) {
+    private GoogleTokenResponse getGoogleToken(String authorizationCode) {
         try {
             GoogleTokenResponse googleTokenResponse = this.googleTokenClient.getToken(
                     GoogleTokenRequest.builder()
@@ -63,8 +62,7 @@ public class Oauth2ProviderImpl implements IIdentityOauth2Provider {
      * @param accessToken: String
      * @return user: GoogleUserResponse
      */
-    @Override
-    public GoogleUserResponse getGoogleUser(String accessToken) {
+    private GoogleUserResponse getGoogleUser(String accessToken) {
         try {
             GoogleUserResponse googleUserResponse = this.googleUserClient.getUser("json", accessToken);
 
@@ -74,5 +72,14 @@ public class Oauth2ProviderImpl implements IIdentityOauth2Provider {
             log.error(">>> INTERNAL: getGoogleUser: {}", e.getMessage());
             throw new AppException(ErrorCode.OAUTH2__GET_GOOGLE_USER_FAILED);
         }
+    }
+
+    @Override
+    public GoogleUserResponse authViaGoogle(String code) {
+        // 1. exchange code for token
+        var googleToken = this.getGoogleToken(code);
+
+        // 2. exchange token for user
+        return this.getGoogleUser(googleToken.getAccessToken());
     }
 }

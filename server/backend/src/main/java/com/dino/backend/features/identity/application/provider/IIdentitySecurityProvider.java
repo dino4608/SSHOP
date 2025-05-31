@@ -1,27 +1,19 @@
 package com.dino.backend.features.identity.application.provider;
 
-import com.dino.backend.features.identity.domain.User;
-import com.dino.backend.infrastructure.security.model.JwtType;
-import com.dino.backend.shared.application.utils.Id;
-
-import java.time.Duration;
-import java.time.Instant;
 import java.util.Optional;
 
+import com.dino.backend.features.identity.application.model.TokenPair;
+import com.dino.backend.features.identity.domain.User;
+import com.dino.backend.shared.application.utils.Id;
+
 public interface IIdentitySecurityProvider {
-    // PASSWORD//
+    // PASSWORD //
     String hashPassword(String plain);
 
     boolean matchPassword(String plain, String hash);
 
-    // JWT//
-    byte[] getSecretKey(JwtType jwtType);
+    // JWT //
+    TokenPair genTokenPair(User user);
 
-    Duration getTtl(JwtType jwtType);
-
-    Instant getExpiry(JwtType jwtType);
-
-    String genToken(User account, JwtType jwtType);
-
-    Optional<Id> verifyToken(String token, JwtType jwtType);
+    Optional<Id> verifyRefreshToken(String refreshToken);
 }

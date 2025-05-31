@@ -1,19 +1,15 @@
 package com.dino.backend.infrastructure.security;
 
-import com.dino.backend.features.identity.application.provider.IIdentitySecurityProvider;
-import com.dino.backend.features.identity.domain.User;
-import com.dino.backend.infrastructure.security.model.JwtType;
-import com.dino.backend.infrastructure.common.Env;
-import com.dino.backend.shared.application.utils.Id;
-import com.dino.backend.shared.domain.exception.AppException;
-import com.dino.backend.shared.domain.exception.ErrorCode;
-import com.nimbusds.jose.*;
-import com.nimbusds.jose.crypto.MACSigner;
-import com.nimbusds.jwt.JWTClaimsSet;
-import lombok.AccessLevel;
-import lombok.RequiredArgsConstructor;
-import lombok.experimental.FieldDefaults;
-import lombok.extern.slf4j.Slf4j;
+import java.time.Duration;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
+import java.util.Date;
+import java.util.Optional;
+import java.util.Set;
+import java.util.StringJoiner;
+
+import javax.crypto.spec.SecretKeySpec;
+
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.jose.jws.MacAlgorithm;
 import org.springframework.security.oauth2.jwt.Jwt;
@@ -23,14 +19,26 @@ import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
-import javax.crypto.spec.SecretKeySpec;
-import java.time.Duration;
-import java.time.Instant;
-import java.time.temporal.ChronoUnit;
-import java.util.Date;
-import java.util.Optional;
-import java.util.Set;
-import java.util.StringJoiner;
+import com.dino.backend.features.identity.application.model.TokenPair;
+import com.dino.backend.features.identity.application.provider.IIdentitySecurityProvider;
+import com.dino.backend.features.identity.domain.User;
+import com.dino.backend.infrastructure.common.Env;
+import com.dino.backend.infrastructure.security.model.JwtType;
+import com.dino.backend.shared.application.utils.Id;
+import com.dino.backend.shared.domain.exception.AppException;
+import com.dino.backend.shared.domain.exception.ErrorCode;
+import com.nimbusds.jose.JOSEException;
+import com.nimbusds.jose.JWSAlgorithm;
+import com.nimbusds.jose.JWSHeader;
+import com.nimbusds.jose.JWSObject;
+import com.nimbusds.jose.Payload;
+import com.nimbusds.jose.crypto.MACSigner;
+import com.nimbusds.jwt.JWTClaimsSet;
+
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
+import lombok.extern.slf4j.Slf4j;
 
 // NOTE: RequiredArgsConstructor
 // create a constructor for final and @NonNull fields
@@ -46,7 +54,7 @@ public class SecurityProviderImpl implements IIdentitySecurityProvider {
 
     /**
      * // buildScope //
-     * 
+     *
      * @des It means to build roles. Scope is a claim of jwt payload
      * @param roles: Set<String>
      * @return scope: String. Example "ADMIN_SELLER_USER"
@@ -60,21 +68,8 @@ public class SecurityProviderImpl implements IIdentitySecurityProvider {
         return stringJoiner.toString();
     }
 
-    // hashPassword //
-    @Override
-    public String hashPassword(String plain) {
-        return this.passwordEncoder.encode(plain);
-    }
-
-    // matchPassword //
-    @Override
-    public boolean matchPassword(String plain, String hash) {
-        return this.passwordEncoder.matches(plain, hash);
-    }
-
     // getSecretKey //
-    @Override
-    public byte[] getSecretKey(JwtType jwtType) {
+    private byte[] getSecretKey(JwtType jwtType) {
         return switch (jwtType) {
             case REFRESH_TOKEN -> this.env.REFRESH_SECRET_KEY.getBytes();
             case ACCESS_TOKEN -> this.env.ACCESS_SECRET_KEY.getBytes();
@@ -82,8 +77,7 @@ public class SecurityProviderImpl implements IIdentitySecurityProvider {
     }
 
     // getTimeToLive //
-    @Override
-    public Duration getTtl(JwtType jwtType) {
+    private Duration getTtl(JwtType jwtType) {
         return switch (jwtType) {
             case REFRESH_TOKEN -> Duration.ofDays(this.env.REFRESH_TTL_DAYS);
             case ACCESS_TOKEN -> Duration.ofMinutes(this.env.ACCESS_TTL_MIN);
@@ -91,8 +85,7 @@ public class SecurityProviderImpl implements IIdentitySecurityProvider {
     }
 
     // getExpiry //
-    @Override
-    public Instant getExpiry(JwtType jwtType) {
+    private Instant getExpiry(JwtType jwtType) {
         return switch (jwtType) {
             case REFRESH_TOKEN -> Instant.now().plus(this.env.REFRESH_TTL_DAYS, ChronoUnit.DAYS);
             case ACCESS_TOKEN -> Instant.now().plus(this.env.ACCESS_TTL_MIN, ChronoUnit.MINUTES);
@@ -110,8 +103,7 @@ public class SecurityProviderImpl implements IIdentitySecurityProvider {
     // - HMAC: Hash-based Message Authentication Code
     // - 1 byte = 8 bit. 1 bit = 1 binary
     // - serialize: chuyển đổi dữ liệu thành định dạng có thể lưu trữ hoặc gửi đi
-    @Override
-    public String genToken(User user, JwtType jwtType) {
+    private String genToken(User user, JwtType jwtType) {
         // 1. create a header: algorithm HS512 + type JWT
         JWSHeader header = new JWSHeader(JWSAlgorithm.HS512);
 
@@ -144,8 +136,7 @@ public class SecurityProviderImpl implements IIdentitySecurityProvider {
     // less try-catch in the services
     // - should only throw internal system errors => safe code
     // - for the services will process logic => single responsibility
-    @Override
-    public Optional<Id> verifyToken(String token, JwtType jwtType) {
+    private Optional<Id> verifyToken(String token, JwtType jwtType) {
         SecretKeySpec secretKeySpec = new SecretKeySpec(
                 this.getSecretKey(jwtType),
                 JWSAlgorithm.HS512.getName());
@@ -166,5 +157,38 @@ public class SecurityProviderImpl implements IIdentitySecurityProvider {
             log.warn(">>> WARNING: verifyToken: {}", e.getMessage());
             return Optional.empty();
         }
+    }
+
+    // IMPLEMENT IIdentitySecurityProvider //
+
+    // hashPassword //
+    @Override
+    public String hashPassword(String plain) {
+        return this.passwordEncoder.encode(plain);
+    }
+
+    // matchPassword //
+    @Override
+    public boolean matchPassword(String plain, String hash) {
+        return this.passwordEncoder.matches(plain, hash);
+    }
+
+    @Override
+    public TokenPair genTokenPair(User user) {
+        String accessToken = this.genToken(user, JwtType.ACCESS_TOKEN);
+        Duration accessTokenTtl = this.getTtl(JwtType.ACCESS_TOKEN);
+        Instant accessTokenExpiry = this.getExpiry(JwtType.ACCESS_TOKEN);
+        String refreshToken = this.genToken(user, JwtType.REFRESH_TOKEN);
+        Duration refreshTokenTtl = this.getTtl(JwtType.REFRESH_TOKEN);
+        Instant refreshTokenExpiry = this.getExpiry(JwtType.REFRESH_TOKEN);
+
+        return new TokenPair(
+                accessToken, accessTokenTtl, accessTokenExpiry,
+                refreshToken, refreshTokenTtl, refreshTokenExpiry);
+    }
+
+    @Override
+    public Optional<Id> verifyRefreshToken(String refreshToken) {
+        return this.verifyToken(refreshToken, JwtType.REFRESH_TOKEN);
     }
 }

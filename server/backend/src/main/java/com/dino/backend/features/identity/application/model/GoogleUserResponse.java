@@ -1,4 +1,4 @@
-package com.dino.backend.infrastructure.security.model;
+package com.dino.backend.features.identity.application.model;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
@@ -12,14 +12,14 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class GoogleUserResponse {
-    private String id;
-    private String email;
-    private boolean verifiedEmail;
-    private String name;
-    private String givenName;
-    private String familyName;
-    private String link;
-    private String picture;
-    private String gender;
-    private String locale;
+    String id;
+    String email;
+    boolean verifiedEmail;
+    String name;
+    String givenName;
+    String familyName;
+    String link;
+    String picture;
+    String gender;
+    String locale;
 }

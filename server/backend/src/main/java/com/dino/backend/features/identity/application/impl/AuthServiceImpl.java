@@ -1,18 +1,27 @@
 package com.dino.backend.features.identity.application.impl;
 
+import java.util.Objects;
+import java.util.Optional;
+
+import org.springframework.http.HttpHeaders;
+import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
+
 import com.dino.backend.features.identity.application.IAuthService;
 import com.dino.backend.features.identity.application.ITokenService;
 import com.dino.backend.features.identity.application.IUserService;
 import com.dino.backend.features.identity.application.mapper.IUserMapper;
-import com.dino.backend.features.identity.application.model.*;
+import com.dino.backend.features.identity.application.model.AuthResponse;
+import com.dino.backend.features.identity.application.model.CurrentUserResponse;
+import com.dino.backend.features.identity.application.model.GoogleOauth2Request;
+import com.dino.backend.features.identity.application.model.GoogleUserResponse;
+import com.dino.backend.features.identity.application.model.LookupIdentifierResponse;
+import com.dino.backend.features.identity.application.model.PasswordLoginRequest;
 import com.dino.backend.features.identity.application.provider.IIdentityCookieProvider;
 import com.dino.backend.features.identity.application.provider.IIdentityOauth2Provider;
 import com.dino.backend.features.identity.application.provider.IIdentitySecurityProvider;
 import com.dino.backend.features.identity.domain.User;
 import com.dino.backend.features.identity.domain.repository.IUserRepository;
-import com.dino.backend.infrastructure.security.model.GoogleTokenResponse;
-import com.dino.backend.infrastructure.security.model.GoogleUserResponse;
-import com.dino.backend.infrastructure.security.model.JwtType;
 import com.dino.backend.shared.api.model.CurrentUser;
 import com.dino.backend.shared.application.utils.Id;
 import com.dino.backend.shared.domain.exception.AppException;
@@ -22,12 +31,6 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpHeaders;
-import org.springframework.stereotype.Service;
-
-import java.time.Duration;
-import java.time.Instant;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -43,9 +46,9 @@ public class AuthServiceImpl implements IAuthService {
 
     IUserMapper userMapper;
 
-    IIdentitySecurityProvider securityInfraProvider;
+    IIdentitySecurityProvider securityProvider;
 
-    IIdentityOauth2Provider oauth2InfraProvider;
+    IIdentityOauth2Provider oauth2Provider;
 
     IIdentityCookieProvider cookieProvider;
 
@@ -83,20 +86,17 @@ public class AuthServiceImpl implements IAuthService {
     // authenticate //
     private AuthResponse authenticate(User user, HttpHeaders headers) {
         // get tokens
-        String accessToken = this.securityInfraProvider.genToken(user, JwtType.ACCESS_TOKEN);
-        String refreshToken = this.securityInfraProvider.genToken(user, JwtType.REFRESH_TOKEN);
-        Duration refreshTokenTtl = this.securityInfraProvider.getTtl(JwtType.REFRESH_TOKEN);
-        Instant refreshTokenExpiry = this.securityInfraProvider.getExpiry(JwtType.REFRESH_TOKEN);
+        var tokenPair = this.securityProvider.genTokenPair(user);
 
         // update refresh token to database
-        this.tokenService.updateRefreshToken(refreshToken, refreshTokenExpiry, user.getId());
+        this.tokenService.updateRefreshToken(tokenPair.refreshToken(), tokenPair.refreshTokenExpiry(), user.getId());
 
         // set refresh token to cookie
-        this.cookieProvider.attachRefreshToken(headers, refreshToken, refreshTokenTtl);
+        this.cookieProvider.attachRefreshToken(headers, tokenPair.refreshToken(), tokenPair.refreshTokenTtl());
 
         return AuthResponse.builder()
                 .isAuthenticated(true)
-                .accessToken(accessToken)
+                .accessToken(tokenPair.accessToken())
                 .currentUser(this.userMapper.toCurrentUserResponse(user))
                 .build();
     }
@@ -118,7 +118,7 @@ public class AuthServiceImpl implements IAuthService {
                 .orElseThrow(() -> new AppException(ErrorCode.AUTH__IDENTIFIER_NOT_FOUND));
 
         // match password
-        if (!this.securityInfraProvider.matchPassword(request.getPassword(), user.getPassword())) {
+        if (!this.securityProvider.matchPassword(request.getPassword(), user.getPassword())) {
             throw new AppException(ErrorCode.AUTH__PASSWORD_INVALID);
         }
 
@@ -138,7 +138,7 @@ public class AuthServiceImpl implements IAuthService {
         // create
         User user = User.createSignupUser(
                 this.userMapper.toUser(request),
-                this.securityInfraProvider.hashPassword(request.getPassword()));
+                this.securityProvider.hashPassword(request.getPassword()));
         user = this.userRepository.save(user);
 
         // license token
@@ -147,12 +147,12 @@ public class AuthServiceImpl implements IAuthService {
     }
 
     // signup + GoogleUserResponse //
-    private AuthResponse signup(GoogleUserResponse request, HttpHeaders headers) {
+    private AuthResponse signup(GoogleUserResponse googleUser, HttpHeaders headers) {
         User user = User.createSignupUser(
                 User.builder()
-                        .email(request.getEmail())
-                        .name(request.getName())
-                        .gender(request.getGender())
+                        .email(googleUser.getEmail())
+                        .name(googleUser.getName())
+                        .gender(googleUser.getGender())
                         .build(),
                 null);
         user = this.userRepository.save(user);
@@ -163,12 +163,10 @@ public class AuthServiceImpl implements IAuthService {
     // loginOrSignup + GoogleOauth2Request //
     @Override
     public AuthResponse loginOrSignup(GoogleOauth2Request request, HttpHeaders headers) {
-        // exchange code for token //
-        GoogleTokenResponse googleTokenResponse = this.oauth2InfraProvider.getGoogleToken(request.getCode());
+        // 1. authViaGoogle
+        var googleUserResponse = this.oauth2Provider.authViaGoogle(request.getCode());
 
         // get user //
-        GoogleUserResponse googleUserResponse = this.oauth2InfraProvider
-                .getGoogleUser(googleTokenResponse.getAccessToken());
         var userOpt = this.findUserByIdentifier(googleUserResponse.getEmail());
 
         // signup or login //
@@ -185,25 +183,21 @@ public class AuthServiceImpl implements IAuthService {
     // refresh //
     @Override
     public AuthResponse refresh(String refreshToken, HttpHeaders headers) {
-        // 1. Check null or empty
-        if (refreshToken == null || refreshToken.isBlank()) {
+        // 1. check refreshToken is not blank
+        if (!StringUtils.hasText(refreshToken))
             return this.unauthenticate(headers);
-        }
 
-        // 2. Verify & extract user ID
-        Id userId = this.securityInfraProvider.verifyToken(refreshToken, JwtType.REFRESH_TOKEN)
-                .orElse(null);
+        // 2. verify & extract user ID
+        Id userId = this.securityProvider.verifyRefreshToken(refreshToken).orElse(null);
 
-        if (userId == null) {
+        if (Objects.isNull(userId))
             return this.unauthenticate(headers);
-        }
 
-        // 3. Check if refresh token matches DB (to prevent reuse)
-        if (!this.tokenService.isRefreshTokenValid(refreshToken, userId.value())) {
+        // 3. check if refresh token matches DB (to prevent reuse)
+        if (!this.tokenService.isRefreshTokenValid(refreshToken, userId.value()))
             return this.unauthenticate(headers);
-        }
 
-        // 4. Get user
+        // 4. get user
         User user = this.userService.getById(userId.value());
 
         // 5. authenticate successfully (license tokens, update DB & set cookie)
@@ -219,7 +213,7 @@ public class AuthServiceImpl implements IAuthService {
         }
 
         // 2. Verify & extract user ID
-        Id userId = this.securityInfraProvider.verifyToken(refreshToken, JwtType.REFRESH_TOKEN)
+        Id userId = this.securityProvider.verifyRefreshToken(refreshToken)
                 .orElse(null);
         if (userId == null) {
             return this.unauthenticate(headers);
