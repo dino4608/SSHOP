@@ -3,7 +3,10 @@ package com.dino.backend.features.productcatalog.domain;
 import com.dino.backend.features.inventory.domain.Inventory;
 import com.dino.backend.features.ordering.domain.CartItem;
 import com.dino.backend.features.ordering.domain.OrderItem;
+import com.dino.backend.features.productcatalog.domain.model.ProductTierVariation;
 import com.dino.backend.features.promotion.domain.DiscountItem;
+import com.dino.backend.shared.domain.exception.AppException;
+import com.dino.backend.shared.domain.exception.ErrorCode;
 import com.dino.backend.shared.domain.model.BaseEntity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
@@ -15,6 +18,7 @@ import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -70,5 +74,29 @@ public class Sku extends BaseEntity {
     List<OrderItem> orderItems;
 
     // carts => sku metrics;
+
+    // FACTORY METHOD //
+    public static List<Integer> createTierOptionIndexes(
+            List<Integer> tierOptionIndexes, List<ProductTierVariation> tierVariations) {
+        if (tierOptionIndexes.size() != tierVariations.size())
+            throw new AppException(ErrorCode.SKU__TIER_OPTION_INDEXES_INVALID);
+
+        List<Integer> result = new ArrayList<>();
+
+        for (int i = 0; i < tierOptionIndexes.size(); i++) {
+            var tierOptionIndex = createTierOptionIndex(tierOptionIndexes.get(i), tierVariations.get(i));
+            result.add(tierOptionIndex);
+        }
+
+        return List.copyOf(result);
+    }
+
+    public static Integer createTierOptionIndex(
+            Integer tierOptionIndex, ProductTierVariation tierVariation) {
+        if (tierOptionIndex == null || tierOptionIndex < 0 || tierOptionIndex >= tierVariation.getOptions().size())
+            throw new AppException(ErrorCode.SKU__TIER_OPTION_INDEXES_INVALID);
+
+        return tierOptionIndex;
+    }
 
 }

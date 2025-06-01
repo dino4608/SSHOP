@@ -19,6 +19,7 @@ public class testApi {
     acRepo acRepo;
 
     @GetMapping("/lazy/find")
+    @SuppressWarnings("unused")
     public ResponseEntity<Object> test1() {
         System.out.println(1);
         var aa = this.aaRepo.findById(1L); // eager

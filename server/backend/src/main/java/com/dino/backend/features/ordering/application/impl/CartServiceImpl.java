@@ -5,8 +5,12 @@ import com.dino.backend.features.ordering.application.ICartService;
 import com.dino.backend.features.ordering.application.mapper.ICartMapper;
 import com.dino.backend.features.ordering.application.model.*;
 import com.dino.backend.features.ordering.domain.Cart;
+import com.dino.backend.features.ordering.domain.CartItem;
 import com.dino.backend.features.ordering.domain.repository.ICartRepository;
 import com.dino.backend.features.productcatalog.application.ISkuService;
+import com.dino.backend.features.promotion.application.IDiscountService;
+import com.dino.backend.features.promotion.application.model.DiscountItemRes;
+import com.dino.backend.features.shop.domain.Shop;
 import com.dino.backend.shared.api.model.CurrentUser;
 import com.dino.backend.shared.application.utils.Deleted;
 import com.dino.backend.shared.domain.exception.AppException;
@@ -18,6 +22,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.*;
+import java.util.stream.Collectors;
+
 @Service
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
@@ -26,38 +33,37 @@ public class CartServiceImpl implements ICartService {
 
     IUserService userService;
     ISkuService skuService;
+    IDiscountService discountService;
     ICartRepository cartRepository;
     ICartMapper cartMapper;
 
     // DOMAIN //
 
     /**
-     * getCart. (get and join all)
+     * findCart. (find cart with sku)
+     */
+    private Optional<Cart> findCart(CurrentUser currentUser) {
+        return this.cartRepository.findWithSkuByBuyerId(currentUser.id());
+    }
+
+    /**
+     * getCart. (get cart with sku)
      */
     private Cart getCart(CurrentUser currentUser) {
-        return this.cartRepository.findJoinAllByBuyerId(currentUser.id())
+        return this.cartRepository.findWithSkuByBuyerId(currentUser.id())
                 .orElseThrow(() -> new AppException(ErrorCode.CART__NOT_FOUND));
     }
 
     /**
-     * getOrCreateCart. (get and join all)
-     */
-    private Cart getOrCreateCart(CurrentUser currentUser) {
-        var cart = this.cartRepository.findJoinAllByBuyerId(currentUser.id());
-        if (cart.isPresent())
-            return cart.get();
-
-        var cartIsDeleted = this.cartRepository.findIsDeletedByBuyerId(currentUser.id());
-        if (cartIsDeleted.isPresent())
-            throw new AppException(ErrorCode.CART__IS_DELETED);
-
-        return this.createCart(currentUser);
-    }
-
-    /**
-     * createCart
+     * createCart.
      */
     private Cart createCart(CurrentUser currentUser) {
+        // check is cart is deleted => to avoid one-to-one cart and buyer
+        this.cartRepository.findIsDeletedByBuyerId(currentUser.id())
+                .ifPresent(ignore -> {
+                    throw new AppException(ErrorCode.CART__IS_DELETED);
+                });
+        // create
         var buyer = this.userService.get(currentUser);
         var newCart = Cart.createCart(buyer);
         return this.cartRepository.save(newCart);
@@ -66,12 +72,50 @@ public class CartServiceImpl implements ICartService {
     // QUERY //
 
     /**
-     * get
+     * get. (get or create cart, map to response dto)
      */
     @Override
     public CartRes get(CurrentUser currentUser) {
-        var cart = this.getOrCreateCart(currentUser);
-        return this.cartMapper.toCartRes(cart);
+        Cart cart = cartRepository.findWithShopByBuyerId(currentUser.id())
+                .orElseGet(() -> this.createCart(currentUser));
+
+        // 1. group CartItems by Shop
+        Map<Shop, List<CartItem>> itemsGroupedByShop = cart.getCartItems().stream()
+                .collect(Collectors.groupingBy(item -> item.getSku().getProduct().getShop()));
+
+        // 2. build and sort CartGroups
+        List<CartGroupRes> cartGroups = itemsGroupedByShop.entrySet().stream()
+                .map(entry -> {
+                    Shop shop = entry.getKey();
+                    List<CartItem> cartItemsInGroup = entry.getValue();
+
+                    // build CartItemsRes
+                    List<CartItemRes> cartItemsRes = cartItemsInGroup.stream()
+                            .map(cartItem -> {
+                                // get photo of CartItem
+                                var photo = this.skuService.getPhoto(cartItem.getSku());
+                                // apply Discount to Sku
+                                var skuPricing = this.discountService.canDiscount(
+                                        cartItem.getSku(), currentUser);
+                                var discountItemRes = DiscountItemRes.from();
+                                // display CartItemRes
+                                return this.cartMapper.toCartItemRes(cartItem, photo, discountItemRes);
+                            })
+                            .sorted(Comparator.comparing(CartItemRes::id).reversed())
+                            .toList();
+                    // get id of CartGroups
+                    Long latestCartItemId = cartItemsRes.stream()
+                            .findFirst()
+                            .map(CartItemRes::id)
+                            .orElse(null);
+
+                    return this.cartMapper.toCartGroupRes(latestCartItemId, shop, cartItemsRes);
+                })
+                .filter(cartGroupRes -> Objects.nonNull(cartGroupRes.id()))
+                .sorted(Comparator.comparing(CartGroupRes::id).reversed())
+                .toList();
+
+        return this.cartMapper.toCartRes(cart, cartGroups);
     }
 
     // COMMAND //
@@ -82,11 +126,10 @@ public class CartServiceImpl implements ICartService {
     @Override
     @Transactional
     public CartItemRes addCartItem(AddCartItemReq request, CurrentUser currentUser) {
-        // 1. get Cart and Sku
-        var cart = this.getOrCreateCart(currentUser);
+        var cart = this.findCart(currentUser).orElseGet(() -> createCart(currentUser));
         var sku = this.skuService.getSku(request.getSkuId());
 
-        // 2. addOrUpdateCartItem
+        // 1. addOrUpdateCartItem
         var upsertedCartItem = cart.addOrUpdateCartItem(sku, request.getQuantity());
         this.cartRepository.save(cart);
 
@@ -98,10 +141,9 @@ public class CartServiceImpl implements ICartService {
      */
     @Override
     public CartItemRes updateQuantity(UpdateQuantityReq request, CurrentUser currentUser) {
-        // 1. get Cart
         var cart = this.getCart(currentUser);
 
-        // 2. updateQuantity
+        // 1. updateQuantity
         var updatedCartItem = cart.updateQuantity(request.getCartItemId(), request.getQuantity());
         this.cartRepository.save(cart);
 
@@ -113,11 +155,10 @@ public class CartServiceImpl implements ICartService {
      */
     @Override
     public Deleted removeCartItems(RemoveCartItemReq request, CurrentUser currentUser) {
-        // 1. get Cart
         var cart = this.getCart(currentUser);
 
-        // 2. removeCartItem
-        var removedCartItems = cart.removeCartItems(request.getSkuIds());
+        // 1.. removeCartItem
+        var removedCartItems = cart.removeCartItems(request.getCartItemIds());
         this.cartRepository.save(cart);
 
         return Deleted.success(removedCartItems.size());

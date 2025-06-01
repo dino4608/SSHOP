@@ -10,4 +10,6 @@ public interface ISkuService {
     Sku getSku(Long skuId);
 
     Optional<Sku> findSku(Long skuId);
+
+    String getPhoto(Sku sku);
 }

@@ -81,7 +81,7 @@ public class Discount extends BaseEntity {
 
     Integer usedCount;
 
-    List<String> usedBuyerIds;
+    List<Long> usedBuyerIds;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "level_type", nullable = false)

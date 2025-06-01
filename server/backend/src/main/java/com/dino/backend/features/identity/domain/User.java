@@ -15,7 +15,6 @@ import com.dino.backend.features.identity.domain.model.UserRoleType;
 import com.dino.backend.features.identity.domain.model.UserStatusType;
 import com.dino.backend.features.ordering.domain.Cart;
 import com.dino.backend.features.ordering.domain.Order;
-import com.dino.backend.features.shop.domain.Shop;
 import com.dino.backend.features.userprofile.domain.Address;
 import com.dino.backend.shared.domain.model.BaseEntity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -28,6 +27,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -85,20 +85,21 @@ public class User extends BaseEntity {
 
     Boolean isPhoneVerified;
 
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToOne(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore
     @ToString.Exclude
-    List<Token> tokens;
+    Token token;
 
-    @OneToMany(mappedBy = "buyer", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToOne(mappedBy = "buyer", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore
     @ToString.Exclude
-    List<Cart> carts;
+    Cart cart;
 
-    @OneToMany(mappedBy = "seller", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonIgnore
-    @ToString.Exclude
-    List<Shop> shops;
+    // @OneToOne(mappedBy = "seller", fetch = FetchType.LAZY, cascade =
+    // CascadeType.ALL, orphanRemoval = true)
+    // @JsonIgnore
+    // @ToString.Exclude
+    // Shop shop;
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore
@@ -125,10 +126,10 @@ public class User extends BaseEntity {
                 .build();
 
         Token newToken = Token.createToken(newUser);
-        newUser.setTokens(List.of(newToken));
+        newUser.setToken(newToken);
 
         Cart newCart = Cart.createCart(newUser);
-        newUser.setCarts(List.of(newCart));
+        newUser.setCart(newCart);
 
         return newUser;
     }

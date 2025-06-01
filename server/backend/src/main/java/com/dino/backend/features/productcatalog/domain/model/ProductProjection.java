@@ -6,7 +6,7 @@ import java.util.List;
 import com.dino.backend.features.promotion.domain.Discount;
 
 public interface ProductProjection {
-    String getId();
+    Long getId();
 
     String getStatus();
 

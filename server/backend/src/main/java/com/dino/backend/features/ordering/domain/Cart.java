@@ -3,7 +3,9 @@ package com.dino.backend.features.ordering.domain;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.hibernate.annotations.*;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
+import org.hibernate.annotations.SQLDelete;
 
 import com.dino.backend.features.identity.domain.User;
 import com.dino.backend.features.productcatalog.domain.Sku;
@@ -20,8 +22,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -36,7 +38,7 @@ import lombok.experimental.SuperBuilder;
 @DynamicInsert
 @DynamicUpdate
 @SQLDelete(sql = "UPDATE carts SET is_deleted = true WHERE cart_id=?")
-//@SQLRestriction("is_deleted = false")
+// @SQLRestriction("is_deleted = false")
 @Getter
 @Setter
 @AllArgsConstructor
@@ -52,7 +54,7 @@ public class Cart extends BaseEntity {
 
     int total;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "buyer_id", nullable = false, updatable = false)
     @JsonIgnore
     User buyer;
@@ -135,11 +137,11 @@ public class Cart extends BaseEntity {
     /**
      * removeCartItems.
      */
-    public List<CartItem> removeCartItems(List<Long> skuIds) {
+    public List<CartItem> removeCartItems(List<Long> cartItemIds) {
         // NOTE: orphanRemoval
         // 1. filter CartItems (objects on memory) to remove
         var cartItemsToRemove = this.getCartItems().stream()
-                .filter(cartItem -> skuIds.contains(cartItem.getSku().getId()))
+                .filter(cartItem -> cartItemIds.contains(cartItem.getId()))
                 .toList();
 
         // 2. removeAll items => JPA note they are orphan => orphanRemoval auto delete

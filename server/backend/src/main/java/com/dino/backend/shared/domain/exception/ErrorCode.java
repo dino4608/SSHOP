@@ -68,6 +68,7 @@ public enum ErrorCode {
     CATEGORY__NOT_FOUND(1210, "Không tìm thấy ngành hàng.", HttpStatus.BAD_REQUEST),
     // SKU //
     SKU__FIND_FAILED(1220, "Lấy SKU thất bại.", HttpStatus.INTERNAL_SERVER_ERROR),
+    SKU__TIER_OPTION_INDEXES_INVALID(1221, "tierOptionIndexes không hợp lệ.", HttpStatus.BAD_REQUEST),
 
     // USER PROFILE 1300+ //
     // ADDRESS //
@@ -87,6 +88,7 @@ public enum ErrorCode {
     CART__TOTAL_MIN_INVALID(1506, "Giỏ hàng đã có 0 sản phẩm", HttpStatus.BAD_REQUEST),
     CART__TOTAL_MAX_INVALID(1507, "Giỏ hàng đã có 100 sản phẩm", HttpStatus.BAD_REQUEST),
     CART__IS_DELETED(1508, "Giỏ hàng đã bị xóa", HttpStatus.BAD_REQUEST),
+    CART__ITEM_EMPTY(1509, "Vui lòng chọn mặt hàng", HttpStatus.BAD_REQUEST),
     ;
 
     int code;

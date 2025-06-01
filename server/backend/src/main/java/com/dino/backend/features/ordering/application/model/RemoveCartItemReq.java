@@ -19,6 +19,6 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class RemoveCartItemReq {
 
-    @NotEmpty(message = "CART__SKU_EMPTY")
-    List<Long> skuIds;
+    @NotEmpty(message = "CART__ITEM_EMPTY")
+    List<Long> cartItemIds;
 }

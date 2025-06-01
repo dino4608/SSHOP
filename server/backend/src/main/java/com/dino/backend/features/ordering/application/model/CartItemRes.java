@@ -1,26 +1,28 @@
 package com.dino.backend.features.ordering.application.model;
 
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.experimental.FieldDefaults;
+import com.dino.backend.features.promotion.application.model.DiscountItemRes;
 
-@Builder
-@AllArgsConstructor
-@NoArgsConstructor
-@Getter
-@Setter
-@FieldDefaults(level = AccessLevel.PRIVATE)
-public class CartItemRes {
+import java.util.List;
 
-    Long skuId;
-    String skuCode;
-    String skuTierOptionValue;
-    Integer retailPrice;
-    int quantity;
-    String productName;
-    String productThumb;
+public record CartItemRes(
+        Long id,
+        int quantity,
+        String photo,
+        ProductRes product,
+        SkuRes sku,
+        DiscountItemRes discountItem) {
+
+    public record ProductRes(
+            Long id,
+            String name,
+            String thumb) {
+    }
+
+    public record SkuRes(
+            Long id,
+            String code,
+            List<Integer> tierOptionIndexes,
+            String tierOptionValue,
+            Integer retailPrice) {
+    }
 }

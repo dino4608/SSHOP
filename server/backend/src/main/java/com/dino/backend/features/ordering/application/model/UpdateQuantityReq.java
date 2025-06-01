@@ -19,7 +19,7 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class UpdateQuantityReq {
 
-    @NotNull(message = "CART__SKU_EMPTY") // TODO
+    @NotNull(message = "CART__ITEM_EMPTY")
     Long cartItemId;
 
     @Min(value = 1, message = "CART__QUANTITY_MIN_INVALID")

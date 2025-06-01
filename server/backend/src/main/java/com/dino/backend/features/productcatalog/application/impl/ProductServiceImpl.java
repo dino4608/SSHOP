@@ -38,7 +38,7 @@ public class ProductServiceImpl implements IProductService {
     @Override
     public PageRes<ProductItemRes> list(Pageable pageable) {
         var page = this.productRepository.findAllProjectedBy(pageable);
-        var products = page.getContent().parallelStream()
+        var products = page.getContent().stream()
                 .map(p -> {
                     var product = this.productMapper.toProductItemRes(p);
                     var discount = this.discountService.canApply(p.getId(), null);
@@ -63,7 +63,7 @@ public class ProductServiceImpl implements IProductService {
         var product = this.productRepository.findEagerById(id.value())
                 .orElseThrow(() -> new AppException(ErrorCode.PRODUCT__NOT_FOUND));
 
-        var discount = this.discountService.canApply(productId, currentUser);
+        var discount = this.discountService.canApply(id.value(), currentUser);
 
         var res = this.productMapper.toProductRes(product);
         res.setDiscount(discount.orElse(null));

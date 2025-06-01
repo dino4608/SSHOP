@@ -30,7 +30,8 @@ public class BuyerCartController {
 
         // getCart //
         @GetMapping("/get")
-        public ResponseEntity<CartRes> getCart(@AuthUser CurrentUser currentUser) {
+        public ResponseEntity<CartRes> getCart(
+                @AuthUser CurrentUser currentUser) {
             var cart = this.cartService.get(currentUser);
             return ResponseEntity.ok(cart);
         }
