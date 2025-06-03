@@ -138,3 +138,50 @@
     @apply bg-background text-foreground;
     }
 }
+
+/* Cart */
+
+/* Định nghĩa grid template columns */
+/* Header: Checkbox | Sản phẩm | Đơn giá | Số lượng | Thành tiền | Hành động */
+.grid-cols-cart-header-layout {
+  grid-template-columns: min-content 3fr 1.5fr 1fr 1.5fr 0.5fr;
+}
+
+/* Item: Checkbox | Sản phẩm | Đơn giá | Số lượng | Thành tiền | Hành động */
+.grid-cols-cart-item-layout {
+  grid-template-columns: min-content 3fr 1.5fr 1fr 1.5fr 0.5fr;
+}
+
+/* Base styles cho input checkbox để custom dễ hơn */
+/* Shadcn UI Checkbox sẽ override một số style này, nhưng giữ lại để tham khảo */
+input[type="checkbox"].form-checkbox {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  display: inline-block;
+  vertical-align: middle;
+  position: relative;
+}
+
+input[type="checkbox"].form-checkbox:checked {
+  background-color: #2563eb; /* blue-600 */
+  border-color: #2563eb;
+}
+
+input[type="checkbox"].form-checkbox:checked::before {
+  content: '✓';
+  display: block;
+  color: white;
+  font-size: 14px;
+  line-height: 18px;
+  text-align: center;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}

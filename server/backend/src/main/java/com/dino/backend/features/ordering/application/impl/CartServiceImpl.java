@@ -93,13 +93,14 @@ public class CartServiceImpl implements ICartService {
                     List<CartItemRes> cartItemsRes = cartItemsInGroup.stream()
                             .map(cartItem -> {
                                 // get photo of CartItem
-                                var photo = this.skuService.getPhoto(cartItem.getSku());
+                                var cartItemPhoto = this.skuService.getPhoto(
+                                        cartItem.getSku());
                                 // apply Discount to Sku
-                                var skuPricing = this.discountService.canDiscount(
+                                var discountItemRes = this.discountService.canDiscount(
                                         cartItem.getSku(), currentUser);
-                                var discountItemRes = DiscountItemRes.from();
                                 // display CartItemRes
-                                return this.cartMapper.toCartItemRes(cartItem, photo, discountItemRes);
+                                return this.cartMapper.toCartItemRes(
+                                        cartItem, cartItemPhoto, discountItemRes);
                             })
                             .sorted(Comparator.comparing(CartItemRes::id).reversed())
                             .toList();

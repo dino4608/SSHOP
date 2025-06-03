@@ -4,21 +4,24 @@ import { actions } from "@/store";
 import { useAppDispatch } from "@/store/hooks";
 import { TAddress } from "@/types/address.types";
 import { TUser } from "@/types/auth.types";
+import { TCart } from "@/types/cart.types";
 import { useEffect } from "react";
 
 type TGlobalDataHydratorProps = {
-    currentUser: TUser;
-    defaultAddress: TAddress;
+    currentUser: TUser; // | null;
+    defaultAddress: TAddress; // | null;
+    cart: TCart | null;
 }
 
-export const GlobalDataHydrator = ({ currentUser, defaultAddress }: TGlobalDataHydratorProps) => {
+export const GlobalDataHydrator = ({ currentUser, defaultAddress, cart }: TGlobalDataHydratorProps) => {
     const dispatch = useAppDispatch();
 
     useEffect(() => {
         dispatch(actions.auth.setCurrentUser(currentUser));
         dispatch(actions.address.setDefaultAddress(defaultAddress));
+        dispatch(actions.cart.setCart(cart));
         console.log(">>> GlobalDataHydrator: init successfully");
-    }, [currentUser, defaultAddress, dispatch]);
+    }, [currentUser, defaultAddress, cart, dispatch]);
 
     return null;
 };

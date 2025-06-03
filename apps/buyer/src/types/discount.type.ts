@@ -1,11 +1,11 @@
 export type TDiscountItem = {
-    id: string;
-    discountedProductId: string;
-    skuId: string;
+    id: number;
+    dealPrice: number;
+    discountPercent: number;
 };
 
 export type TDiscount = {
-    id: string;
+    id: number;
     dealPrice: number | null;
     minDealPrice: number | null;
     maxDealPrice: number | null;
@@ -25,3 +25,4 @@ export type TDiscount = {
 
 export type TDiscountPrice = Pick<TDiscount,
     'dealPrice' | 'minDealPrice' | 'maxDealPrice' | 'discountPercent' | 'minDiscountPercent' | 'maxDiscountPercent'>;
+

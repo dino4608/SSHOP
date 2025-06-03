@@ -35,3 +35,8 @@ export type TPageRes<T> = {
     pagination: TPagination,
     items: T[]
 }
+
+export type TDeletedRes = {
+    isDeleted: boolean;
+    count: number;
+};

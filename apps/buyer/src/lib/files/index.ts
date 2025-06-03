@@ -3,7 +3,7 @@ import { env } from '../env';
 /**
  * Create URL to access files from backend
  */
-export function getFileUrl(fileName: string, resource: string, id: string): string {
+export function getFileUrl(fileName: string, resource: string, id: string | number): string {
     if (!fileName) throw new Error('>>> getFileUrl: fileName is empty');
 
     const domain = env.BACKEND_URL;

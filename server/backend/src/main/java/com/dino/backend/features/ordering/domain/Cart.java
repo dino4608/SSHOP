@@ -32,13 +32,14 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.SuperBuilder;
+import org.hibernate.annotations.SQLRestriction;
 
 @Entity
 @Table(name = "carts")
 @DynamicInsert
 @DynamicUpdate
 @SQLDelete(sql = "UPDATE carts SET is_deleted = true WHERE cart_id=?")
-// @SQLRestriction("is_deleted = false")
+@SQLRestriction("is_deleted = false")
 @Getter
 @Setter
 @AllArgsConstructor

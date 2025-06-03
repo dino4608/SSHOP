@@ -64,8 +64,19 @@ public final class SecurityUtils {
     private static Id getCurrentUserId() {
         return getAuthentication()
                 .flatMap(auth -> extractPrincipal(auth))
-                .flatMap(subject -> Id.from(subject))
+                .flatMap(subject -> {
+                    if (subject.equals("anonymousUser"))
+                        return Id.from("0");
+                    else
+                        return Id.from(subject);
+                })
                 .orElseThrow(() -> new AppException(ErrorCode.SECURITY__GET_CURRENT_USER_FAILED));
+//        return getAuthentication()
+//                .map(auth -> extractPrincipal(auth)
+//                        .map(subject -> Id.from(subject)
+//                                .orElseThrow(() -> new AppException(ErrorCode.SECURITY__GET_CURRENT_USER_FAILED)))
+//                        .orElseThrow(() -> new AppException(ErrorCode.SECURITY__GET_CURRENT_USER_FAILED)))
+//                .orElse(null);
     }
 
     /**

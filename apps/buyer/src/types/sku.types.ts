@@ -5,7 +5,7 @@ export enum SkuStatusType {
     DEACTIVATED = 'DEACTIVATED',
 }
 export type TSku = {
-    id: string;
+    id: number;
     inventory: TInventory;
     status: SkuStatusType;
     code: string;

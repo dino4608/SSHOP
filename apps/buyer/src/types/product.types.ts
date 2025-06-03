@@ -30,7 +30,7 @@ export type TProductMeta = {
 }
 
 export type TProduct = {
-    id: string;
+    id: number; // TODO: id string to long
     status: ProductStatusType;
     name: string;
     slug: string;
@@ -56,6 +56,9 @@ export type TProduct = {
     isDeleted: boolean;
 }
 
+export type TProductItem = Pick<TProduct,
+    'id' | 'name' | 'thumb' | 'meta' | 'retailPrice' | 'dealPrice' | 'discountPercent'>;
+
 export type TProductBuyBox = Pick<TProduct,
     'id' | 'name' | 'shop' | 'skus' | 'tierVariations' | 'retailPrice' | 'minRetailPrice' | 'maxRetailPrice' | 'discount'>;
 
@@ -73,6 +76,3 @@ export type TProductMedia = Pick<TProduct,
 
 export type TProductDescription = Pick<TProduct,
     'description' | 'specifications'>;
-
-export type TProductItem = Pick<TProduct,
-    'id' | 'name' | 'status' | 'meta' | 'thumb' | 'updatedAt' | 'retailPrice' | 'dealPrice' | 'discountPercent'>;

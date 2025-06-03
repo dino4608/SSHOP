@@ -1,5 +1,5 @@
 export type TAddress = {
-    id: string;
+    id: number;
     contactName: string;
     contactPhone: string;
     province: string;
