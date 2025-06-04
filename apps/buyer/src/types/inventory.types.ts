@@ -1,5 +1,5 @@
 export type TInventory = {
-    id: string;
+    id: number;
     stocks: number;
     sales: number;
     total: number;

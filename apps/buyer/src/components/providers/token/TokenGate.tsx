@@ -18,7 +18,7 @@ export const TokenGate = async ({ children }: { children: React.ReactNode }) => 
     console.log(">>> TokenGate: apiRes: ", apiRes);
 
     // Nếu token hết hạn → gọi TokenRestorer
-    if (!apiRes.success && apiRes.code === 1200) {
+    if (!apiRes.success && apiRes.code === 1010) {
         console.log(">>> TokenGate: Access token expired, render TokenRestorer");
         return (
             <Suspense fallback={<div>TokenGate: Khôi phục trạng thái đã xác thực...</div>}>

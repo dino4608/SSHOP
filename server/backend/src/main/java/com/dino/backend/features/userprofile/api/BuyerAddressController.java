@@ -2,8 +2,9 @@ package com.dino.backend.features.userprofile.api;
 
 import com.dino.backend.features.userprofile.application.IAddressAppService;
 import com.dino.backend.features.userprofile.domain.Address;
-import com.dino.backend.infrastructure.web.annotation.AuthUser;
-import com.dino.backend.infrastructure.web.model.CurrentUser;
+import com.dino.backend.shared.api.annotation.AuthUser;
+import com.dino.backend.shared.api.model.CurrentUser;
+
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.experimental.FieldDefaults;

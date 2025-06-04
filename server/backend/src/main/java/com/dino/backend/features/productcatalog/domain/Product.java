@@ -13,7 +13,7 @@ import com.dino.backend.features.productcatalog.domain.model.ProductSpecificatio
 import com.dino.backend.features.productcatalog.domain.model.ProductTierVariation;
 import com.dino.backend.features.promotion.domain.Discount;
 import com.dino.backend.features.shop.domain.Shop;
-import com.dino.backend.shared.model.BaseEntity;
+import com.dino.backend.shared.domain.model.BaseEntity;
 
 import io.hypersistence.utils.hibernate.type.json.JsonType;
 import jakarta.persistence.CascadeType;
@@ -50,9 +50,9 @@ import lombok.experimental.SuperBuilder;
 public class Product extends BaseEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(name = "productId", updatable = false, nullable = false)
-    String id;
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @Column(name = "product_id")
+    Long id;
 
     String status;
 
@@ -99,12 +99,14 @@ public class Product extends BaseEntity {
     List<Discount> discounts;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "categoryId", nullable = false)
+    @JoinColumn(name = "category_id", nullable = false)
     Category category;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "shopId", updatable = false, nullable = false)
+    @JoinColumn(name = "shop_id", updatable = false, nullable = false)
     Shop shop;
+
+    // TODO: product props
 
     // stars => review
 

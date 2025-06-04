@@ -10,10 +10,10 @@ import org.springframework.lang.NonNull;
 import com.dino.backend.features.promotion.domain.Discount;
 
 public interface IDiscountRepository
-        extends JpaRepository<Discount, String>, JpaSpecificationExecutor<Discount> {
+        extends JpaRepository<Discount, Long>, JpaSpecificationExecutor<Discount> {
 
-    List<Discount> findByProductId(@NonNull String productId);
+    List<Discount> findByProductId(@NonNull Long productId);
 
     @EntityGraph(attributePaths = { "discount" })
-    List<Discount> findEagerByProductId(@NonNull String productId);
+    List<Discount> findEagerByProductId(@NonNull Long productId);
 }

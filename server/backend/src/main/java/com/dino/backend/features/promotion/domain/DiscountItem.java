@@ -1,7 +1,7 @@
 package com.dino.backend.features.promotion.domain;
 
 import com.dino.backend.features.productcatalog.domain.Sku;
-import com.dino.backend.shared.model.BaseEntity;
+import com.dino.backend.shared.domain.model.BaseEntity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
@@ -27,9 +27,9 @@ import org.hibernate.annotations.SQLRestriction;
 public class DiscountItem extends BaseEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(name = "discount_item_id", updatable = false, nullable = false)
-    String id;
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @Column(name = "discount_item_id")
+    Long id;
 
     Integer dealPrice;
 

@@ -4,8 +4,8 @@ import org.springframework.data.domain.Pageable;
 
 import com.dino.backend.features.productcatalog.application.model.ProductItemRes;
 import com.dino.backend.features.productcatalog.application.model.ProductRes;
-import com.dino.backend.infrastructure.web.model.CurrentUser;
-import com.dino.backend.shared.utils.PageRes;
+import com.dino.backend.shared.api.model.CurrentUser;
+import com.dino.backend.shared.application.utils.PageRes;
 
 public interface IProductService {
     // QUERY //

@@ -1,7 +1,9 @@
 package com.dino.backend.features.ordering.domain;
 
 import com.dino.backend.features.productcatalog.domain.Sku;
-import com.dino.backend.shared.model.BaseEntity;
+import com.dino.backend.shared.domain.exception.AppException;
+import com.dino.backend.shared.domain.exception.ErrorCode;
+import com.dino.backend.shared.domain.model.BaseEntity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
@@ -16,7 +18,7 @@ import org.hibernate.annotations.SQLRestriction;
 @Table(name = "cart_items")
 @DynamicInsert
 @DynamicUpdate
-@SQLDelete(sql = "UPDATE cart_items SET is_deleted = true WHERE item_id=?")
+@SQLDelete(sql = "UPDATE cart_items SET is_deleted = true WHERE cart_item_id=?")
 @SQLRestriction("is_deleted = false")
 @Getter
 @Setter
@@ -25,19 +27,50 @@ import org.hibernate.annotations.SQLRestriction;
 @SuperBuilder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class CartItem extends BaseEntity {
-    @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(name = "itemId", updatable = false, nullable = false)
-    String id;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "cart_id", updatable = false, nullable = false)
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @Column(name = "cart_item_id")
+    Long id;
+
+    int quantity;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "cart_id", nullable = false, updatable = false)
     @JsonIgnore
     Cart cart;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "sku_id", nullable = false)
     Sku sku;
 
-    int quantity;
+    // SETTER METHODS //
+
+    public void setQuantity(int quantity) {
+        if (quantity < 1)
+            throw new AppException(ErrorCode.CART__QUANTITY_MIN_INVALID);
+        if (quantity > 100)
+            throw new AppException(ErrorCode.CART__QUANTITY_MAX_INVALID);
+
+        this.quantity = quantity;
+    }
+
+    // FACTORY METHODS //
+
+    public static CartItem createCartItem(Cart cart, Sku sku, int quantity) {
+        CartItem item = new CartItem();
+        item.setQuantity(quantity);
+        item.setCart(cart);
+        item.setSku(sku);
+
+        return item;
+    }
+
+    public void increaseQuantity(int increment) {
+        this.setQuantity(this.getQuantity() + increment);
+    }
+
+    public void updateQuantity(int quantity) {
+        this.setQuantity(quantity);
+    }
 }

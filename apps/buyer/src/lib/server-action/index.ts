@@ -3,6 +3,6 @@
 import { serverFetch } from "@/lib/fetch/fetch.server";
 import { TApiDefinition } from "@/types/base.types";
 
-export async function serverAction<T>(apiDef: TApiDefinition<T>) {
-    return await serverFetch(apiDef);
+export async function serverAction<T>(api: TApiDefinition<T>) {
+    return await serverFetch(api);
 }

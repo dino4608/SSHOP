@@ -6,7 +6,7 @@ import java.util.List;
 import com.dino.backend.features.promotion.domain.Discount;
 
 public interface ProductProjection {
-    String getId();
+    Long getId();
 
     String getStatus();
 
@@ -21,18 +21,4 @@ public interface ProductProjection {
     ProductMeta getMeta();
 
     List<Discount> getDiscounts();
-
-    // List<ISkuProjection> getSkus();
-
-    // interface ISkuProjection {
-    // String getStatus();
-    // String getSkuCode();
-    // Integer[] getTierIndex();
-    // Integer getRetailPrice();
-    // IInventoryProjection getInventory();
-    // }
-
-    // interface IInventoryProjection {
-    // Integer getStocks();
-    // }
 }

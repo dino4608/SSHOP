@@ -2,17 +2,20 @@
 import { configureStore } from "@reduxjs/toolkit";
 import { addressActions, addressReducer } from "./slices/address.slice";
 import { authActions, authReducer } from "./slices/auth.slice";
+import { cartActions, cartReducer } from "./slices/cart.slice";
 
 export const store = configureStore({
     reducer: {
         auth: authReducer,
         address: addressReducer,
+        cart: cartReducer,
     },
 });
 
 export const actions = {
     auth: authActions,
     address: addressActions,
+    cart: cartActions
 }
 
 // NOTE: Type of Redux hooks

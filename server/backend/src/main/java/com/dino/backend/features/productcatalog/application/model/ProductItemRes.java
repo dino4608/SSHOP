@@ -22,7 +22,7 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ProductItemRes {
 
-    String id;
+    Long id;
     String status;
     Instant updatedAt;
     String name;

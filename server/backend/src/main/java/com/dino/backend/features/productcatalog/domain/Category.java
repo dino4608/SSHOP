@@ -1,6 +1,6 @@
 package com.dino.backend.features.productcatalog.domain;
 
-import com.dino.backend.shared.model.BaseEntity;
+import com.dino.backend.shared.domain.model.BaseEntity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
@@ -28,9 +28,9 @@ import java.util.List;
 public class Category extends BaseEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(name = "categoryId", updatable = false, nullable = false)
-    String id;
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @Column(name = "category_id")
+    Long id;
 
     @Column(length = 40, nullable = false, unique = true)
     String name;
@@ -44,9 +44,13 @@ public class Category extends BaseEntity {
 
     Integer position;
 
-    @OneToMany(mappedBy = "category", fetch =  FetchType.LAZY)
+    @OneToMany(mappedBy = "category", fetch = FetchType.LAZY)
     @JsonIgnore
     List<Product> products;
 
-    // nested categories => list / array
+    @OneToMany(mappedBy = "category", fetch = FetchType.LAZY)
+    @JsonIgnore
+    List<Specification> specifications;
+
+    // TODO: nested categories => list / array
 }

@@ -15,7 +15,7 @@ export enum ShopBusinessType {
 }
 
 export type TShop = {
-    id: string;
+    id: number;
     status: ShopStatusType;
     code: string;
     name: string;

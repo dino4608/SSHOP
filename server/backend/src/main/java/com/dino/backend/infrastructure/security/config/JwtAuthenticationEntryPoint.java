@@ -1,6 +1,6 @@
 package com.dino.backend.infrastructure.security.config;
 
-import com.dino.backend.infrastructure.aop.ErrorCode;
+import com.dino.backend.shared.domain.exception.ErrorCode;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.ServletException;
@@ -15,23 +15,25 @@ import org.springframework.security.web.AuthenticationEntryPoint;
 import java.io.IOException;
 
 /**
- * handle exception threw at Spring Security Filter Chain, specifically unauthenticated
+ * handle exception threw at Spring Security Filter Chain, specifically
+ * unauthenticated
  */
 public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
     @Override
-    public void commence(HttpServletRequest request, HttpServletResponse httpResponse, AuthenticationException authException)
+    public void commence(HttpServletRequest request, HttpServletResponse httpResponse,
+            AuthenticationException authException)
             throws IOException, ServletException {
         ErrorCode exceptionCode = ErrorCode.SECURITY__UNAUTHENTICATED;
-        //define an httpResponse
+        // define an httpResponse
         httpResponse.setContentType(MediaType.APPLICATION_JSON_VALUE);
         httpResponse.setStatus(exceptionCode.getStatus().value());
-        //define an apiResponse
+        // define an apiResponse
         ApiResClone<?> apiRes = ApiResClone.builder()
                 .success(false)
                 .code(exceptionCode.getCode())
                 .error(exceptionCode.getMessage())
                 .build();
-        //write httpResponse and apiResponse to buffet that will be sent to client
+        // write httpResponse and apiResponse to buffet that will be sent to client
         ObjectMapper objectMapper = new ObjectMapper();
         httpResponse.getWriter().write(objectMapper.writeValueAsString(apiRes));
         httpResponse.flushBuffer();
