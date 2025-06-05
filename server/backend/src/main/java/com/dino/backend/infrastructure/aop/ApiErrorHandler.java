@@ -2,6 +2,7 @@ package com.dino.backend.infrastructure.aop;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
@@ -19,10 +20,7 @@ import java.util.Optional;
 @Slf4j
 public class ApiErrorHandler {
     /**
-     * Handle app exception threw in the service tier
-     *
-     * @param: AppException
-     * @return: ApiResponse
+     * Handle app exception in the service tier
      */
     @ExceptionHandler(value = AppException.class)
     ResponseEntity<ApiResponse<Object>> handleException(AppException exception) {
@@ -37,11 +35,9 @@ public class ApiErrorHandler {
     }
 
     /**
-     * Handle app exception unhandled
-     *
-     * @param: RuntimeException
-     * @return: ApiResponse
+     * Handle unhandled app exception
      */
+
     @ExceptionHandler(value = RuntimeException.class)
     ResponseEntity<ApiResponse<Object>> handleException(RuntimeException exception) {
         log.error(">>> INTERNAL: unhandled exception occurred", exception);
@@ -57,11 +53,9 @@ public class ApiErrorHandler {
     }
 
     /**
-     * Handle exception threw in the validation tier
-     *
-     * @params: RuntimeException
-     * @return: ApiResponse
+     * Handle exception in the validation tier
      */
+
     @ExceptionHandler(value = MethodArgumentNotValidException.class)
     ResponseEntity<ApiResponse<Object>> handleException(MethodArgumentNotValidException exception) {
         String key = Optional.ofNullable(exception.getFieldError())
@@ -82,11 +76,9 @@ public class ApiErrorHandler {
     }
 
     /**
-     * Handle exception threw in the service tier by spring security
-     *
-     * @return ApiResponse
-     * @param: AccessDeniedException
+     * Handle exception in the spring security tier
      */
+
     @ExceptionHandler(value = AccessDeniedException.class)
     ResponseEntity<ApiResponse<Object>> handleException(AccessDeniedException exception) {
         ErrorCode error = ErrorCode.SECURITY__UNAUTHORIZED;
@@ -99,6 +91,10 @@ public class ApiErrorHandler {
                         .error(error.getMessage())
                         .build());
     }
+
+    /**
+     * Handle exception in the web layer
+     */
 
     @ExceptionHandler(value = HttpRequestMethodNotSupportedException.class)
     ResponseEntity<ApiResponse<Object>> handleException(HttpRequestMethodNotSupportedException exception) {
@@ -123,6 +119,19 @@ public class ApiErrorHandler {
                         .status(error.getStatus().value())
                         .code(error.getCode())
                         .error(String.format(error.getMessage(), exception.getResourcePath()))
+                        .build());
+    }
+
+    @ExceptionHandler(value = HttpMessageNotReadableException.class)
+    ResponseEntity<ApiResponse<Object>> handleException(HttpMessageNotReadableException exception) {
+        ErrorCode error = ErrorCode.SYSTEM__BODY_REQUIRED;
+        return ResponseEntity
+                .status(error.getStatus())
+                .body(ApiResponse.builder()
+                        .success(false)
+                        .status(error.getStatus().value())
+                        .code(error.getCode())
+                        .error(String.format(error.getMessage()))
                         .build());
     }
 }

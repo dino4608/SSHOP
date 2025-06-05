@@ -1,10 +1,8 @@
 package com.dino.backend.features.ordering.api;
 
 import com.dino.backend.features.ordering.application.ICheckoutService;
-import com.dino.backend.features.ordering.application.ICheckoutServiceV3;
-import com.dino.backend.features.ordering.application.model.CheckoutPreviewRes;
-import com.dino.backend.features.ordering.application.model.PreviewCheckoutReq;
-import com.dino.backend.features.ordering.application.model.PreviewCheckoutResV3;
+import com.dino.backend.features.ordering.application.model.CheckoutSnapshotRes;
+import com.dino.backend.features.ordering.application.model.EstimateCheckoutReq;
 import com.dino.backend.shared.api.annotation.AuthUser;
 import com.dino.backend.shared.api.model.CurrentUser;
 import jakarta.validation.Valid;
@@ -27,32 +25,29 @@ public class BuyerCheckoutController {
     public static class BuyerPrivateCheckoutController {
 
         ICheckoutService checkoutService;
-        ICheckoutServiceV3 checkoutServiceV3;
 
         // QUERY //
 
         /**
-         * previewCheckout
-         * (Xem trước đơn hàng dựa trên danh sách cart item IDs được chọn)
+         * estimateCheckout
+         * (preview checkout of CartItem list)
          */
-        @PostMapping("/preview")
-        public ResponseEntity<PreviewCheckoutResV3> preview(
-                @Valid @RequestBody PreviewCheckoutReq request,
+        @PostMapping("/estimate")
+        public ResponseEntity<Object> estimateCheckout(
+                @Valid @RequestBody EstimateCheckoutReq request,
                 @AuthUser CurrentUser currentUser) {
-            var checkout = this.checkoutServiceV3.previewCheckout(request, currentUser);
+            var checkout = this.checkoutService.estimateCheckout(request, currentUser);
             return ResponseEntity.ok(checkout);
         }
-
-        // TODO: HttpMessageNotReadableException: Required request body is missing
 
         // COMMAND //
 
         /**
-         * createOrder
+         * draftCheckout
          * (Tạo đơn hàng thực tế)
          */
-        @PostMapping("/order")
-        public ResponseEntity<Object> createOrder(@AuthUser CurrentUser currentUser) {
+        @PostMapping("/make")
+        public ResponseEntity<Object> draftCheckout(@AuthUser CurrentUser currentUser) {
             // Logic tạo đơn hàng thực tế
             return ResponseEntity.ok().build();
         }
@@ -62,7 +57,7 @@ public class BuyerCheckoutController {
          * (Xác nhận đơn hàng cuối cùng)
          */
         @PatchMapping("/confirm")
-        public ResponseEntity<Object> confirm(@AuthUser CurrentUser currentUser) {
+        public ResponseEntity<Object> confirmCheckout(@AuthUser CurrentUser currentUser) {
             // Logic
             return ResponseEntity.ok().build();
         }

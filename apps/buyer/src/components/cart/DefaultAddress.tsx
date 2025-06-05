@@ -1,4 +1,4 @@
-// src/app/cart/components/DefaultAddressDisplay.tsx
+// src/components/cart/DefaultAddress.tsx
 "use client";
 import { Button } from "@/components/ui/button"; // Import Button từ shadcn/ui
 import { TAddress } from "@/types/address.types";
@@ -10,24 +10,6 @@ interface DefaultAddressProps {
 
 export function DefaultAddress({ defaultAddress }: DefaultAddressProps) {
     const currentAddress = defaultAddress;
-
-    // return (
-    //     currentAddress && <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
-    //         <h2 className="text-lg font-semibold mb-2 flex items-center gap-2">
-    //             <MapPin className="w-5 h-5 text-gray-600" />
-    //             Địa chỉ giao hàng
-    //         </h2>
-
-    //         <div>
-    //             <p className="font-medium">{currentAddress.contactName} - {currentAddress.contactPhone}</p>
-    //             <p className="text-gray-600 text-sm">
-    //                 {currentAddress.street}, {currentAddress.commune}, {currentAddress.district}, {currentAddress.province}
-    //             </p>
-    //             <Button variant="link" className="mt-2 p-0 h-auto text-blue-600 hover:no-underline text-sm">Thay đổi</Button>
-    //         </div>
-    //     </div>
-    //     // (<p className="text-gray-600 text-sm">Bạn chưa có địa chỉ mặc định. Vui lòng thêm địa chỉ.</p>)
-    // );
 
     return (
         currentAddress && <div className="bg-white p-4 rounded-sm border border-gray-200">

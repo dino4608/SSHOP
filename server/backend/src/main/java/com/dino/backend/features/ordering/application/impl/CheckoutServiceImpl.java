@@ -1,15 +1,13 @@
 package com.dino.backend.features.ordering.application.impl;
 
-import com.dino.backend.features.ordering.application.ICartService;
 import com.dino.backend.features.ordering.application.ICheckoutService;
-import com.dino.backend.features.ordering.application.mapper.ICartMapper;
-import com.dino.backend.features.ordering.application.model.CartItemRes;
-import com.dino.backend.features.ordering.application.model.CheckoutPreviewRes;
-import com.dino.backend.features.ordering.application.model.PreviewCheckoutReq;
+import com.dino.backend.features.ordering.application.mapper.ICheckoutMapper;
+import com.dino.backend.features.ordering.application.model.EstimateCheckoutReq;
+import com.dino.backend.features.ordering.application.model.CheckoutSnapshotRes;
+import com.dino.backend.features.ordering.application.model.EstimateCheckoutRes;
 import com.dino.backend.features.ordering.domain.Cart;
 import com.dino.backend.features.ordering.domain.CartItem;
 import com.dino.backend.features.ordering.domain.repository.ICartRepository;
-import com.dino.backend.features.productcatalog.application.ISkuService;
 import com.dino.backend.features.promotion.application.IDiscountService;
 import com.dino.backend.features.promotion.application.model.DiscountItemRes;
 import com.dino.backend.features.shop.domain.Shop;
@@ -22,10 +20,8 @@ import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -34,142 +30,138 @@ import java.util.stream.Collectors;
 @Slf4j
 public class CheckoutServiceImpl implements ICheckoutService {
 
-    ICartService cartService;
-    ICartRepository cartRepository;
-    ISkuService skuService;
     IDiscountService discountService;
-    ICartMapper cartMapper;
+    ICartRepository cartRepository;
+    ICheckoutMapper checkoutMapper;
 
+    private static final int DEFAULT_PLATFORM_DISCOUNT_PROMOTION = 0;
+    private static final int DEFAULT_SELLER_COUPON_PROMOTION = 0;
+    private static final int DEFAULT_PLATFORM_COUPON_PROMOTION = 0;
     private static final int DEFAULT_INITIAL_SHIPPING_FEE = 36000;
-    private static final int DEFAULT_SHIPPING_DISCOUNT = -36000;
+    private static final int DEFAULT_SELLER_SHIPPING_PROMOTION = 0;
+    private static final int DEFAULT_PLATFORM_SHIPPING_PROMOTION = 36000;
 
     // QUERY //
 
     /**
-     * previewCheckout.
-     * Tính toán và trả về thông tin xem trước đơn hàng dựa trên các cart item IDs được chọn.
-     *
-     * @param request     Chứa danh sách cartItemIds được chọn.
-     * @param currentUser Thông tin người dùng hiện tại.
-     * @return CheckoutPreviewRes chứa thông tin chi tiết về các đơn hàng giả định và tổng cộng.
+     * previewCheckout
+     * (preview checkout of CartItem list)
      */
     @Override
-    public CheckoutPreviewRes previewCheckout(PreviewCheckoutReq request, CurrentUser currentUser) {
-        // 1. Lấy giỏ hàng của người dùng với tất cả các mối quan hệ cần thiết
+    public EstimateCheckoutRes estimateCheckout(EstimateCheckoutReq request, CurrentUser currentUser) {
+        // 1. get Cart with essential relationships
         Cart cart = cartRepository.findWithShopByBuyerId(currentUser.id())
                 .orElseThrow(() -> new AppException(ErrorCode.CART__NOT_FOUND));
 
-        // 2. Lọc ra các cart item được chọn từ giỏ hàng dựa trên cartItemIds trong request
+        // 2. filter target CartItems
         List<CartItem> selectedCartItems = cart.getCartItems().stream()
-                .filter(item -> request.getCartItemIds().contains(item.getId()))
+                .filter(item -> request.cartItemIds().contains(item.getId()))
                 .toList();
 
-        // Nếu không có item nào được chọn, ném lỗi
         if (selectedCartItems.isEmpty()) {
             throw new AppException(ErrorCode.CHECKOUT__NO_SELECTED_ITEMS);
         }
 
-        // 3. Nhóm các cart item đã chọn theo Shop. Mỗi nhóm là một đơn hàng giả định.
+        // 3. group CartItems by Shop. every group will be a future Order.
         Map<Shop, List<CartItem>> itemsGroupedByShop = selectedCartItems.stream()
                 .collect(Collectors.groupingBy(item -> item.getSku().getProduct().getShop()));
 
-        // 4. Xử lý từng nhóm (đơn hàng giả định) để tính toán chi tiết và tạo OrderPreviewRes
-        List<CheckoutPreviewRes.OrderPreviewRes> orderPreviews = itemsGroupedByShop.entrySet().stream()
-                .map(entry -> {
-                    Shop shop = entry.getKey(); // Shop của đơn hàng giả định này
-                    List<CartItem> cartItemsInOrder = entry.getValue(); // Các cart item thuộc đơn hàng này
+        // init total values in PreviewCheckoutRes
+        int totalItemsPrice = 0;
 
-                    // Chuyển đổi CartItem entities thành CartItemRes DTOs
-                    // và tính toán các giá trị trung gian cần thiết cho tổng giảm giá
-                    List<CartItemRes> orderCartItemRes = cartItemsInOrder.stream()
-                            .map(cartItem -> {
-                                String cartItemPhoto = this.skuService.getPhoto(cartItem.getSku());
-                                DiscountItemRes discountItemRes = this.discountService.canDiscount(cartItem.getSku(), currentUser);
+        int totalSellerDiscount = 0;
+        int totalSellerCoupon = 0;
+        int totalPlatformDiscount = 0;
+        int totalPlatformCoupon = 0;
 
-                                // Map CartItem entity sang CartItemRes DTO, truyền photo và discountItemRes
-                                return this.cartMapper.toCartItemRes(cartItem, cartItemPhoto, discountItemRes);
-                            })
-                            // Sắp xếp các cart item trong đơn hàng theo ID giảm dần
-                            .sorted(Comparator.comparing(CartItemRes::id).reversed())
-                            .toList();
+        int totalInitialShippingFee = 0;
+        int totalSellerShippingPromotion = 0;
+        int totalPlatformShippingPromotion = 0;
 
-                    // Tính toán tổng tiền hàng (retail price) cho đơn hàng này
-                    Integer orderItemsPrice = orderCartItemRes.stream()
-                            .mapToInt(item -> item.sku().retailPrice() * item.quantity())
-                            .sum();
 
-                    // Tính toán tổng giảm giá sản phẩm của người bán cho đơn hàng này
-                    // Đây là tổng của (giá bán lẻ - giá ưu đãi) cho mỗi item có giảm giá
-                    Integer sellerProductDiscount = orderCartItemRes.stream()
-                            .mapToInt(itemRes -> {
-                                Integer itemRetailPrice = itemRes.sku().retailPrice() * itemRes.quantity();
-                                Integer itemDealPrice = itemRetailPrice; // Mặc định là giá bán lẻ
-                                if (itemRes.discountItem() != null && itemRes.discountItem().dealPrice() != null) {
-                                    itemDealPrice = itemRes.discountItem().dealPrice() * itemRes.quantity();
-                                }
-                                return itemRetailPrice - itemDealPrice;
-                            })
-                            .sum();
+        // 4. iterate each Order compute total contributions
+        for (Map.Entry<Shop, List<CartItem>> entry : itemsGroupedByShop.entrySet()) {
+            List<CartItem> cartItemsInOrder = entry.getValue();
 
-                    // Tổng giảm giá cho đơn hàng này (hiện tại chỉ bao gồm giảm giá sản phẩm của người bán)
-                    Integer orderDiscountAmount = sellerProductDiscount;
+            int currentOrderItemsPrice = 0;
+            int currentOrderDiscount = 0;
 
-                    // Các loại giảm giá khác (chưa thực thi, mặc định 0)
-                    Integer sellerCouponDiscount = 0;
-                    Integer platformDiscount = 0;
+            for (CartItem cartItem : cartItemsInOrder) {
+                DiscountItemRes discountItemRes = this.discountService.canDiscount(cartItem.getSku(), currentUser);
 
-                    // Tính toán phí vận chuyển cho đơn hàng này
-                    Integer initialShippingFee = DEFAULT_INITIAL_SHIPPING_FEE;
-                    Integer shippingDiscount = DEFAULT_SHIPPING_DISCOUNT;
-                    Integer shippingFee = initialShippingFee + shippingDiscount; // Phí vận chuyển cuối cùng
+                int itemRetailPrice = cartItem.getSku().getRetailPrice() * cartItem.getQuantity();
+                int itemDealPrice = itemRetailPrice;
 
-                    // Trả về OrderPreviewRes cho đơn hàng giả định này
-                    return new CheckoutPreviewRes.OrderPreviewRes(
-                            // groupId: Lấy ID của CartItem mới nhất trong nhóm để làm ID nhóm
-                            orderCartItemRes.stream().findFirst().map(CartItemRes::id).orElse(null),
-                            new CheckoutPreviewRes.OrderPreviewRes.ShopRes(shop.getId(), shop.getName()),
-                            orderCartItemRes,
-                            orderItemsPrice,
-                            orderDiscountAmount,
-                            sellerProductDiscount,
-                            sellerCouponDiscount,
-                            platformDiscount,
-                            shippingFee,
-                            initialShippingFee,
-                            shippingDiscount
-                    );
-                })
-                // Lọc bỏ các nhóm không có ID hợp lệ
-                .filter(orderPreviewRes -> Objects.nonNull(orderPreviewRes.groupId()))
-                // Sắp xếp các đơn hàng giả định theo Group ID giảm dần
-                .sorted(Comparator.comparing(CheckoutPreviewRes.OrderPreviewRes::groupId).reversed())
-                .toList();
+                if (discountItemRes != null && discountItemRes.dealPrice() != null) {
+                    itemDealPrice = discountItemRes.dealPrice() * cartItem.getQuantity();
+                }
 
-        // 5. Tổng hợp kết quả từ tất cả các đơn hàng giả định để tạo CheckoutPreviewRes tổng thể
-        Integer totalItemsPrice = orderPreviews.stream().mapToInt(CheckoutPreviewRes.OrderPreviewRes::orderItemsPrice).sum();
-        Integer totalDiscountAmount = orderPreviews.stream().mapToInt(CheckoutPreviewRes.OrderPreviewRes::orderDiscountAmount).sum();
-        Integer totalShippingFee = orderPreviews.stream().mapToInt(CheckoutPreviewRes.OrderPreviewRes::shippingFee).sum();
-        Integer totalPayableAmount = totalItemsPrice - totalDiscountAmount + totalShippingFee;
+                currentOrderItemsPrice += itemRetailPrice;
+                currentOrderDiscount += (itemRetailPrice - itemDealPrice);
+            }
 
-        // Trả về CheckoutPreviewRes cuối cùng
-        return new CheckoutPreviewRes(
-                cart.getId(),
+            totalItemsPrice += currentOrderItemsPrice;
+
+            totalSellerDiscount += currentOrderDiscount;
+            totalSellerCoupon += DEFAULT_SELLER_COUPON_PROMOTION;
+            totalPlatformDiscount += DEFAULT_PLATFORM_DISCOUNT_PROMOTION;
+            totalPlatformCoupon += DEFAULT_PLATFORM_COUPON_PROMOTION;
+
+            totalInitialShippingFee += DEFAULT_INITIAL_SHIPPING_FEE;
+            totalSellerShippingPromotion += DEFAULT_SELLER_SHIPPING_PROMOTION;
+            totalPlatformShippingPromotion += DEFAULT_PLATFORM_SHIPPING_PROMOTION;
+        }
+
+        // 5. compute latest totals
+
+        // PricePromotionRes.totalAmount
+        int pricePromotionAmount = totalSellerDiscount + totalSellerCoupon +
+                totalPlatformDiscount + totalPlatformCoupon;
+
+        // ShippingFeeRes.finalFee
+        int finalShippingFee = Math.max(0, totalInitialShippingFee -
+                totalSellerShippingPromotion - totalPlatformShippingPromotion); // ensure no negative
+
+        // SummaryRes.promotionAmount
+        Integer totalPromotionAmount = pricePromotionAmount + (totalInitialShippingFee - finalShippingFee);
+
+
+        // SummaryRes.payableAmount
+        Integer payableAmount = totalItemsPrice - pricePromotionAmount + finalShippingFee;
+
+
+        // 6. response dto
+        CheckoutSnapshotRes.SummaryRes summary = checkoutMapper.toSummaryRes(
                 totalItemsPrice,
-                totalDiscountAmount,
-                totalShippingFee,
-                totalPayableAmount,
-                orderPreviews
+                totalPromotionAmount,
+                finalShippingFee,
+                payableAmount
+        );
+
+        CheckoutSnapshotRes.PricePromotionRes pricePromotion = checkoutMapper.toPricePromotionRes(
+                pricePromotionAmount,
+                totalSellerDiscount,
+                totalSellerCoupon,
+                totalPlatformDiscount,
+                totalPlatformCoupon
+        );
+
+        CheckoutSnapshotRes.ShippingFeeRes shippingFee = checkoutMapper.toShippingFeeRes(
+                finalShippingFee,
+                totalInitialShippingFee,
+                totalSellerShippingPromotion,
+                totalPlatformShippingPromotion
+        );
+
+        CheckoutSnapshotRes checkoutSnapshot = checkoutMapper.toCheckoutSnapshotRes(
+                summary,
+                pricePromotion,
+                shippingFee
+        );
+
+        return checkoutMapper.toEstimateCheckoutRes(
+                cart.getId(),
+                checkoutSnapshot
         );
     }
-
-    @Override
-    public Object checkoutOrder(CurrentUser currentUser) {
-        return null;
-    }
-
-    @Override
-    public Object confirmCheckout(CurrentUser currentUser) {
-        return null;
-    }
 }
-

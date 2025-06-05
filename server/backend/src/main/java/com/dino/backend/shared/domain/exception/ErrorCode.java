@@ -24,6 +24,7 @@ public enum ErrorCode {
     SYSTEM__KEY_UNSUPPORTED(1003, "The key is unsupported.", HttpStatus.INTERNAL_SERVER_ERROR),
     SYSTEM__METHOD_NOT_SUPPORTED(1004, "Method '%s' is not supported.", HttpStatus.INTERNAL_SERVER_ERROR),
     SYSTEM__ROUTE_NOT_SUPPORTED(1005, "Route '%s' not supported.", HttpStatus.INTERNAL_SERVER_ERROR),
+    SYSTEM__BODY_REQUIRED(1006, "Body is required.", HttpStatus.INTERNAL_SERVER_ERROR),
     // SECURITY //
     SECURITY__UNAUTHENTICATED(1010, "Resources are protected.", HttpStatus.UNAUTHORIZED),
     SECURITY__UNAUTHORIZED(1011, "Resources are forbidden.", HttpStatus.FORBIDDEN),

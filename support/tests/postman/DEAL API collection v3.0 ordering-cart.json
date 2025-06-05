@@ -1,0 +1,1362 @@
+{
+	"info": {
+		"_postman_id": "149207cc-5e2e-4192-a4ca-1d56b648c84b",
+		"name": "2. DEAL API collection",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "39273924"
+	},
+	"item": [
+		{
+			"name": "Admin",
+			"item": [
+				{
+					"name": "System domain",
+					"item": [
+						{
+							"name": "Media: upload a file",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "file",
+											"type": "file",
+											"src": "daZYfqWif/BA3BA5-NguyenTrungNhan-71AC08425-GiaHanT1N2025.jpg"
+										},
+										{
+											"key": "folder",
+											"value": "product",
+											"type": "text"
+										}
+									]
+								},
+								"url": "{{admin}}/{{media}}/upload"
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Identity domain",
+					"item": [
+						{
+							"name": "Access: login via username",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"username\": \"admin\",\r\n    \"password\": \"123456\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{admin}}/{{access}}/login/username"
+							},
+							"response": []
+						},
+						{
+							"name": "Access: refresh",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": "{{admin}}/{{access}}/refresh"
+							},
+							"response": []
+						},
+						{
+							"name": "Access: logout",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"username\": \"user1\",\r\n    \"password\": \"123456\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{admin}}/{{access}}/logout"
+							},
+							"response": []
+						},
+						{
+							"name": "Account: get info",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": "{{admin}}/{{account}}/info/get"
+							},
+							"response": []
+						},
+						{
+							"name": "Account: list all",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{admin}}/{{account}}/list"
+							},
+							"response": []
+						},
+						{
+							"name": "Account: find one",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8044/sshop/admin/api/v1/account/find/:id",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8044",
+									"path": [
+										"sshop",
+										"admin",
+										"api",
+										"v1",
+										"account",
+										"find",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "59ea602e-f603-43b3-83e8-ac049a80692d"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"packages": {},
+								"exec": [
+									""
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"packages": {},
+								"exec": [
+									""
+								]
+							}
+						}
+					]
+				},
+				{
+					"name": "Product domain",
+					"item": [
+						{
+							"name": "Category: create",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"name\": \"string\",\r\n  \"description\": \"string\",\r\n  \"photo\": \"string\",\r\n  \"position\": 1\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{admin}}/{{category}}/create"
+							},
+							"response": []
+						},
+						{
+							"name": "Category: update",
+							"request": {
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n//   \"name\": \"string\",\r\n//   \"description\": \"string\",\r\n  \"photo\": \"photo\",\r\n  \"position\": 20\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{admin}}/{{category}}/update/d5b2f8e2-76d9-456f-95ef-86af6df9eab0"
+							},
+							"response": []
+						},
+						{
+							"name": "Category: list",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{admin}}/{{category}}/list",
+									"host": [
+										"{{admin}}"
+									],
+									"path": [
+										"{{category}}",
+										"list"
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "2",
+											"description": "min = 1",
+											"disabled": true
+										},
+										{
+											"key": "size",
+											"value": "6",
+											"description": "min = 1",
+											"disabled": true
+										},
+										{
+											"key": "sort",
+											"value": "position",
+											"description": "sort by field",
+											"disabled": true
+										},
+										{
+											"key": "direct",
+											"value": "asc",
+											"description": "asc / desc",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Category: find",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{admin}}/{{category}}/find/:cateId",
+									"host": [
+										"{{admin}}"
+									],
+									"path": [
+										"{{category}}",
+										"find",
+										":cateId"
+									],
+									"variable": [
+										{
+											"key": "cateId",
+											"value": "f71d9048-0012-47bc-b3a5-639c25152396"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Category: delete",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{admin}}/{{category}}/delete/:cateId",
+									"host": [
+										"{{admin}}"
+									],
+									"path": [
+										"{{category}}",
+										"delete",
+										":cateId"
+									],
+									"variable": [
+										{
+											"key": "cateId",
+											"value": "d5b2f8e2-76d9-456f-95ef-86af6df9eab0"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Product: list",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": "{{admin}}/{{product}}/list"
+							},
+							"response": []
+						}
+					]
+				}
+			],
+			"auth": {
+				"type": "bearer",
+				"bearer": {
+					"token": "eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJzc2hvcC5kaW5vLmNvbSIsInN1YiI6ImNlYjNlYjVjLTI0NTctNDEwZC05NzY0LTM0MmFkODQ1NWI5NyIsImV4cCI6MTczOTg4MTY3OSwiaWF0IjoxNzM5Nzk1Mjc5LCJzY29wZSI6IkFETUlOIn0.6178ppCVb56Kr6BvfEE3EGXWtHslgOmgTIQ4Sq-IQYTrwzWN0r3lPR1S_POpHjObJGwXCy3lHbpcchCXMVXdgQ"
+				}
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "Seller",
+			"item": [
+				{
+					"name": "System domain",
+					"item": [
+						{
+							"name": "Media: upload a file",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "file",
+											"type": "file",
+											"src": "daZYfqWif/BA3BA5-NguyenTrungNhan-71AC08425-GiaHanT1N2025.jpg"
+										},
+										{
+											"key": "folder",
+											"value": "product",
+											"type": "text"
+										}
+									]
+								},
+								"url": "{{seller}}/{{media}}/upload"
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Identity domain",
+					"item": [
+						{
+							"name": "Access: login via username",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"username\": \"dinoshop1\",\r\n    \"password\": \"123456\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{seller}}/{{access}}/login/username"
+							},
+							"response": []
+						},
+						{
+							"name": "Access: login via oauth2 Copy",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{seller}}/{{access}}/login/oauth2?code=4%2F0ASVgi3IbCo9fJGWqwV5kyJaKlE17Jtqqa5NFzEmpQn50lhnx055TDQq6Qg5mo97MJtn4Vw&auth2=GOOGLE",
+									"host": [
+										"{{seller}}"
+									],
+									"path": [
+										"{{access}}",
+										"login",
+										"oauth2"
+									],
+									"query": [
+										{
+											"key": "code",
+											"value": "4%2F0ASVgi3IbCo9fJGWqwV5kyJaKlE17Jtqqa5NFzEmpQn50lhnx055TDQq6Qg5mo97MJtn4Vw"
+										},
+										{
+											"key": "auth2",
+											"value": "GOOGLE"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Access: signup via username",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"username\": \"dinohere1\",\r\n    \"password\": \"123456\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{seller}}/{{access}}/signup/username"
+							},
+							"response": []
+						},
+						{
+							"name": "Access: signup via oauth2",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{seller}}/{{access}}/signup/oauth2?code=4%2F0ASVgi3IbCo9fJGWqwV5kyJaKlE17Jtqqa5NFzEmpQn50lhnx055TDQq6Qg5mo97MJtn4Vw&auth2=GOOGLE",
+									"host": [
+										"{{seller}}"
+									],
+									"path": [
+										"{{access}}",
+										"signup",
+										"oauth2"
+									],
+									"query": [
+										{
+											"key": "code",
+											"value": "4%2F0ASVgi3IbCo9fJGWqwV5kyJaKlE17Jtqqa5NFzEmpQn50lhnx055TDQq6Qg5mo97MJtn4Vw"
+										},
+										{
+											"key": "auth2",
+											"value": "GOOGLE"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Access: refresh",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": "{{seller}}/{{access}}/refresh"
+							},
+							"response": []
+						},
+						{
+							"name": "Access: logout",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{seller}}/{{access}}/logout"
+							},
+							"response": []
+						},
+						{
+							"name": "Account: get info",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": "{{seller}}/{{account}}/info/get"
+							},
+							"response": []
+						},
+						{
+							"name": "Account: get login",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": "{{seller}}/{{account}}/login/get"
+							},
+							"response": []
+						},
+						{
+							"name": "Account: get contact",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": "{{seller}}/{{account}}/contact/get"
+							},
+							"response": []
+						},
+						{
+							"name": "Account: get citizen",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": "{{seller}}/{{account}}/citizen/get"
+							},
+							"response": []
+						},
+						{
+							"name": "Account: settle info",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"dob\": \"2003-8-9\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{seller}}/{{account}}/info/settle"
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Product domain",
+					"item": [
+						{
+							"name": "Category: list as tree",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": "{{seller}}/{{category}}/tree"
+							},
+							"response": []
+						},
+						{
+							"name": "Product: create",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"category\": { \"id\": \"8d4c2f1a-867c-49d8-8d3e-2b9100abd348\" },\r\n    \"skus\": [\r\n        {\r\n            \"inventory\": { \"stocks\": 6000 },\r\n            \"skuCode\": \"EX41\",\r\n            \"tierName\": \"Đen, M\",\r\n            \"tierIndex\": [0, 0],\r\n            \"productCost\": 60000,\r\n            \"retailPrice\": 160000,\r\n            \"specifications\": [\r\n                { \"name\": \"height\", \"value\": \"44\" },\r\n                { \"name\": \"length\", \"value\": \"66\" },\r\n                { \"name\": \"width\", \"value\": \"88\" }\r\n            ]\r\n        },\r\n        {\r\n            \"inventory\": { \"stocks\": 7000 },\r\n            \"skuCode\": \"EX42\",\r\n            \"tierName\": \"Đen, L\",\r\n            \"tierIndex\": [0, 1],\r\n            \"productCost\": 70000,\r\n            \"retailPrice\": 170000,\r\n            \"specifications\": [\r\n                { \"name\": \"height\", \"value\": \"44\" },\r\n                { \"name\": \"length\", \"value\": \"66\" },\r\n                { \"name\": \"width\", \"value\": \"88\" }\r\n            ]\r\n        },\r\n        {\r\n            \"inventory\": { \"stocks\": 8000 },\r\n            \"skuCode\": \"EX43\",\r\n            \"tierName\": \"Trắng, M\",\r\n            \"tierIndex\": [1, 0],\r\n            \"productCost\": 80000,\r\n            \"retailPrice\": 180000,\r\n            \"specifications\": [\r\n                { \"name\": \"height\", \"value\": \"44\" },\r\n                { \"name\": \"length\", \"value\": \"66\" },\r\n                { \"name\": \"width\", \"value\": \"88\" }\r\n            ]\r\n        },\r\n        {\r\n            \"inventory\": { \"stocks\": 9000 },\r\n            \"skuCode\": \"EX44\",\r\n            \"tierName\": \"Trắng, L\",\r\n            \"tierIndex\": [1, 1],\r\n            \"productCost\": 90000,\r\n            \"retailPrice\": 190000,\r\n            \"specifications\": [\r\n                { \"name\": \"height\", \"value\": \"44\" },\r\n                { \"name\": \"length\", \"value\": \"66\" },\r\n                { \"name\": \"width\", \"value\": \"88\" }\r\n            ]\r\n        }\r\n    ],\r\n    \"name\": \"Áo khoác da cực ngầu | Dmon Clothing\",\r\n    \"description\": \"Da cực ngầu\",\r\n    \"thumb\": \"thumb\",\r\n    \"photos\": [\"photo\", \"photos\", \"photos\", \"photos\"],\r\n    \"video\": \"video\",\r\n    \"sizeChart\": \"sizeChart\",\r\n    \"weight\": 50,\r\n    \"location\": \"Số 46 Đường số 8, Linh Trung, Thủ Đức, TP.Hồ Chi Minh\",\r\n    \"attributes\": [\r\n        { \"name\": \"Nơi sản xuất\", \"value\": \"Việt Nam\" },\r\n        { \"name\": \"Chất liệu\", \"value\": \"Cotton\" }\r\n    ],\r\n    \"tierVariations\": [\r\n        { \"name\": \"Màu sắc\", \"options\": [\"Đen\", \"Trắng\"] },\r\n        { \"name\": \"Kích cỡ\", \"options\": [\"M\", \"L\"] }\r\n    ]\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{seller}}/{{product}}/create"
+							},
+							"response": []
+						},
+						{
+							"name": "Product: list",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{seller}}/{{product}}/list",
+									"host": [
+										"{{seller}}"
+									],
+									"path": [
+										"{{product}}",
+										"list"
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": null,
+											"description": "1",
+											"disabled": true
+										},
+										{
+											"key": "size",
+											"value": null,
+											"description": "4",
+											"disabled": true
+										},
+										{
+											"key": "sort",
+											"value": null,
+											"description": "updatedAt",
+											"disabled": true
+										},
+										{
+											"key": "direct",
+											"value": null,
+											"description": "desc",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			],
+			"auth": {
+				"type": "bearer",
+				"bearer": {
+					"token": "eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJzc2hvcC5kaW5vLmNvbSIsInN1YiI6IjlhNmQyMDEwLTExODQtNDI5ZS05YjFiLTVhNjY5NjM5NDgxOSIsImV4cCI6MTczOTg4MTc2MiwiaWF0IjoxNzM5Nzk1MzYyLCJzY29wZSI6IlNFTExFUiJ9.OF1FUVANxXlvx-wb_s5lFE2ie86_oO8OVN-2APKsBGuDKLFmTTu5aUDaQ89phbWX9gUHqCHzu8czNktJdiFp1g"
+				}
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "Buyer public",
+			"item": [
+				{
+					"name": "Identity",
+					"item": [
+						{
+							"name": "Auth: lookupIdentifier",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{BUYER_PUBLIC}}/{{AUTH}}/lookup?email=dino1@gmail.com",
+									"host": [
+										"{{BUYER_PUBLIC}}"
+									],
+									"path": [
+										"{{AUTH}}",
+										"lookup"
+									],
+									"query": [
+										{
+											"key": "email",
+											"value": "dino1@gmail.com"
+										},
+										{
+											"key": "email",
+											"value": "tn9th8@gmail.com",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Auth: loginWithPassword",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"email\": \"dino1@gmail.com\",\r\n    \"password\": \"123456\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{BUYER_PUBLIC}}/{{AUTH}}/login/password"
+							},
+							"response": []
+						},
+						{
+							"name": "Auth: signupWithPassword",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"email\": \"dino7@gmail.com\",\r\n    \"password\": \"123456\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{BUYER_PUBLIC}}/{{AUTH}}/signup/password"
+							},
+							"response": []
+						},
+						{
+							"name": "Auth: oauth2WithGoogle",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{BUYER_PUBLIC}}/{{AUTH}}/oauth2/google?code=4/0Ab_5qllluziY-Q8rZ6eDxwsJ6ei7PLa7k3O2ZPg4EkGJ3Tn8UcoIadnO7mFhPev5j0Yflg",
+									"host": [
+										"{{BUYER_PUBLIC}}"
+									],
+									"path": [
+										"{{AUTH}}",
+										"oauth2",
+										"google"
+									],
+									"query": [
+										{
+											"key": "code",
+											"value": "4/0Ab_5qllluziY-Q8rZ6eDxwsJ6ei7PLa7k3O2ZPg4EkGJ3Tn8UcoIadnO7mFhPev5j0Yflg"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Auth: refresh",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{BUYER_PUBLIC}}/{{AUTH}}/refresh"
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Files",
+					"item": [
+						{
+							"name": "Media: upload a file",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "file",
+											"type": "file",
+											"src": []
+										},
+										{
+											"key": "folder",
+											"value": "product",
+											"type": "text"
+										},
+										{
+											"key": "",
+											"type": "file",
+											"src": []
+										}
+									]
+								},
+								"url": "{{buyer}}/{{media}}/upload"
+							},
+							"response": []
+						},
+						{
+							"name": "Media: upload a file",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": []
+								},
+								"url": "{{buyer}}/{{media}}/test"
+							},
+							"response": []
+						},
+						{
+							"name": "Test: test",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "GET",
+								"header": [],
+								"url": "{{BUYER_PUBLIC}}/test/lazy/find"
+							},
+							"response": []
+						}
+					],
+					"auth": {
+						"type": "noauth"
+					},
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"packages": {},
+								"exec": [
+									""
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"packages": {},
+								"exec": [
+									""
+								]
+							}
+						}
+					]
+				},
+				{
+					"name": "Product catalog",
+					"item": [
+						{
+							"name": "Category: tree",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "GET",
+								"header": [],
+								"url": "{{BUYER_PUBLIC}}/{{CATEGORY}}/tree"
+							},
+							"response": []
+						},
+						{
+							"name": "Product: list",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "GET",
+								"header": [],
+								"url": "{{BUYER_PUBLIC}}/{{PRODUCTS}}/list"
+							},
+							"response": []
+						},
+						{
+							"name": "Product: demo",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "GET",
+								"header": [],
+								"url": "{{BUYER_PUBLIC}}/{{PRODUCTS}}/demo"
+							},
+							"response": []
+						},
+						{
+							"name": "Product: getById",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "GET",
+								"header": [],
+								"url": "{{BUYER_PUBLIC}}/{{PRODUCTS}}/1"
+							},
+							"response": []
+						}
+					]
+				}
+			],
+			"auth": {
+				"type": "bearer",
+				"bearer": {
+					"token": "eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJkZWFsLmRpbm8uY29tIiwic3ViIjoiY2VjZjFhYTctYTRjYy00NmQ4LTkzNzctNzBiNDkxYWZkNWVjIiwiZXhwIjoxNzQ4MzM0MDE2LCJpYXQiOjE3NDgzMjg2MTYsInNjb3BlIjoiQlVZRVIifQ.mismOTNOVKL4DHxVGOaFKtm1worxFJrmD1SR_OqJUBCEQWA3kty5d-ervo4ageSdyJQjrzmNNJIGuucJ4ZK2WA"
+				}
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "Buyer private",
+			"item": [
+				{
+					"name": "Identity",
+					"item": [
+						{
+							"name": "Auth: getCurrentUser",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{BUYER_PRIVATE}}/{{AUTH}}/me",
+									"host": [
+										"{{BUYER_PRIVATE}}"
+									],
+									"path": [
+										"{{AUTH}}",
+										"me"
+									],
+									"query": [
+										{
+											"key": "email",
+											"value": "tn9th8@gmail.com",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Auth: logout",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{BUYER_PRIVATE}}/{{AUTH}}/logout",
+									"host": [
+										"{{BUYER_PRIVATE}}"
+									],
+									"path": [
+										"{{AUTH}}",
+										"logout"
+									],
+									"query": [
+										{
+											"key": "email",
+											"value": "tn9th8@gmail.com",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "New Request",
+							"request": {
+								"method": "GET",
+								"header": []
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "User profile",
+					"item": [
+						{
+							"name": "Address: getDefault",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": "{{BUYER_PRIVATE}}{{ADDRESSES}}/default"
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Promotion",
+					"item": [
+						{
+							"name": "Discounts: getByProductId",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": "{{BUYER_PRIVATE}}{{DISCOUNTS}}/6e124bde-3346-4cc8-a66c-b7cdbd4d498d"
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Ordering",
+					"item": [
+						{
+							"name": "Cart: getCart",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": "{{BUYER_PRIVATE}}/carts/get"
+							},
+							"response": []
+						},
+						{
+							"name": "Cart: addItem",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "// {\r\n//     \"skuId\": \"02500e30-8b93-4315-a3a4-960abdeb5d35\", \r\n//     \"quantity\": 2\r\n// }\r\n\r\n// {\r\n//     \"skuId\": \"b9407c76-1188-4835-98db-d9ed0fee897b\", \r\n//     \"quantity\": 1\r\n// }\r\n\r\n{\r\n    \"skuId\": \"7eb9fa18-d810-4410-bcd4-1a29513a29c6\", \r\n    \"quantity\": 1\r\n}\r\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{BUYER_PRIVATE}}/carts/items/add"
+							},
+							"response": []
+						},
+						{
+							"name": "Cart: updateQuantity",
+							"request": {
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "// {\r\n//     \"skuId\": \"02500e30-8b93-4315-a3a4-960abdeb5d35\", \r\n//     \"quantity\": 2\r\n// }\r\n\r\n// {\r\n//     \"skuId\": \"b9407c76-1188-4835-98db-d9ed0fee897b\", \r\n//     \"quantity\": 1\r\n// }\r\n\r\n{\r\n    \"skuId\": 4, \r\n    \"quantity\": 14\r\n}\r\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{BUYER_PRIVATE}}/carts/items/quantity/update"
+							},
+							"response": []
+						},
+						{
+							"name": "Cart: removeItem",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"cartItemIds\": [102] \r\n}\r\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{BUYER_PRIVATE}}/carts/items/remove"
+							},
+							"response": []
+						},
+						{
+							"name": "Checkout: preview",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"cartItemIds\": [102, 2]\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{BUYER_PRIVATE}}/checkout/preview"
+							},
+							"response": []
+						}
+					]
+				}
+			],
+			"auth": {
+				"type": "bearer",
+				"bearer": {
+					"token": "eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJkZWFsLmRpbm8uY29tIiwic3ViIjoiMSIsImV4cCI6MTc0OTExMzU4OCwiaWF0IjoxNzQ5MTA4MTg4LCJzY29wZSI6IkJVWUVSIn0.jxUkU18cMcjupL2rwiBLmhTLUuUWtCEo1cWJm1U6_paiM5ORgd1Sw5iQze8qCZtkVJ3hSNEAF6s5m3OIspCcqQ"
+				}
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "admin",
+			"value": "http://localhost:8044/sshop/admin",
+			"type": "string"
+		},
+		{
+			"key": "seller",
+			"value": "http://localhost:8044/sshop/seller",
+			"type": "string"
+		},
+		{
+			"key": "buyer",
+			"value": "http://localhost:8044/sshop",
+			"type": "string"
+		},
+		{
+			"key": "account",
+			"value": "api/v1/account",
+			"type": "string"
+		},
+		{
+			"key": "access",
+			"value": "api/v1/access",
+			"type": "string"
+		},
+		{
+			"key": "category",
+			"value": "api/v1/category",
+			"type": "string"
+		},
+		{
+			"key": "product",
+			"value": "api/v1/product",
+			"type": "string"
+		},
+		{
+			"key": "media",
+			"value": "api/v1/media",
+			"type": "string"
+		},
+		{
+			"key": "BUYER",
+			"value": "http://localhost:8080/api/v1",
+			"type": "string"
+		},
+		{
+			"key": "NGROK",
+			"value": "https://cheetah-dear-mutt.ngrok-free.app/api/v1",
+			"type": "string"
+		},
+		{
+			"key": "AUTH",
+			"value": "auth",
+			"type": "string"
+		},
+		{
+			"key": "CATEGORY",
+			"value": "category",
+			"type": "string"
+		},
+		{
+			"key": "BUYER_PUBLIC",
+			"value": "http://localhost:8080/api/v1/public",
+			"type": "string"
+		},
+		{
+			"key": "BUYER_PRIVATE",
+			"value": "http://localhost:8080/api/v1",
+			"type": "string"
+		},
+		{
+			"key": "PRODUCTS",
+			"value": "products",
+			"type": "string"
+		},
+		{
+			"key": "ADDRESSES",
+			"value": "/addresses",
+			"type": "string"
+		},
+		{
+			"key": "DISCOUNTS",
+			"value": "/discounts",
+			"type": "string"
+		}
+	]
+}

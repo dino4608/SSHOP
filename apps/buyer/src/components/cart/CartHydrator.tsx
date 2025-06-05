@@ -2,7 +2,7 @@
 "use client";
 import { TAddress } from "@/types/address.types";
 import { TCart } from "@/types/cart.types";
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { CartDisplay } from "./CartDisplay";
 import { CartSummary } from "./CartSummary";
 import { DefaultAddress } from "./DefaultAddress";
@@ -10,6 +10,7 @@ import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { clientFetch } from "@/lib/fetch/fetch.client";
 import { api } from "@/lib/api";
+import { TEstimateCheckout } from "@/types/checkout.types";
 
 interface CartHydratorProps {
     initialCart: TCart;
@@ -18,12 +19,9 @@ interface CartHydratorProps {
 
 export function CartHydrator({ initialCart, initialDefaultAddress }: CartHydratorProps) {
     const router = useRouter();
-
-    // State để quản lý dữ liệu giỏ hàng trên client, cho phép optimistic updates
     const [cartData, setCartData] = useState<TCart>(initialCart);
-
-    // State để lưu trữ danh sách các cartItem.id đã chọn
     const [selectedCartItemIds, setSelectedCartItemIds] = useState<Set<number>>(new Set());
+    const [estimateData, setEstimateData] = useState<TEstimateCheckout | null>(null);
 
     // Lấy tất cả các ID của item trong giỏ hàng (dùng useMemo để tối ưu)
     const allCartItemIds = useMemo(() => {
@@ -134,11 +132,36 @@ export function CartHydrator({ initialCart, initialDefaultAddress }: CartHydrato
         }
     }, [cartData, selectedCartItemIds]);
 
-    // Hàm để refresh dữ liệu giỏ hàng sau khi clientFetch thành công
-    // Bạn có thể truyền hàm này xuống CartLineItem
+    // Hàm để refresh dữ liệu giỏ hàng sau khi clientFetch thành côngs
     const refreshCartData = useCallback(() => {
-        router.refresh(); // Buộc Next.js re-fetch dữ liệu cho trang hiện tại
+        router.refresh();
     }, [router]);
+
+    // Effect để gọi API estimateCheckout mỗi khi selectedCartItemIds thay đổi
+    useEffect(() => {
+        const fetchEstimate = async () => {
+            if (selectedCartItemIds.size === 0) {
+                setEstimateData(null);
+                return;
+            }
+
+            const itemIdsArray = Array.from(selectedCartItemIds);
+            const result = await clientFetch(api.checkout.estimateCheckout({ cartItemIds: itemIdsArray }));
+            if (result.success && result.data) {
+                setEstimateData(result.data);
+            } else {
+                console.error("Failed to fetch estimate data:", result.error);
+                setEstimateData(null);
+            }
+        };
+
+        // Debounce để tránh gọi API quá nhiều khi chọn nhanh
+        const debounceTimer = setTimeout(() => {
+            fetchEstimate();
+        }, 300);
+
+        return () => clearTimeout(debounceTimer); // Clear timer
+    }, [selectedCartItemIds]);
 
     return (
         <div className="flex flex-col lg:flex-row gap-4">
@@ -159,9 +182,12 @@ export function CartHydrator({ initialCart, initialDefaultAddress }: CartHydrato
 
             {/* Right area: Default address + Cart summary */}
             <div className="lg:w-1/3 flex flex-col gap-4 lg:sticky lg:top-4 lg:self-start">
-                <DefaultAddress defaultAddress={initialDefaultAddress} />
+                <DefaultAddress
+                    defaultAddress={initialDefaultAddress} />
 
-                <CartSummary cart={initialCart} selectedCartItemIds={selectedCartItemIds} />
+                <CartSummary
+                    selectedCartItemIds={selectedCartItemIds}
+                    estimateData={estimateData} />
             </div>
         </div>
     );

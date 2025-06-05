@@ -71,12 +71,6 @@ public final class SecurityUtils {
                         return Id.from(subject);
                 })
                 .orElseThrow(() -> new AppException(ErrorCode.SECURITY__GET_CURRENT_USER_FAILED));
-//        return getAuthentication()
-//                .map(auth -> extractPrincipal(auth)
-//                        .map(subject -> Id.from(subject)
-//                                .orElseThrow(() -> new AppException(ErrorCode.SECURITY__GET_CURRENT_USER_FAILED)))
-//                        .orElseThrow(() -> new AppException(ErrorCode.SECURITY__GET_CURRENT_USER_FAILED)))
-//                .orElse(null);
     }
 
     /**
