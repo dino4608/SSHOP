@@ -5,6 +5,8 @@ import com.dino.backend.features.ordering.application.model.CartItemRes;
 import com.dino.backend.features.ordering.application.model.CartRes;
 import com.dino.backend.features.ordering.domain.Cart;
 import com.dino.backend.features.ordering.domain.CartItem;
+import com.dino.backend.features.productcatalog.domain.Product;
+import com.dino.backend.features.productcatalog.domain.Sku;
 import com.dino.backend.features.promotion.application.model.DiscountItemRes;
 import com.dino.backend.features.shop.domain.Shop;
 import org.mapstruct.Mapper;
@@ -33,4 +35,11 @@ public interface ICartMapper {
 
     @Mapping(source = "cartGroupsRes", target = "cartGroups")
     CartRes toCartRes(Cart cart, List<CartGroupRes> cartGroupsRes);
+
+//    // Helper cho Product
+//    CartItemRes.ProductRes productToProductResponse(Product product);
+//    // Helper cho Sku
+//    CartItemRes.SkuRes skuToSkuResponse(Sku sku);
+//    // Helper cho ShopRes (nested trong CartGroupRes)
+//    CartGroupRes.ShopRes shopToShopRes(Shop shop);
 }

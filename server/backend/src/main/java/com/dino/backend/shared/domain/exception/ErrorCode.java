@@ -89,6 +89,9 @@ public enum ErrorCode {
     CART__TOTAL_MAX_INVALID(1507, "Giỏ hàng đã có 100 sản phẩm", HttpStatus.BAD_REQUEST),
     CART__IS_DELETED(1508, "Giỏ hàng đã bị xóa", HttpStatus.BAD_REQUEST),
     CART__ITEM_EMPTY(1509, "Vui lòng chọn mặt hàng", HttpStatus.BAD_REQUEST),
+    // CHECKOUT //
+    CHECKOUT__CART_ITEM_IDS_EMPTY(1510, "Vui lòng chọn mặt hàng", HttpStatus.BAD_REQUEST),
+    CHECKOUT__NO_SELECTED_ITEMS(1511, "Vui lòng chọn mặt hàng", HttpStatus.BAD_REQUEST)
     ;
 
     int code;
