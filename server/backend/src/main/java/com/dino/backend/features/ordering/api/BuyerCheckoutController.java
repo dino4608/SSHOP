@@ -2,7 +2,9 @@ package com.dino.backend.features.ordering.api;
 
 import com.dino.backend.features.ordering.application.ICheckoutService;
 import com.dino.backend.features.ordering.application.model.CheckoutSnapshotRes;
+import com.dino.backend.features.ordering.application.model.ConfirmCheckoutReq;
 import com.dino.backend.features.ordering.application.model.EstimateCheckoutReq;
+import com.dino.backend.features.ordering.application.model.InitCheckoutReq;
 import com.dino.backend.shared.api.annotation.AuthUser;
 import com.dino.backend.shared.api.model.CurrentUser;
 import jakarta.validation.Valid;
@@ -43,13 +45,15 @@ public class BuyerCheckoutController {
         // COMMAND //
 
         /**
-         * draftCheckout
-         * (Tạo đơn hàng thực tế)
+         * initCheckout
+         * (initialize a checkout process)
          */
         @PostMapping("/make")
-        public ResponseEntity<Object> draftCheckout(@AuthUser CurrentUser currentUser) {
-            // Logic tạo đơn hàng thực tế
-            return ResponseEntity.ok().build();
+        public ResponseEntity<Object> initCheckout(
+                @Valid @RequestBody InitCheckoutReq request,
+                @AuthUser CurrentUser currentUser) {
+            var checkout = this.checkoutService.initCheckout(request, currentUser);
+            return ResponseEntity.ok(checkout);
         }
 
         /**
@@ -57,8 +61,10 @@ public class BuyerCheckoutController {
          * (Xác nhận đơn hàng cuối cùng)
          */
         @PatchMapping("/confirm")
-        public ResponseEntity<Object> confirmCheckout(@AuthUser CurrentUser currentUser) {
-            // Logic
+        public ResponseEntity<Object> confirmCheckout(
+                @Valid @RequestBody ConfirmCheckoutReq request,
+                @AuthUser CurrentUser currentUser) {
+            var checkout = this.checkoutService.confirmCheckout(request, currentUser);
             return ResponseEntity.ok().build();
         }
     }

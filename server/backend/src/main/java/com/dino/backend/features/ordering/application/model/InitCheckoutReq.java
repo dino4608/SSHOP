@@ -4,9 +4,7 @@ import jakarta.validation.constraints.NotEmpty;
 
 import java.util.List;
 
-public record EstimateCheckoutReq(
-
+public record InitCheckoutReq(
         @NotEmpty(message = "CART__ITEMS_EMPTY")
-        List<Long> cartItemIds
-) {
+        List<Long> cartItemIds) {
 }

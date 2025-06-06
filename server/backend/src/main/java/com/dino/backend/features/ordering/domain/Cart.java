@@ -61,7 +61,6 @@ public class Cart extends BaseEntity {
     User buyer;
 
     @OneToMany(mappedBy = "cart", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    // @OrderBy("id ASC")
     List<CartItem> cartItems;
 
     // SETTER METHODS //

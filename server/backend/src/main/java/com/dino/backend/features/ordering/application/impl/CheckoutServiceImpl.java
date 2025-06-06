@@ -2,9 +2,7 @@ package com.dino.backend.features.ordering.application.impl;
 
 import com.dino.backend.features.ordering.application.ICheckoutService;
 import com.dino.backend.features.ordering.application.mapper.ICheckoutMapper;
-import com.dino.backend.features.ordering.application.model.EstimateCheckoutReq;
-import com.dino.backend.features.ordering.application.model.CheckoutSnapshotRes;
-import com.dino.backend.features.ordering.application.model.EstimateCheckoutRes;
+import com.dino.backend.features.ordering.application.model.*;
 import com.dino.backend.features.ordering.domain.Cart;
 import com.dino.backend.features.ordering.domain.CartItem;
 import com.dino.backend.features.ordering.domain.repository.ICartRepository;
@@ -59,7 +57,7 @@ public class CheckoutServiceImpl implements ICheckoutService {
                 .toList();
 
         if (selectedCartItems.isEmpty()) {
-            throw new AppException(ErrorCode.CHECKOUT__NO_SELECTED_ITEMS);
+            throw new AppException(ErrorCode.CART__ITEMS_EMPTY);
         }
 
         // 3. group CartItems by Shop. every group will be a future Order.
@@ -163,5 +161,17 @@ public class CheckoutServiceImpl implements ICheckoutService {
                 cart.getId(),
                 checkoutSnapshot
         );
+    }
+
+    // COMMAND //
+
+    @Override
+    public InitCheckoutRes initCheckout(InitCheckoutReq request, CurrentUser currentUser) {
+        return null;
+    }
+
+    @Override
+    public ConfirmCheckoutRes confirmCheckout(ConfirmCheckoutReq request, CurrentUser currentUser) {
+        return null;
     }
 }

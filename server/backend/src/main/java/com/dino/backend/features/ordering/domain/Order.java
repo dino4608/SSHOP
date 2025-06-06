@@ -1,8 +1,8 @@
 package com.dino.backend.features.ordering.domain;
 
 import com.dino.backend.features.identity.domain.User;
+import com.dino.backend.features.ordering.domain.model.*;
 import com.dino.backend.features.shop.domain.Shop;
-import com.dino.backend.features.userprofile.domain.Address;
 import com.dino.backend.shared.domain.model.BaseEntity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.hypersistence.utils.hibernate.type.json.JsonType;
@@ -14,8 +14,7 @@ import lombok.experimental.FieldDefaults;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.*;
 
-import java.time.Instant;
-import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "orders")
@@ -36,33 +35,36 @@ public class Order extends BaseEntity {
     @Column(name = "order_id")
     Long id;
 
-    String status;
-
-    int count;
-
-    float subtotal;
-
-    float shippingFee;
-
-    float discount; // seller discount + platform discount
-
-    float shippingDiscount;
-
-    float total;
-
-    Instant orderDate;
-
-    String paymentMethod;
-
-    Instant paymentTime;
-
-    Instant shipmentDate;
-
-    Instant deliveryDate;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status")
+    OrderStatus status;
 
     @Type(JsonType.class)
     @Column(columnDefinition = "jsonb")
-    Address address;
+    OrderTimeline timeline;
+
+    @Type(JsonType.class)
+    @Column(columnDefinition = "jsonb")
+    CheckoutSnapshot checkoutSnapshot;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status")
+    PaymentMethod paymentMethod;
+
+    @Column(columnDefinition = "text")
+    private String note;
+
+    @Type(JsonType.class)
+    @Column(columnDefinition = "jsonb")
+    ShippingDetail shippingDetail;
+
+    @Type(JsonType.class)
+    @Column(columnDefinition = "jsonb")
+    OrderAddress deliveryAddress;
+
+    @Type(JsonType.class)
+    @Column(columnDefinition = "jsonb")
+    OrderAddress pickupAddress;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "buyer_id", nullable = false, updatable = false)
@@ -75,15 +77,6 @@ public class Order extends BaseEntity {
     Shop shop;
 
     @OneToMany(mappedBy = "order", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    ArrayList<OrderItem> orderItems;
-
-    // NESTED OBJECTS//
-    public enum StatusType {
-        DRAFT, UNPAID, PREPARING, TRANSIT, DELIVERING, DELIVERED, RETURN, CANCELED,
-    }
-
-    public enum PaymentMethodType {
-        COD, ZALOPAY, MONO, VNPAY,
-    }
+    List<OrderItem> orderItems;
 
 }

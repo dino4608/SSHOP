@@ -25,20 +25,21 @@ import org.hibernate.annotations.SQLRestriction;
 @SuperBuilder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class OrderItem extends BaseEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    @Column(name = "order_item_id", nullable = false, updatable = false)
+    @Column(name = "order_item_id")
     Long id;
 
-    float lockedPrice;
-
     int quantity;
+
+    int effectivePrice;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "order_id", nullable = false, updatable = false)
     Order order;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "sku_id", nullable = false)
+    @JoinColumn(name = "sku_id", nullable = false, updatable = false)
     Sku sku;
 }

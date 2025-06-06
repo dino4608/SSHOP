@@ -1,9 +1,8 @@
 package com.dino.backend.features.ordering.application;
 
-import com.dino.backend.features.ordering.application.model.EstimateCheckoutReq;
-import com.dino.backend.features.ordering.application.model.CheckoutSnapshotRes;
-import com.dino.backend.features.ordering.application.model.EstimateCheckoutRes;
+import com.dino.backend.features.ordering.application.model.*;
 import com.dino.backend.shared.api.model.CurrentUser;
+import jakarta.validation.Valid;
 
 public interface ICheckoutService {
     // QUERY //
@@ -12,7 +11,7 @@ public interface ICheckoutService {
 
     // COMMAND //
 
-//    Object draftCheckout(Object request, CurrentUser currentUser);
-//
-//    Object confirmCheckout(Object request, CurrentUser currentUser);
+    InitCheckoutRes initCheckout(InitCheckoutReq request, CurrentUser currentUser);
+
+    ConfirmCheckoutRes confirmCheckout(ConfirmCheckoutReq request, CurrentUser currentUser);
 }
