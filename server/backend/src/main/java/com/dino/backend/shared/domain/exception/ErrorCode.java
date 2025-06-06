@@ -20,11 +20,10 @@ public enum ErrorCode {
     // COMMON //
     SYSTEM__UNHANDLED_EXCEPTION(1000, "Lỗi chưa được xử lý.", HttpStatus.INTERNAL_SERVER_ERROR),
     SYSTEM__DEVELOPING_FEATURE(1001, "The feature is still developing.", HttpStatus.INTERNAL_SERVER_ERROR),
-    SYSTEM__UNIMPLEMENTED_FEATURE(1002, "The feature is still developing.", HttpStatus.INTERNAL_SERVER_ERROR),
-    SYSTEM__KEY_UNSUPPORTED(1003, "The key is unsupported.", HttpStatus.INTERNAL_SERVER_ERROR),
-    SYSTEM__METHOD_NOT_SUPPORTED(1004, "Method '%s' is not supported.", HttpStatus.INTERNAL_SERVER_ERROR),
-    SYSTEM__ROUTE_NOT_SUPPORTED(1005, "Route '%s' not supported.", HttpStatus.INTERNAL_SERVER_ERROR),
-    SYSTEM__BODY_REQUIRED(1006, "Body is required.", HttpStatus.INTERNAL_SERVER_ERROR),
+    SYSTEM__VALIDATION_UNSUPPORTED(1003, "Validation is unsupported.", HttpStatus.INTERNAL_SERVER_ERROR),
+    SYSTEM__METHOD_NOT_SUPPORTED(1004, "Method '%s' is not supported.", HttpStatus.BAD_REQUEST),
+    SYSTEM__ROUTE_NOT_SUPPORTED(1005, "Route '%s' not supported.", HttpStatus.BAD_REQUEST),
+    SYSTEM__BODY_REQUIRED(1006, "Body is required.", HttpStatus.BAD_REQUEST),
     // SECURITY //
     SECURITY__UNAUTHENTICATED(1010, "Resources are protected.", HttpStatus.UNAUTHORIZED),
     SECURITY__UNAUTHORIZED(1011, "Resources are forbidden.", HttpStatus.FORBIDDEN),
@@ -70,6 +69,7 @@ public enum ErrorCode {
     // SKU //
     SKU__FIND_FAILED(1220, "Lấy SKU thất bại.", HttpStatus.INTERNAL_SERVER_ERROR),
     SKU__TIER_OPTION_INDEXES_INVALID(1221, "tierOptionIndexes không hợp lệ.", HttpStatus.BAD_REQUEST),
+    SKU__INSUFFICIENT_STOCK(1222, "Không đủ tồn kho", HttpStatus.BAD_REQUEST),
 
     // USER PROFILE 1300+ //
     // ADDRESS //
@@ -89,10 +89,22 @@ public enum ErrorCode {
     CART__TOTAL_MIN_INVALID(1506, "Giỏ hàng đã có 0 sản phẩm", HttpStatus.BAD_REQUEST),
     CART__TOTAL_MAX_INVALID(1507, "Giỏ hàng đã có 100 sản phẩm", HttpStatus.BAD_REQUEST),
     CART__IS_DELETED(1508, "Giỏ hàng đã bị xóa", HttpStatus.BAD_REQUEST),
-    CART__ITEM_EMPTY(1509, "Vui lòng chọn mặt hàng", HttpStatus.BAD_REQUEST),
-    // CHECKOUT //
-    CHECKOUT__CART_ITEM_IDS_EMPTY(1510, "Vui lòng chọn mặt hàng", HttpStatus.BAD_REQUEST),
-    CHECKOUT__NO_SELECTED_ITEMS(1511, "Vui lòng chọn mặt hàng", HttpStatus.BAD_REQUEST)
+    CART__ITEMS_EMPTY(1509, "Vui lòng chọn mặt hàng", HttpStatus.BAD_REQUEST),
+    // ORDER //
+    ORDER__ORDERS_EMPTY(1510, "Vui lòng chọn đơn hàng", HttpStatus.BAD_REQUEST),
+    ORDER__NOT_FOUND(1511, "Không tìm thấy đơn hàng", HttpStatus.BAD_REQUEST),
+    ORDER__QUANTITY_UNDER_MIN(1512, "Số lượng tối thiểu là 1", HttpStatus.BAD_REQUEST),
+    ORDER__QUANTITY_OVER_MAX(1513, "Số lượng tối đa là 100", HttpStatus.BAD_REQUEST),
+    ORDER__STATUS_NOT_UPDATABLE(1514, "Trạng thái hiện tại không cho phép chỉnh sửa", HttpStatus.BAD_REQUEST),
+    ORDER__MAIN_PRICE_INVALID(1515, "Giá chính không nên nhỏ hơn 1000 VNĐ hoặc nhỏ hơn giá phụ", HttpStatus.BAD_REQUEST),
+    ORDER__SIDE_PRICE_INVALID(1516, "Giá phụ không nên nhỏ hơn 0 VNĐ hoặc lớn hơn giá chính", HttpStatus.BAD_REQUEST),
+    ORDER__MAX_ESTIMATE_DAY_INVALID(1518, "Ngày dự kiến tối đa không nên nhỏ hơn ngày hiện tại hoặc ngày tối thiểu", HttpStatus.BAD_REQUEST),
+    ORDER__MIN_ESTIMATE_DAY_INVALID(1519, "Ngày dự kiến tối thiểu không nên nhỏ hơn ngày hiện tại hoặc lớn hơn tối đa", HttpStatus.BAD_REQUEST),
+
+    // INVENTORY 1600+ //
+    // INVENTORY //
+    INVENTORY__NOT_FOUND(1600, "Không tìm thấy kho hàng", HttpStatus.BAD_REQUEST),
+
     ;
 
     int code;

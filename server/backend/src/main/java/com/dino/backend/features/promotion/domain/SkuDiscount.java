@@ -13,10 +13,10 @@ import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
 
 @Entity
-@Table(name = "discount_items")
+@Table(name = "sku_discounts")
 @DynamicInsert
 @DynamicUpdate
-@SQLDelete(sql = "UPDATE discount_items SET is_deleted = true WHERE discount_item_id=?")
+@SQLDelete(sql = "UPDATE sku_discounts SET is_deleted = true WHERE sku_discount_id=?")
 @SQLRestriction("is_deleted = false")
 @Getter
 @Setter
@@ -24,11 +24,11 @@ import org.hibernate.annotations.SQLRestriction;
 @NoArgsConstructor
 @SuperBuilder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class DiscountItem extends BaseEntity {
+public class SkuDiscount extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    @Column(name = "discount_item_id")
+    @Column(name = "sku_discount_id")
     Long id;
 
     Integer dealPrice;
@@ -48,4 +48,29 @@ public class DiscountItem extends BaseEntity {
     @JoinColumn(name = "sku_id", updatable = false, nullable = false)
     @JsonIgnore
     Sku sku;
+
+    public static Integer createDiscountPercent(Integer retailPrice, Integer dealPrice) {
+        if (dealPrice == null)
+            return 0;
+
+        double discountRatio = 1 - (dealPrice.doubleValue() / retailPrice.doubleValue());
+        int discountPercent = (int) Math.round(discountRatio * 100);
+
+        if (discountPercent < 0) discountPercent = 0;
+        if (discountPercent > 100) discountPercent = 100;  // đảm bảo từ 0..100
+
+        return discountPercent;
+    }
+
+    public static Integer createDealPrice(Integer retailPrice, Integer discountPercent) {
+        if (discountPercent == null)
+            return retailPrice;
+
+        double price = retailPrice * (100 - discountPercent) / 100.0;
+        int dealPrice = (int) Math.round(price);
+
+        if (dealPrice < 0) dealPrice = 0; // đảm bảo không âm
+
+        return dealPrice;
+    }
 }

@@ -51,6 +51,4 @@ public class Category extends BaseEntity {
     @OneToMany(mappedBy = "category", fetch = FetchType.LAZY)
     @JsonIgnore
     List<Specification> specifications;
-
-    // TODO: nested categories => list / array
 }

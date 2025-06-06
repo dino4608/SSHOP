@@ -6,7 +6,7 @@ import java.util.List;
 
 public record EstimateCheckoutReq(
 
-        @NotEmpty(message = "CHECKOUT__CART_ITEM_IDS_EMPTY")
+        @NotEmpty(message = "CART__ITEMS_EMPTY")
         List<Long> cartItemIds
 ) {
 }

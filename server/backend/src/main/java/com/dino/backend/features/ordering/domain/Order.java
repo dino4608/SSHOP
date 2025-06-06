@@ -1,8 +1,10 @@
 package com.dino.backend.features.ordering.domain;
 
 import com.dino.backend.features.identity.domain.User;
+import com.dino.backend.features.ordering.domain.model.*;
 import com.dino.backend.features.shop.domain.Shop;
-import com.dino.backend.features.userprofile.domain.Address;
+import com.dino.backend.shared.domain.exception.AppException;
+import com.dino.backend.shared.domain.exception.ErrorCode;
 import com.dino.backend.shared.domain.model.BaseEntity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.hypersistence.utils.hibernate.type.json.JsonType;
@@ -14,8 +16,9 @@ import lombok.experimental.FieldDefaults;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.*;
 
+import java.time.Duration;
 import java.time.Instant;
-import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "orders")
@@ -36,33 +39,34 @@ public class Order extends BaseEntity {
     @Column(name = "order_id")
     Long id;
 
-    String status;
-
-    int count;
-
-    float subtotal;
-
-    float shippingFee;
-
-    float discount; // seller discount + platform discount
-
-    float shippingDiscount;
-
-    float total;
-
-    Instant orderDate;
-
-    String paymentMethod;
-
-    Instant paymentTime;
-
-    Instant shipmentDate;
-
-    Instant deliveryDate;
+    @Enumerated(EnumType.STRING)
+    OrderStatus status;
 
     @Type(JsonType.class)
     @Column(columnDefinition = "jsonb")
-    Address address;
+    OrderTimeline timeline;
+
+    @Type(JsonType.class)
+    @Column(columnDefinition = "jsonb")
+    CheckoutSnapshot checkoutSnapshot;
+
+    @Enumerated(EnumType.STRING)
+    PaymentMethod paymentMethod;
+
+    @Column(columnDefinition = "text")
+    private String note;
+
+    @Type(JsonType.class)
+    @Column(columnDefinition = "jsonb")
+    ShippingDetail shippingDetail;
+
+    @Type(JsonType.class)
+    @Column(columnDefinition = "jsonb")
+    OrderAddress deliveryAddress;
+
+    @Type(JsonType.class)
+    @Column(columnDefinition = "jsonb")
+    OrderAddress pickupAddress;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "buyer_id", nullable = false, updatable = false)
@@ -75,15 +79,56 @@ public class Order extends BaseEntity {
     Shop shop;
 
     @OneToMany(mappedBy = "order", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    ArrayList<OrderItem> orderItems;
+    List<OrderItem> orderItems;
 
-    // NESTED OBJECTS//
-    public enum StatusType {
-        DRAFT, UNPAID, PREPARING, TRANSIT, DELIVERING, DELIVERED, RETURN, CANCELED,
+    // FACTORY //
+
+    /**
+     * createDraftOrder.
+     */
+    public static Order createDraftOrder(
+            List<OrderItem> orderItems, User buyer, Shop shop,
+            CheckoutSnapshot checkoutSnapshot, ShippingDetail shippingDetail
+    ) {
+        Order order = new Order();
+        order.setStatus(OrderStatus.DRAFT);
+        order.setTimeline(OrderTimeline.beginRecording());
+
+        order.setBuyer(buyer);
+        order.setShop(shop);
+        order.setCheckoutSnapshot(checkoutSnapshot);
+        order.setShippingDetail(shippingDetail);
+        order.setOrderItems(orderItems);
+
+
+        orderItems.forEach(item -> item.setOrder(order)); // link OrderItems to Order
+
+        return order;
     }
 
-    public enum PaymentMethodType {
-        COD, ZALOPAY, MONO, VNPAY,
+    // INSTANCE //
+
+    /**
+     * markAsPending
+     */
+    public void markAsPending(
+            PaymentMethod paymentMethod, String note,
+            OrderAddress deliveryAddress, OrderAddress pickupAddress
+    ) {
+        if (this.status != OrderStatus.DRAFT && this.status != OrderStatus.UNPAID)
+            throw new AppException(ErrorCode.ORDER__STATUS_NOT_UPDATABLE);
+
+        this.setStatus(OrderStatus.PENDING);
+        this.getTimeline().recordOrdering();
+
+        this.setPaymentMethod(paymentMethod);
+        this.setNote(note);
+        this.setDeliveryAddress(deliveryAddress);
+        this.setPickupAddress(pickupAddress);
+    }
+
+    public boolean canDelete(Duration ttl) {
+        return this.getCreatedAt().isBefore(Instant.now().minus(ttl));
     }
 
 }

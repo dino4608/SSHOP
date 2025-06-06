@@ -1,10 +1,12 @@
-package com.dino.backend.features.userprofile.application;
+package com.dino.backend.features.userprofile.application.service;
 
 import com.dino.backend.features.userprofile.domain.Address;
 import com.dino.backend.shared.api.model.CurrentUser;
 
-public interface IAddressAppService {
+public interface IAddressService {
     // QUERY //
 
     Address getDefault(CurrentUser currentUser);
+
+    Address getDefault(Long userId);
 }

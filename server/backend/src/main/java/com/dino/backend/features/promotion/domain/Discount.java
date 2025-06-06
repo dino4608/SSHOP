@@ -98,7 +98,9 @@ public class Discount extends BaseEntity {
     Product product;
 
     @OneToMany(mappedBy = "discount", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    List<DiscountItem> discountItems;
+    List<SkuDiscount> skuDiscounts;
+
+    // INSTANCE METHODS //
 
     // isWithinTotalLimit //
     private boolean isWithinTotalLimit() {
@@ -128,7 +130,5 @@ public class Discount extends BaseEntity {
             return false;
 
         return this.discountProgram.isActive();
-
-        // TODO: Kiểm tra điều kiện áp dụng SKU (thông qua priceType, discountedSkus)
     }
 }

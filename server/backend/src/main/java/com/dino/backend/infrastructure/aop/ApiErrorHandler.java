@@ -60,10 +60,10 @@ public class ApiErrorHandler {
     ResponseEntity<ApiResponse<Object>> handleException(MethodArgumentNotValidException exception) {
         String key = Optional.ofNullable(exception.getFieldError())
                 .map(FieldError::getDefaultMessage)
-                .orElse(ErrorCode.SYSTEM__KEY_UNSUPPORTED.name());
+                .orElse(ErrorCode.SYSTEM__VALIDATION_UNSUPPORTED.name());
 
         ErrorCode error = ErrorCode.safeValueOf(key)
-                .orElse(ErrorCode.SYSTEM__KEY_UNSUPPORTED);
+                .orElse(ErrorCode.SYSTEM__VALIDATION_UNSUPPORTED);
 
         return ResponseEntity
                 .status(error.getStatus())

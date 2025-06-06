@@ -1,4 +1,6 @@
 package com.dino.backend.features.ordering.application.model;
 
-public record EstimateCheckoutRes(Long cartId, CheckoutSnapshotRes checkoutSnapshot) {
+import com.dino.backend.features.ordering.domain.model.CheckoutSnapshot;
+
+public record EstimateCheckoutRes(Long cartId, CheckoutSnapshot checkoutSnapshot) {
 }
