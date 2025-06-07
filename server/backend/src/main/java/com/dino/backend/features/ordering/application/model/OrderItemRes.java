@@ -7,7 +7,7 @@ public record OrderItemRes(
         Long id,
         String photo,
         int quantity,
-        int effectivePrice,
+        int mainPrice,
         ProductLean product,
         SkuLean sku) {
 }

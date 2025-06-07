@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.dino.backend.features.promotion.application.IDiscountService;
+import com.dino.backend.features.promotion.application.service.IDiscountService;
 import com.dino.backend.shared.api.annotation.AuthUser;
 import com.dino.backend.shared.api.model.CurrentUser;
 
@@ -33,7 +33,7 @@ public class BuyerDiscountController {
         // getByProductId //
         @GetMapping("/{id}")
         public ResponseEntity<Object> getByProductId(@PathVariable String id, @AuthUser CurrentUser currentUser) {
-            return ResponseEntity.ok(discountService.canApply(id, currentUser));
+            return ResponseEntity.ok(discountService.canDiscount(id, currentUser));
         }
     }
 }

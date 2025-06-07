@@ -90,7 +90,12 @@ public enum ErrorCode {
     CART__TOTAL_MAX_INVALID(1507, "Giỏ hàng đã có 100 sản phẩm", HttpStatus.BAD_REQUEST),
     CART__IS_DELETED(1508, "Giỏ hàng đã bị xóa", HttpStatus.BAD_REQUEST),
     CART__ITEMS_EMPTY(1509, "Vui lòng chọn mặt hàng", HttpStatus.BAD_REQUEST),
-    // CHECKOUT //
+    // ORDER //
+    ORDER__ORDERS_EMPTY(1510, "Vui lòng chọn đơn hàng", HttpStatus.BAD_REQUEST),
+    ORDER__NOT_FOUND(1511, "Không tìm thấy đơn hàng", HttpStatus.BAD_REQUEST),
+
+    SKU__INSUFFICIENT_STOCK(0, "// TODO", HttpStatus.BAD_REQUEST),
+    INVENTORY__NOT_FOUND(0, "// TODO", HttpStatus.BAD_REQUEST),
 
     ;
 

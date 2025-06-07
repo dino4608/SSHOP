@@ -1,8 +1,7 @@
-package com.dino.backend.features.ordering.application;
+package com.dino.backend.features.ordering.application.service;
 
 import com.dino.backend.features.ordering.application.model.*;
 import com.dino.backend.shared.api.model.CurrentUser;
-import jakarta.validation.Valid;
 
 public interface ICheckoutService {
     // QUERY //

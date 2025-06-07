@@ -1,6 +1,8 @@
 package com.dino.backend.features.ordering.domain;
 
 import com.dino.backend.features.productcatalog.domain.Sku;
+import com.dino.backend.shared.domain.exception.AppException;
+import com.dino.backend.shared.domain.exception.ErrorCode;
 import com.dino.backend.shared.domain.model.BaseEntity;
 
 import jakarta.persistence.*;
@@ -33,7 +35,7 @@ public class OrderItem extends BaseEntity {
 
     int quantity;
 
-    int effectivePrice;
+    int mainPrice;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "order_id", nullable = false, updatable = false)
@@ -42,4 +44,33 @@ public class OrderItem extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "sku_id", nullable = false, updatable = false)
     Sku sku;
+
+    // SETTER //
+    public void setQuantity(int quantity) {
+        // TODO: SYSTEM__DEVELOPING_FEATURE
+        if (quantity < 1)
+            throw new AppException(ErrorCode.SYSTEM__DEVELOPING_FEATURE);
+        if (quantity > 100)
+            throw new AppException(ErrorCode.SYSTEM__DEVELOPING_FEATURE);
+
+        this.quantity = quantity;
+    }
+
+    public void setMainPrice(int mainPrice) {
+        // TODO: SYSTEM__DEVELOPING_FEATURE
+        if (quantity < 1000)
+            throw new AppException(ErrorCode.SYSTEM__DEVELOPING_FEATURE);
+
+        this.mainPrice = mainPrice;
+    }
+
+    //
+    public static OrderItem createOrderItem(Sku sku, int quantity, int effectivePrice) {
+        var item = new OrderItem();
+        item.setQuantity(quantity);
+        item.setMainPrice(effectivePrice);
+        item.setSku(sku);
+
+        return item;
+    }
 }

@@ -16,4 +16,12 @@ public class OrderTimeline {
     Instant orderDate;
     Instant shipmentDate;
     Instant deliveryDate;
+
+    // --- Static Factory Method ---
+    public static OrderTimeline createInitialTimeline(Instant orderDate) {
+        if (orderDate == null) {
+            throw new IllegalArgumentException("Order date cannot be null for initial timeline.");
+        }
+        return new OrderTimeline(null, orderDate, null, null);
+    }
 }

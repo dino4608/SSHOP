@@ -1,5 +1,5 @@
 package com.dino.backend.features.ordering.domain.model;
 
 public enum OrderStatus {
-    DRAFT, UNPAID, PREPARING, TRANSIT, DELIVERING, DELIVERED, RETURN, CANCELED,
+    DRAFT, UNPAID, PENDING, PREPARING, TRANSIT, DELIVERING, DELIVERED, RETURN, CANCELED,
 }

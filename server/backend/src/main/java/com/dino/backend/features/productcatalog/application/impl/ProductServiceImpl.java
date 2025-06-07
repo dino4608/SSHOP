@@ -8,7 +8,7 @@ import com.dino.backend.features.productcatalog.application.mapper.IProductMappe
 import com.dino.backend.features.productcatalog.application.model.ProductItemRes;
 import com.dino.backend.features.productcatalog.application.model.ProductRes;
 import com.dino.backend.features.productcatalog.domain.repository.IProductRepository;
-import com.dino.backend.features.promotion.application.IDiscountService;
+import com.dino.backend.features.promotion.application.service.IDiscountService;
 import com.dino.backend.shared.api.model.CurrentUser;
 import com.dino.backend.shared.application.utils.Id;
 import com.dino.backend.shared.application.utils.PageRes;
@@ -41,7 +41,7 @@ public class ProductServiceImpl implements IProductService {
         var products = page.getContent().stream()
                 .map(p -> {
                     var product = this.productMapper.toProductItemRes(p);
-                    var discount = this.discountService.canApply(p.getId(), null);
+                    var discount = this.discountService.canDiscount(p.getId(), null);
                     discount.ifPresent(d -> {
                         product.setDealPrice(
                                 d.getDealPrice() != null ? d.getDealPrice() : d.getMinDealPrice());
@@ -63,7 +63,7 @@ public class ProductServiceImpl implements IProductService {
         var product = this.productRepository.findEagerById(id.value())
                 .orElseThrow(() -> new AppException(ErrorCode.PRODUCT__NOT_FOUND));
 
-        var discount = this.discountService.canApply(id.value(), currentUser);
+        var discount = this.discountService.canDiscount(id.value(), currentUser);
 
         var res = this.productMapper.toProductRes(product);
         res.setDiscount(discount.orElse(null));

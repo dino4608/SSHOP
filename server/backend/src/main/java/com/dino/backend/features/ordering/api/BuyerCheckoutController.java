@@ -1,7 +1,6 @@
 package com.dino.backend.features.ordering.api;
 
-import com.dino.backend.features.ordering.application.ICheckoutService;
-import com.dino.backend.features.ordering.application.model.CheckoutSnapshotRes;
+import com.dino.backend.features.ordering.application.service.ICheckoutService;
 import com.dino.backend.features.ordering.application.model.ConfirmCheckoutReq;
 import com.dino.backend.features.ordering.application.model.EstimateCheckoutReq;
 import com.dino.backend.features.ordering.application.model.InitCheckoutReq;
@@ -48,7 +47,7 @@ public class BuyerCheckoutController {
          * initCheckout
          * (initialize a checkout process)
          */
-        @PostMapping("/make")
+        @PostMapping("/init")
         public ResponseEntity<Object> initCheckout(
                 @Valid @RequestBody InitCheckoutReq request,
                 @AuthUser CurrentUser currentUser) {

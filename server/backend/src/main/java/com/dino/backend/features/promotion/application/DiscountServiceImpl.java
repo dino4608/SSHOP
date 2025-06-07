@@ -1,7 +1,7 @@
-package com.dino.backend.features.promotion.application.impl;
+package com.dino.backend.features.promotion.application;
 
 import com.dino.backend.features.productcatalog.domain.Sku;
-import com.dino.backend.features.promotion.application.IDiscountService;
+import com.dino.backend.features.promotion.application.service.IDiscountService;
 import com.dino.backend.features.promotion.application.model.DiscountItemRes;
 import com.dino.backend.features.promotion.domain.Discount;
 import com.dino.backend.features.promotion.domain.repository.IDiscountRepository;
@@ -15,6 +15,7 @@ import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Comparator;
 import java.util.List;
@@ -61,7 +62,7 @@ public class DiscountServiceImpl implements IDiscountService {
 
     // canApply by discounts //
     @Override
-    public Optional<Discount> canApply(List<Discount> discounts, @Nullable CurrentUser currentUser) {
+    public Optional<Discount> canDiscount(List<Discount> discounts, @Nullable CurrentUser currentUser) {
         var applicableDiscounts = discounts.stream()
                 .filter(dp -> dp.canApply(currentUser))
                 .toList();
@@ -78,22 +79,27 @@ public class DiscountServiceImpl implements IDiscountService {
 
     // canApply to product //
     @Override
-    public Optional<Discount> canApply(Long productId, @Nullable CurrentUser currentUser) {
+    public Optional<Discount> canDiscount(Long productId, @Nullable CurrentUser currentUser) {
         var discounts = this.discountRepository.findByProductId(productId);
 
-        return this.canApply(discounts, currentUser);
+        return this.canDiscount(discounts, currentUser);
     }
 
     // canApply to product //
     @Override
-    public Optional<Discount> canApply(String productId, CurrentUser currentUser) {
+    public Optional<Discount> canDiscount(String productId, CurrentUser currentUser) {
         Id id = Id.from(productId).orElseThrow(() -> new AppException(ErrorCode.PRODUCT__NOT_FOUND));
-        return this.canApply(id.value(), currentUser);
+        return this.canDiscount(id.value(), currentUser);
     }
 
     // canApply to Sku //
+    @Override
+    public Optional<Discount> canDiscount(Sku sku, CurrentUser currentUser) {
+        return this.canDiscount(sku.getProduct().getId(), currentUser);
+    }
+
     private Optional<Discount> findDiscount(Sku sku, CurrentUser currentUser) {
-        return this.canApply(sku.getProduct().getId(), currentUser);
+        return this.canDiscount(sku.getProduct().getId(), currentUser);
     }
 
     // applyPricing Sku //
@@ -113,9 +119,12 @@ public class DiscountServiceImpl implements IDiscountService {
         return DiscountItemRes.from(dealPrice, discountPercent);
     }
 
-
+    /**
+     * canDiscount.
+     * @return Sku Discount or NULL
+     */
     @Override
-    public DiscountItemRes canDiscount(Sku sku, CurrentUser currentUser) {
+    public DiscountItemRes canDiscountAndCalculate(Sku sku, CurrentUser currentUser) {
         return this.findDiscount(sku, currentUser)
                 .map(discount -> this.computeDiscount(sku, discount))
                 .orElse(DiscountItemRes.from());

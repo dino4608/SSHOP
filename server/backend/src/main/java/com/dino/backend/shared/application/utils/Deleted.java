@@ -1,6 +1,6 @@
 package com.dino.backend.shared.application.utils;
 
-public record Deleted(boolean isDeleted, int count) {
+public record Deleted(Boolean isDeleted, int count) {
 
     public static Deleted success(int count) {
         return new Deleted(true, count);

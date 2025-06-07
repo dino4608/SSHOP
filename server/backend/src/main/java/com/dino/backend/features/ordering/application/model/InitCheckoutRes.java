@@ -5,7 +5,7 @@ import com.dino.backend.features.ordering.domain.model.CheckoutSnapshot;
 import java.util.List;
 
 public record InitCheckoutRes(
-        Long id, // first order id
-        CheckoutSnapshot checkoutSnapshot,
+        Long checkoutId, // first order id
+        CheckoutSnapshot totalCheckoutSnapshot,
         List<OrderRes> orders) {
 }
