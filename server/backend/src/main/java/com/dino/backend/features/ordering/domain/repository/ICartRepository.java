@@ -12,12 +12,12 @@ import java.util.Optional;
 
 public interface ICartRepository extends JpaRepository<Cart, Long> {
 
-    @EntityGraph(attributePaths = { "cartItems", "cartItems.sku" })
+    @EntityGraph(attributePaths = {"cartItems", "cartItems.sku"})
     Optional<Cart> findWithSkuByBuyerId(@NonNull Long buyerId);
 
     @EntityGraph(attributePaths = {
             "cartItems", "cartItems.sku", "cartItems.sku.product",
-            "cartItems.sku.product.shop" })
+            "cartItems.sku.product.shop"})
     Optional<Cart> findWithShopByBuyerId(@NonNull Long buyerId);
 
     @Query("SELECT c FROM Cart c WHERE c.buyer.id = :buyerId AND c.isDeleted = true")

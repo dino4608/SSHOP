@@ -46,6 +46,7 @@ public class OrderItem extends BaseEntity {
     Sku sku;
 
     // SETTER //
+
     public void setQuantity(int quantity) {
         // TODO: SYSTEM__DEVELOPING_FEATURE
         if (quantity < 1)
@@ -64,7 +65,8 @@ public class OrderItem extends BaseEntity {
         this.mainPrice = mainPrice;
     }
 
-    //
+    // FACTORY //
+
     public static OrderItem createOrderItem(Sku sku, int quantity, int effectivePrice) {
         var item = new OrderItem();
         item.setQuantity(quantity);

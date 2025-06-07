@@ -1,11 +1,7 @@
 package com.dino.backend.features.ordering.domain.model;
 
-import com.dino.backend.features.ordering.domain.Order;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-
-import java.util.List;
-import java.util.Objects;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -24,10 +20,10 @@ public class CheckoutSnapshot {
     @Builder
     @FieldDefaults(level = AccessLevel.PRIVATE)
     public static class Summary {
-        int effectivePrice;
+        int mainPrice;
         int savings; // discount voucher + shipping voucher
         int shippingFee;
-        int total;   // effective price - discount voucher + final shipping fee.
+        int total;   // main price - discount voucher + final shipping fee.
 
     }
 
@@ -58,6 +54,14 @@ public class CheckoutSnapshot {
 
     }
 
+    // DEFAULT VALUES //
+
+    private static final int DEFAULT_SHOP_DISCOUNT_VOUCHER = 0;
+    private static final int DEFAULT_PLATFORM_DISCOUNT_VOUCHER = 0;
+    private static final int DEFAULT_INITIAL_SHIPPING_FEE = 36000;
+    private static final int DEFAULT_SHOP_SHIPPING_VOUCHER = 0;
+    private static final int DEFAULT_PLATFORM_SHIPPING_VOUCHER = 36000;
+
     // PROPS //
 
     Summary summary;
@@ -74,14 +78,45 @@ public class CheckoutSnapshot {
                 .build();
     }
 
+    // FACTORY METHODS //
+
+    public static CheckoutSnapshot createSanpshot(int totalMainPrice) {
+        // 1. calculate units
+        int shopDiscountVoucher = DEFAULT_SHOP_DISCOUNT_VOUCHER;
+        int platformDiscountVoucher = DEFAULT_PLATFORM_DISCOUNT_VOUCHER;
+
+        int initialShippingFee = DEFAULT_INITIAL_SHIPPING_FEE;
+        int shopShippingVoucher = DEFAULT_SHOP_SHIPPING_VOUCHER;
+        int platformShippingVoucher = DEFAULT_PLATFORM_SHIPPING_VOUCHER;
+
+        // 2. calculate totals
+        int totalDiscountVoucher = shopDiscountVoucher + platformDiscountVoucher;
+        int totalShippingVoucher = shopShippingVoucher + platformShippingVoucher;
+        int totalSavings = totalDiscountVoucher + totalShippingVoucher;
+        int finalShippingFee = Math.max(0, initialShippingFee - totalShippingVoucher);
+        int finalTotal = Math.max(0, totalMainPrice - totalDiscountVoucher + finalShippingFee);
+
+        // 2. map to dto
+        CheckoutSnapshot.Summary summary = new CheckoutSnapshot.Summary(
+                totalMainPrice, totalSavings, finalShippingFee, finalTotal);
+        CheckoutSnapshot.DiscountVoucher discountVoucher = new CheckoutSnapshot.DiscountVoucher(
+                totalDiscountVoucher, shopDiscountVoucher, platformDiscountVoucher);
+        CheckoutSnapshot.ShippingFee shippingFee = new CheckoutSnapshot.ShippingFee(
+                finalShippingFee, initialShippingFee, shopShippingVoucher, platformShippingVoucher);
+        return new CheckoutSnapshot(summary, discountVoucher, shippingFee);
+    }
+
     // INSTANCE METHODS //
 
+    // Note: DDD domain model method
+    // “Behavior that is tightly coupled to the data structure
+    // and meaning of a domain object should reside within that domain object.”
     public void accumulateFrom(CheckoutSnapshot other) {
         if (other == null) return;
 
         if (other.getSummary() != null) {
             // if (this.summary == null) this.summary = new Summary();
-            this.summary.setEffectivePrice(this.summary.getEffectivePrice() + other.getSummary().getEffectivePrice());
+            this.summary.setMainPrice(this.summary.getMainPrice() + other.getSummary().getMainPrice());
             this.summary.setSavings(this.summary.getSavings() + other.getSummary().getSavings());
             this.summary.setShippingFee(this.summary.getShippingFee() + other.getSummary().getShippingFee());
             this.summary.setTotal(this.summary.getTotal() + other.getSummary().getTotal());

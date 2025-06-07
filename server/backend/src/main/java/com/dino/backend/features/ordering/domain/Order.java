@@ -16,7 +16,6 @@ import lombok.experimental.FieldDefaults;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.*;
 
-import java.time.Instant;
 import java.util.List;
 
 @Entity
@@ -80,7 +79,7 @@ public class Order extends BaseEntity {
     @OneToMany(mappedBy = "order", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     List<OrderItem> orderItems;
 
-    // FACTORY METHOD //
+    // FACTORY //
 
     /**
      * createDraftOrder.
@@ -103,7 +102,7 @@ public class Order extends BaseEntity {
         return order;
     }
 
-    // --- Instance Update Methods ---
+    // INSTANCE //
 
     /**
      * markAsPending
@@ -114,58 +113,9 @@ public class Order extends BaseEntity {
 
         this.setStatus(OrderStatus.PENDING);
 
-        // TODO:
+        // TODO: markAsPending
         // address
         // timeline ...
     }
-
-    /**
-     * Marks the order as UNPAID.
-     * Can only transition from DRAFT or CANCELED (if re-opened).
-     */
-    public void markAsUnpaid() {
-        if (this.status != OrderStatus.DRAFT && this.status != OrderStatus.CANCELED) {
-            throw new IllegalStateException("Order status cannot be changed to UNPAID from " + this.status);
-        }
-        this.setStatus(OrderStatus.UNPAID);
-        // Additional logic like updating timeline.paymentDate if needed
-    }
-
-    /**
-     * Updates the payment method for the order.
-     * Can only be called in DRAFT or UNPAID states.
-     */
-    public void updatePaymentMethod(PaymentMethod method) {
-        if (this.status != OrderStatus.DRAFT && this.status != OrderStatus.UNPAID) {
-            throw new IllegalStateException("Payment method can only be updated for DRAFT or UNPAID orders.");
-        }
-        if (method == null) {
-            throw new IllegalArgumentException("Payment method cannot be null.");
-        }
-        this.setPaymentMethod(method);
-    }
-
-    /**
-     * Updates shipping and delivery details for the order.
-     * Can only be called in DRAFT or UNPAID states.
-     */
-    public void updateShippingDetails(ShippingDetail shippingDetail, OrderAddress deliveryAddress) {
-        if (this.status != OrderStatus.DRAFT && this.status != OrderStatus.UNPAID) {
-            throw new IllegalStateException("Shipping details can only be updated for DRAFT or UNPAID orders.");
-        }
-        if (shippingDetail == null) {
-            throw new IllegalArgumentException("Shipping details cannot be null.");
-        }
-        if (deliveryAddress == null) {
-            throw new IllegalArgumentException("Delivery address cannot be null.");
-        }
-        this.setShippingDetail(shippingDetail);
-        this.setDeliveryAddress(deliveryAddress);
-        // pickupAddress might be null if not pick-up
-        // this.setPickupAddress(pickupAddress);
-    }
-
-    // ... (other update methods for status transitions like markAsPreparing, markAsDelivered, etc.)
-
 
 }

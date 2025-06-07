@@ -48,4 +48,29 @@ public class DiscountItem extends BaseEntity {
     @JoinColumn(name = "sku_id", updatable = false, nullable = false)
     @JsonIgnore
     Sku sku;
+
+    public static Integer createDiscountPercent(Integer retailPrice, Integer dealPrice) {
+        if (dealPrice == null)
+            return 0;
+
+        double discountRatio = 1 - (dealPrice.doubleValue() / retailPrice.doubleValue());
+        int discountPercent = (int) Math.round(discountRatio * 100);
+
+        if (discountPercent < 0) discountPercent = 0;
+        if (discountPercent > 100) discountPercent = 100;  // đảm bảo từ 0..100
+
+        return discountPercent;
+    }
+
+    public static Integer createDealPrice(Integer retailPrice, Integer discountPercent) {
+        if (discountPercent == null)
+            return retailPrice;
+
+        double price = retailPrice * (100 - discountPercent) / 100.0;
+        int dealPrice = (int) Math.round(price);
+
+        if (dealPrice < 0) dealPrice = 0; // đảm bảo không âm
+
+        return dealPrice;
+    }
 }

@@ -8,7 +8,9 @@ import com.dino.backend.features.ordering.domain.Cart;
 import com.dino.backend.features.ordering.domain.CartItem;
 import com.dino.backend.features.ordering.domain.repository.ICartRepository;
 import com.dino.backend.features.productcatalog.application.ISkuService;
+import com.dino.backend.features.promotion.application.model.DiscountItemRes;
 import com.dino.backend.features.promotion.application.service.IDiscountService;
+import com.dino.backend.features.promotion.application.service.IPricingService;
 import com.dino.backend.features.shop.domain.Shop;
 import com.dino.backend.shared.api.model.CurrentUser;
 import com.dino.backend.shared.application.utils.Deleted;
@@ -32,6 +34,7 @@ public class CartServiceImpl implements ICartService {
 
     IUserService userService;
     ISkuService skuService;
+    IPricingService pricingService;
     IDiscountService discountService;
     ICartRepository cartRepository;
     ICartMapper cartMapper;
@@ -124,8 +127,10 @@ public class CartServiceImpl implements ICartService {
                                 var cartItemPhoto = this.skuService.getPhoto(
                                         cartItem.getSku());
                                 // apply Discount to Sku
-                                var discountItemRes = this.discountService.canDiscountAndCalculate(
-                                        cartItem.getSku(), currentUser);
+                                var skuDiscount = this.pricingService.calculatePrice(cartItem.getSku(),
+                                        currentUser);
+                                var discountItemRes = new DiscountItemRes(skuDiscount.mainPrice(),
+                                        skuDiscount.discountPercent());
                                 // display CartItemRes
                                 return this.cartMapper.toCartItemRes(
                                         cartItem, cartItemPhoto, discountItemRes);
@@ -156,10 +161,10 @@ public class CartServiceImpl implements ICartService {
     @Transactional
     public CartItemRes addCartItem(AddCartItemReq request, CurrentUser currentUser) {
         var cart = this.findCartWithSku(currentUser).orElseGet(() -> createCart(currentUser));
-        var sku = this.skuService.getSku(request.getSkuId());
+        var sku = this.skuService.getSku(request.skuId());
 
         // 1. addOrUpdateCartItem
-        var upsertedCartItem = cart.addOrUpdateCartItem(sku, request.getQuantity());
+        var upsertedCartItem = cart.addOrUpdateCartItem(sku, request.quantity());
         this.cartRepository.save(cart);
 
         return this.cartMapper.toCartItemRes(upsertedCartItem);
@@ -173,7 +178,7 @@ public class CartServiceImpl implements ICartService {
         var cart = this.getCartWithSku(currentUser);
 
         // 1. updateQuantity
-        var updatedCartItem = cart.updateQuantity(request.getCartItemId(), request.getQuantity());
+        var updatedCartItem = cart.updateQuantity(request.cartItemId(), request.quantity());
         this.cartRepository.save(cart);
 
         return this.cartMapper.toCartItemRes(updatedCartItem);
@@ -187,7 +192,7 @@ public class CartServiceImpl implements ICartService {
         var cart = this.getCartWithSku(currentUser);
 
         // 1.. removeCartItem
-        var removedCartItems = cart.removeCartItems(request.getCartItemIds());
+        var removedCartItems = cart.removeCartItems(request.cartItemIds());
         this.cartRepository.save(cart);
 
         return Deleted.success(removedCartItems.size());

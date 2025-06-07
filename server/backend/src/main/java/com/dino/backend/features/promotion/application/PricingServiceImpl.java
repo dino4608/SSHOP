@@ -1,16 +1,22 @@
 package com.dino.backend.features.promotion.application;
 
+import com.dino.backend.features.ordering.domain.CartItem;
+import com.dino.backend.features.ordering.domain.OrderItem;
+import com.dino.backend.features.ordering.domain.model.CheckoutSnapshot;
 import com.dino.backend.features.productcatalog.domain.Sku;
 import com.dino.backend.features.promotion.application.model.SkuPrice;
 import com.dino.backend.features.promotion.application.service.IDiscountService;
 import com.dino.backend.features.promotion.application.service.IPricingService;
 import com.dino.backend.features.promotion.domain.Discount;
+import com.dino.backend.features.promotion.domain.DiscountItem;
 import com.dino.backend.shared.api.model.CurrentUser;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 @AllArgsConstructor
@@ -20,38 +26,14 @@ public class PricingServiceImpl implements IPricingService {
 
     IDiscountService discountService;
 
-    // HELPER //
+    // QUERY //
 
-    private Integer calculateDiscountPercent(Integer retailPrice, Integer dealPrice) {
-        if (retailPrice == null || retailPrice == 0 || dealPrice == null)
-            return 0;
+    // SKU PRICE //
 
-        double discountRatio = 1 - (dealPrice.doubleValue() / retailPrice.doubleValue());
-        int discountPercent = (int) Math.round(discountRatio * 100);
-
-        if (discountPercent < 0) discountPercent = 0;
-        if (discountPercent > 100) discountPercent = 100;  // đảm bảo từ 0..100
-
-        return discountPercent;
-    }
-
-    private Integer calculateDealPrice(Integer retailPrice, Integer discountPercent) {
-        if (retailPrice == null || retailPrice == 0 || discountPercent == null)
-            return retailPrice;
-
-        double price = retailPrice * (100 - discountPercent) / 100.0;
-        int dealPrice = (int) Math.round(price);
-
-        if (dealPrice < 0) dealPrice = 0; // đảm bảo không âm
-
-        return dealPrice;
-    }
-
-    private SkuPrice calculateRetail(Sku sku) {
+    @Override
+    public SkuPrice calculateRetail(Sku sku) {
         return new SkuPrice(sku.getRetailPrice(), 0, 0);
     }
-
-    // QUERY //
 
     // calculatePrice Sku //
     @Override
@@ -60,22 +42,12 @@ public class PricingServiceImpl implements IPricingService {
         // dealPrice = dealPrice | calculateDealPrice by discountPercent | null
         Integer dealPrice = discount.getDealPrice() != null
                 ? discount.getDealPrice()
-                : discount.getDiscountPercent() != null
-                ? this.calculateDealPrice(sku.getRetailPrice(), discount.getDiscountPercent())
-                : null;
+                : DiscountItem.createDealPrice(sku.getRetailPrice(), discount.getDiscountPercent());
         // discountPercent = discountPercent | calculateDiscountPercent by dealPrice | null
         Integer discountPercent = discount.getDiscountPercent() != null
                 // Discount ko có discountPercent => có dealPrice
                 ? discount.getDiscountPercent()
-                : discount.getDealPrice() != null
-                ? this.calculateDiscountPercent(sku.getRetailPrice(), discount.getDealPrice())
-                : null;
-
-        if (dealPrice == null || discountPercent == null) {
-            dealPrice = sku.getRetailPrice();
-            retailPrice = 0;
-            discountPercent = 0;
-        }
+                : DiscountItem.createDiscountPercent(sku.getRetailPrice(), discount.getDealPrice());
 
         return new SkuPrice(dealPrice, retailPrice, discountPercent);
     }
@@ -85,5 +57,28 @@ public class PricingServiceImpl implements IPricingService {
         return this.discountService.canDiscount(sku, currentUser)
                 .map(discount -> this.calculateDiscount(sku, discount))
                 .orElseGet(() -> calculateRetail(sku));
+    }
+
+    // CHECKOUT //
+
+    @Override
+    public CheckoutSnapshot checkoutOrder(List<OrderItem> orderItems) {
+        int totalMainPrice = orderItems.stream()
+                .mapToInt(item -> item.getMainPrice() * item.getQuantity())
+                .sum();
+
+        return CheckoutSnapshot.createSanpshot(totalMainPrice);
+    }
+
+    @Override
+    public CheckoutSnapshot checkoutCartGroup(List<CartItem> cartItems, CurrentUser currentUser) {
+        int totalMainPrice = cartItems.stream()
+                .mapToInt(item -> {
+                    var skuPrice = this.calculatePrice(item.getSku(), currentUser);
+                    return skuPrice.mainPrice() * item.getQuantity();
+                })
+                .sum();
+
+        return CheckoutSnapshot.createSanpshot(totalMainPrice);
     }
 }

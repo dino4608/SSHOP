@@ -18,7 +18,7 @@ public class ShippingDetail {
     Instant minEstimatedDelivery;
     Instant maxEstimatedDelivery;
 
-    // SETTER //
+    // SETTERS //
 
     public void setMinEstimatedDelivery(Instant minEstimatedDelivery) {
         Instant now = Instant.now();
