@@ -17,7 +17,7 @@ export function DefaultAddress({ defaultAddress }: DefaultAddressProps) {
                 <h2 className="text-base font-medium flex items-center gap-2">
                     Địa chỉ giao hàng
                 </h2>
-                <Button variant="link" className="p-0 h-auto text-blue-600 hover:no-underline text-sm">
+                <Button variant="link" className="p-0 has-[>svg]:px-0 h-auto text-blue-600 hover:no-underline text-sm">
                     Thay đổi
                 </Button>
             </div>

@@ -69,11 +69,11 @@ public class CheckoutServiceImpl implements ICheckoutService {
     // COMMAND //
 
     /**
-     * initCheckout
+     * startCheckout
      */
     @Override
     @Transactional
-    public InitCheckoutRes startCheckout(InitCheckoutReq request, CurrentUser currentUser) {
+    public StartCheckoutRes startCheckout(StartCheckoutReq request, CurrentUser currentUser) {
         // 1. get Cart, group CartItems by Shop
         Cart cart = this.cartService.getCartWithShop(currentUser);
 
@@ -81,21 +81,21 @@ public class CheckoutServiceImpl implements ICheckoutService {
                 .orElseThrow(() -> new AppException(ErrorCode.CART__NOT_FOUND));
 
         // 2. create draft Orders
-        var ordersRes = new ArrayList<OrderRes>();
+        var ordersRes = new ArrayList<DraftOrderRes>();
         var totalCheckoutSnapshot = CheckoutSnapshot.empty();
         for (var entry : itemsGroupedByShop.entrySet()) {
             // create OrderItems
-            Shop shop = entry.getKey();
-            List<CartItem> cartItems = entry.getValue();
+            var shop = entry.getKey();
+            var cartItems = entry.getValue();
 
-            var createdOrder = this.orderService.createOrder(cartItems, shop, currentUser);
+            var createdOrder = this.orderService.createDraftOrder(cartItems, shop, currentUser);
 
             // response
-            ordersRes.add(this.orderMapper.toOrderRes(createdOrder));
+            ordersRes.add(this.orderMapper.toDraftOrderRes(createdOrder));
             totalCheckoutSnapshot.accumulateFrom(createdOrder.getCheckoutSnapshot());
         }
 
-        return this.checkoutMapper.toInitCheckoutRes(ordersRes.getFirst().id(), totalCheckoutSnapshot,
+        return this.checkoutMapper.toStartCheckoutRes(ordersRes.getFirst().id(), totalCheckoutSnapshot,
                 ordersRes);
     }
 
@@ -106,19 +106,26 @@ public class CheckoutServiceImpl implements ICheckoutService {
     @Transactional
     public ConfirmCheckoutRes confirmCheckout(ConfirmCheckoutReq request, CurrentUser currentUser) {
         // 1. get orders of current user
-        List<Order> ordersToConfirm = this.orderService.getOrdersByIds(request.orderIds(), currentUser);
+        var ordersToConfirm = this.orderService.getOrdersByIds(request.orderIds(), currentUser);
 
         // 2. update order and inventory
-        List<Order> updatedOrders = new ArrayList<>();
+        var updatedOrders = new ArrayList<>();
         for (Order order : ordersToConfirm) {
-            // markAsPending for orderItem
-            for (OrderItem orderItem : order.getOrderItems()) {
+            // reserveStock for orderItem
+            for (OrderItem orderItem : order.getOrderItems())
                 inventoryService.reserveStock(orderItem.getSku().getId(), orderItem.getQuantity());
-            }
             // markAsPending
             Order updatedOrder = this.orderService.markAsPending(order);
             updatedOrders.add(updatedOrder);
         }
+
+        // 3. remove cart items
+        var skuIds = new ArrayList<Long>();
+        for (Order order : ordersToConfirm) {
+            for (OrderItem orderItem : order.getOrderItems())
+                skuIds.add(orderItem.getSku().getId());
+        }
+        // TEMP: this.cartService.removeCartItems(new RemoveCartItemReq(skuIds), currentUser);
 
         return ConfirmCheckoutRes.success(updatedOrders.size());
     }
@@ -127,10 +134,7 @@ public class CheckoutServiceImpl implements ICheckoutService {
      * cancelCheckout
      */
     @Override
-    public Deleted cancelCheckout(Duration ttl) {
-
-        Deleted deleted = orderService.cleanupDraftOrders(ttl);
-
-        return deleted;
+    public Deleted cancelCheckout(Duration orderTtl) {
+        return orderService.cleanupDraftOrders(orderTtl);
     }
 }

@@ -163,6 +163,21 @@ export function CartHydrator({ initialCart, initialDefaultAddress }: CartHydrato
         return () => clearTimeout(debounceTimer); // Clear timer
     }, [selectedCartItemIds]);
 
+    // TODO: remove try catch fetch checkout
+    const handleCheckout = useCallback(() => {
+        if (selectedCartItemIds.size === 0) {
+            toast.error("Vui lòng chọn ít nhất một sản phẩm để thanh toán.");
+            return;
+        }
+        try {
+            localStorage.setItem('checkoutCartItemIds', JSON.stringify(Array.from(selectedCartItemIds)));
+            router.push('/checkout');
+        } catch (error) {
+            console.error("Failed to save selected cart item IDs to localStorage:", error);
+            toast.error("Có lỗi xảy ra khi chuẩn bị thanh toán. Vui lòng thử lại.");
+        }
+    }, [selectedCartItemIds, router]);
+
     return (
         <div className="flex flex-col lg:flex-row gap-4">
             {/* Left area: Display Cart */}
@@ -187,7 +202,8 @@ export function CartHydrator({ initialCart, initialDefaultAddress }: CartHydrato
 
                 <CartSummary
                     selectedCartItemIds={selectedCartItemIds}
-                    estimateData={estimateData} />
+                    estimateData={estimateData}
+                    onCheckout={handleCheckout} />
             </div>
         </div>
     );

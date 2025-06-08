@@ -1,7 +1,8 @@
 package com.dino.backend.features.ordering.application.mapper;
 
+import com.dino.backend.features.ordering.application.model.DraftOrderRes;
 import com.dino.backend.features.ordering.application.model.EstimateCheckoutRes;
-import com.dino.backend.features.ordering.application.model.InitCheckoutRes;
+import com.dino.backend.features.ordering.application.model.StartCheckoutRes;
 import com.dino.backend.features.ordering.application.model.OrderRes;
 import com.dino.backend.features.ordering.domain.model.CheckoutSnapshot;
 import org.mapstruct.Mapper;
@@ -16,8 +17,8 @@ public interface ICheckoutMapper {
             Long cartId,
             CheckoutSnapshot checkoutSnapshot);
 
-    InitCheckoutRes toInitCheckoutRes(
+    StartCheckoutRes toStartCheckoutRes(
             Long checkoutId,
             CheckoutSnapshot totalCheckoutSnapshot,
-            List<OrderRes> orders);
+            List<DraftOrderRes> orders);
 }

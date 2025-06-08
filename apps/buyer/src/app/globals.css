@@ -185,3 +185,9 @@ input[type="checkbox"].form-checkbox:checked::before {
   left: 50%;
   transform: translate(-50%, -50%);
 }
+
+/* Order */
+
+.grid-cols-order-item {
+  grid-template-columns: 3fr 2fr 0.5fr 1fr;
+}

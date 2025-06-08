@@ -2,7 +2,6 @@ package com.dino.backend.features.ordering.application.service;
 
 import com.dino.backend.features.ordering.domain.CartItem;
 import com.dino.backend.features.ordering.domain.Order;
-import com.dino.backend.features.ordering.domain.OrderItem;
 import com.dino.backend.features.shop.domain.Shop;
 import com.dino.backend.shared.api.model.CurrentUser;
 import com.dino.backend.shared.application.utils.Deleted;
@@ -17,9 +16,9 @@ public interface IOrderService {
 
     // COMMAND //
 
-    Order createOrder(List<CartItem> cartItems, Shop shop, CurrentUser currentUser);
+    Order createDraftOrder(List<CartItem> cartItems, Shop shop, CurrentUser currentUser);
 
     Order markAsPending(Order order);
 
-    Deleted cleanupDraftOrders(Duration ttl);
+    Deleted cleanupDraftOrders(Duration orderTtl);
 }

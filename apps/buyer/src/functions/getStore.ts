@@ -1,4 +1,4 @@
-// src/lib/server/data-access/cart.ts
+// src/functions/getStore.ts
 import { api } from '@/lib/api';
 import { serverFetch } from '@/lib/fetch/fetch.server';
 import { TAddress } from '@/types/address.types';

@@ -16,6 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class Env {
     // JWT //
+
     @Value("${jwt.access.secret-key}")
     String ACCESS_SECRET_KEY;
 
@@ -29,6 +30,7 @@ public class Env {
     Long REFRESH_TTL_DAYS;
 
     // OAUTH2 GOOGLE //
+
     @Value("${oauth2.google.client-id}")
     String CLIENT_ID;
 
@@ -42,6 +44,7 @@ public class Env {
     String GRANT_TYPE;
 
     // STATIC FILE RESOURCES //
+
     @Value("${file.location}")
     String FILE_LOCATION;
 

@@ -1,6 +1,7 @@
 package com.dino.backend.infrastructure.web.annotation;
 
 import org.springframework.core.MethodParameter;
+import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.support.WebDataBinderFactory;
@@ -24,9 +25,9 @@ public class AuthUserAnnotationImpl implements HandlerMethodArgumentResolver {
 
     @Override
     public Object resolveArgument(
-            MethodParameter parameter,
+            @NonNull MethodParameter parameter,
             @Nullable ModelAndViewContainer mavContainer,
-            NativeWebRequest webRequest,
+            @NonNull NativeWebRequest webRequest,
             @Nullable WebDataBinderFactory binderFactory) throws Exception {
 
         return SecurityUtils.getCurrentUser();

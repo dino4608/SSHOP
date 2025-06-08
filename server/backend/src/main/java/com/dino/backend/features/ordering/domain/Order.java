@@ -127,8 +127,8 @@ public class Order extends BaseEntity {
         this.setPickupAddress(pickupAddress);
     }
 
-    public boolean canDelete(Duration ttl) {
-        return this.getCreatedAt().isBefore(Instant.now().minus(ttl));
+    public boolean canDelete(Duration orderTtl) {
+        return this.getCreatedAt().isBefore(Instant.now().minus(orderTtl));
     }
 
 }

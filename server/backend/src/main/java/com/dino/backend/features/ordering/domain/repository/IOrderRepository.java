@@ -12,4 +12,8 @@ public interface IOrderRepository extends JpaRepository<Order, Long> {
     List<Order> findByIdIn(@NonNull List<Long> ids);
 
     List<Order> findByStatus(@NonNull OrderStatus status);
+
+    void deleteAllByIdInBatch(@NonNull Iterable<Long> ids);
+
+    void deleteAllInBatch(@NonNull Iterable<Order> orders);
 }

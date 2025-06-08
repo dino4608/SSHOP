@@ -6,8 +6,8 @@ import lombok.experimental.FieldDefaults;
 
 /**
  * define a structure of an apiResponse or apiError
- * @case: apiResponse includes: success (true), code, meta, data
- * @case: apiError includes: success (false), code, error
+ * @des: success (true), status, code, meta, data
+ * @des: success (false), status, code, error
  */
 @Getter
 @Setter

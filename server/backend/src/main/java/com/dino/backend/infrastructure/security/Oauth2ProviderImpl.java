@@ -38,7 +38,7 @@ public class Oauth2ProviderImpl implements IIdentityOauth2Provider {
      */
     private GoogleTokenResponse getGoogleToken(String authorizationCode) {
         try {
-            GoogleTokenResponse googleTokenResponse = this.googleTokenClient.getToken(
+            return this.googleTokenClient.getToken(
                     GoogleTokenRequest.builder()
                             .code(authorizationCode)
                             .clientId(this.env.CLIENT_ID)
@@ -46,8 +46,6 @@ public class Oauth2ProviderImpl implements IIdentityOauth2Provider {
                             .redirectUri(this.env.REDIRECT_URI)
                             .grantType(this.env.GRANT_TYPE)
                             .build());
-
-            return googleTokenResponse;
 
         } catch (Exception e) {
             log.error(">>> INTERNAL: getGoogleToken: {}", e.getMessage());
@@ -64,9 +62,7 @@ public class Oauth2ProviderImpl implements IIdentityOauth2Provider {
      */
     private GoogleUserResponse getGoogleUser(String accessToken) {
         try {
-            GoogleUserResponse googleUserResponse = this.googleUserClient.getUser("json", accessToken);
-
-            return googleUserResponse;
+            return this.googleUserClient.getUser("json", accessToken);
 
         } catch (Exception e) {
             log.error(">>> INTERNAL: getGoogleUser: {}", e.getMessage());

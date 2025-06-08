@@ -88,7 +88,7 @@ public class OrderServiceImpl implements IOrderService {
     // COMMAND //
 
     @Override
-    public Order createOrder(List<CartItem> cartItems, Shop shop, CurrentUser currentUser) {
+    public Order createDraftOrder(List<CartItem> cartItems, Shop shop, CurrentUser currentUser) {
         // 1. create props
         var orderItems = this.createOrderItems(cartItems, currentUser);
         var checkoutSnapshot = this.pricingService.checkoutOrder(orderItems);
@@ -114,7 +114,7 @@ public class OrderServiceImpl implements IOrderService {
     }
 
     @Override
-    public Deleted cleanupDraftOrders(Duration ttl) {
+    public Deleted cleanupDraftOrders(Duration orderTtl) {
         List<Order> draftOrders = this.orderRepository.findByStatus(OrderStatus.DRAFT);
 
         if (draftOrders.isEmpty()) {
@@ -122,15 +122,13 @@ public class OrderServiceImpl implements IOrderService {
             return Deleted.success();
         }
 
-
-        List<Long> idsToDelete = draftOrders.stream()
-                .filter(order -> order.canDelete(ttl))
-                .map(Order::getId)
+        var ordersToDelete = draftOrders.stream()
+                .filter(order -> order.canDelete(orderTtl))
                 .toList();
 
-        this.orderRepository.deleteAllByIdInBatch(idsToDelete);
+        this.orderRepository.deleteAll(ordersToDelete);
 
-        log.info(">>> Cleaned up {} draft order.", idsToDelete.size());
-        return Deleted.success(idsToDelete.size());
+        log.info(">>> Cleaned up {} draft order.", ordersToDelete.size());
+        return Deleted.success(ordersToDelete.size());
     }
 }

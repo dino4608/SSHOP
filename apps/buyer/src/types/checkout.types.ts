@@ -1,40 +1,61 @@
 // src/types/checkout.types.ts
 
-// --- Base type of checkout ---
+import { TDraftOrder } from "./order.types";
+
+// NESTED TYPES //
+
 export type TCheckoutSummary = {
     itemsPrice: number;
-    promotionAmount: number;
+    savings: number;
     shippingFee: number;
-    payableAmount: number;
+    total: number;
 }
 
-export type TCheckoutPricePromotion = {
-    totalAmount: number;
-    sellerDiscount: number;
-    sellerCoupon: number;
-    platformDiscount: number;
-    platformCoupon: number;
+export type TDiscountVoucher = {
+    totalVoucher: number;
+    sellerVoucher: number;
+    platformVoucher: number;
 }
 
 export type TCheckoutShippingFee = {
     finalFee: number;
     initialFee: number;
-    sellerShippingPromotion: number;
-    platformShippingPromotion: number;
+    sellerShippingVoucher: number;
+    platformShippingVoucher: number;
 }
 
 export type TCheckoutSnapshot = {
     summary: TCheckoutSummary;
-    pricePromotion: TCheckoutPricePromotion;
+    discountVoucher: TDiscountVoucher;
     shippingFee: TCheckoutShippingFee;
 }
 
-// --- Specific type of checkout //
-export type TEstimateCheckoutBody = {
-    cartItemIds: number[];
-};
+// MAIN TYPES //
 
 export type TEstimateCheckout = {
     cartId: number;
     checkoutSnapshot: TCheckoutSnapshot;
+};
+
+export type TEstimateCheckoutBody = {
+    cartItemIds: number[];
+};
+
+export type TStartCheckout = {
+    checkoutId: number;
+    totalCheckoutSnapshot: TCheckoutSnapshot;
+    orders: TDraftOrder[];
+};
+
+export type TStartCheckoutBody = {
+    cartItemIds: number[];
+};
+
+export type TConfirmCheckout = {
+    isConfirmed: boolean;
+    count: number;
+};
+
+export type TConfirmCheckoutBody = {
+    orderIds: number[];
 };

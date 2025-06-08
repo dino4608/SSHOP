@@ -1,8 +1,6 @@
 package com.dino.backend.features.ordering.api;
 
-import com.dino.backend.features.ordering.application.model.ConfirmCheckoutReq;
-import com.dino.backend.features.ordering.application.model.EstimateCheckoutReq;
-import com.dino.backend.features.ordering.application.model.InitCheckoutReq;
+import com.dino.backend.features.ordering.application.model.*;
 import com.dino.backend.features.ordering.application.service.ICheckoutService;
 import com.dino.backend.shared.api.annotation.AuthUser;
 import com.dino.backend.shared.api.model.CurrentUser;
@@ -34,7 +32,7 @@ public class BuyerCheckoutController {
          * (preview checkout of CartItem list)
          */
         @PostMapping("/estimate")
-        public ResponseEntity<Object> estimateCheckout(
+        public ResponseEntity<EstimateCheckoutRes> estimateCheckout(
                 @Valid @RequestBody EstimateCheckoutReq request,
                 @AuthUser CurrentUser currentUser) {
             var checkout = this.checkoutService.estimateCheckout(request, currentUser);
@@ -47,8 +45,8 @@ public class BuyerCheckoutController {
          * startCheckout
          */
         @PostMapping("/start")
-        public ResponseEntity<Object> startCheckout(
-                @Valid @RequestBody InitCheckoutReq request,
+        public ResponseEntity<StartCheckoutRes> startCheckout(
+                @Valid @RequestBody StartCheckoutReq request,
                 @AuthUser CurrentUser currentUser) {
             var checkout = this.checkoutService.startCheckout(request, currentUser);
             return ResponseEntity.ok(checkout);
@@ -59,7 +57,7 @@ public class BuyerCheckoutController {
          * (end the checkout process)
          */
         @PatchMapping("/confirm")
-        public ResponseEntity<Object> confirmCheckout(
+        public ResponseEntity<ConfirmCheckoutRes> confirmCheckout(
                 @Valid @RequestBody ConfirmCheckoutReq request,
                 @AuthUser CurrentUser currentUser) {
             var checkout = this.checkoutService.confirmCheckout(request, currentUser);

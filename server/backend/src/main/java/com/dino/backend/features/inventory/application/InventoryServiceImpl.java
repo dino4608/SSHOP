@@ -42,8 +42,7 @@ public class InventoryServiceImpl implements IInventoryService {
     @Transactional
     public void reserveStock(Long skuId, int quantity) {
         Inventory inventory = this.checkStock(skuId, quantity);
-
-        inventory.setStocks(inventory.getStocks() - quantity);
-        // TEMP: inventoryRepository.save(inventory);
+        inventory.reverseStock(quantity);
+        inventoryRepository.save(inventory);
     }
 }

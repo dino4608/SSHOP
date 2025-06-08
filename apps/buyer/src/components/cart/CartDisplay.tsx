@@ -7,14 +7,14 @@ import { api } from "@/lib/api";
 import { RESOURCES } from "@/lib/constants";
 import { clientFetch } from "@/lib/fetch/fetch.client";
 import { getFileUrl } from "@/lib/files";
-import { formatPercent } from "@/lib/utils";
+import { formatCurrency, formatPercent } from "@/lib/utils";
 import { TCart, TCartGroup, TCartItem } from "@/types/cart.types";
 import { SquarePenIcon, StoreIcon, Ticket, Trash2Icon as TrashIcon } from 'lucide-react';
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import { toast } from "sonner";
 
-// --- CartDisplay Component ---
+// CartDisplay Component
 interface CartDisplayProps {
     cart: TCart;
     selectedCartItemIds: Set<number>;
@@ -31,9 +31,6 @@ export function CartDisplay({
     cart, selectedCartItemIds,
     onCheckAll, onCheckGroup, onCheckItem, onRemoveItem, onQuantityUpdate, onQuantityUpdateSuccess, onRemoveItemSuccess
 }: CartDisplayProps) {
-    const formatCurrency = (amount: number) => {
-        return `₫${amount.toLocaleString('vi-VN')}`;
-    };
 
     const allCartItemIds = useMemo(() => {
         const ids = new Set<number>();
@@ -84,7 +81,6 @@ export function CartDisplay({
                 <CartGroup
                     key={group.id}
                     group={group}
-                    formatCurrency={formatCurrency}
                     selectedCartItemIds={selectedCartItemIds}
                     onCheckGroup={onCheckGroup}
                     onCheckItem={onCheckItem}
@@ -99,7 +95,6 @@ export function CartDisplay({
 // --- CartGroup Component ---
 interface CartGroupProps {
     group: TCartGroup;
-    formatCurrency: (amount: number) => string;
     selectedCartItemIds: Set<number>;
     onCheckGroup: (groupId: number, checked: boolean) => void;
     onCheckItem: (itemId: number, checked: boolean) => void;
@@ -108,7 +103,7 @@ interface CartGroupProps {
 }
 
 const CartGroup = ({
-    group, formatCurrency, selectedCartItemIds, onCheckGroup, onCheckItem, onQuantityUpdate, onRemoveItem
+    group, selectedCartItemIds, onCheckGroup, onCheckItem, onQuantityUpdate, onRemoveItem
 }: CartGroupProps) => {
     const isGroupSelected = useMemo(() => {
         if (group.cartItems.length === 0) return false;
@@ -153,8 +148,7 @@ const CartGroup = ({
                 {group.cartItems.map(item => (
                     <CartLineItem
                         key={item.id}
-                        item={item}
-                        formatCurrency={formatCurrency}
+                        lineItem={item}
                         selectedCartItemIds={selectedCartItemIds}
                         onCheckItem={onCheckItem}
                         onQuantityUpdate={onQuantityUpdate}
@@ -168,8 +162,7 @@ const CartGroup = ({
 
 // --- CartLineItem Component ---
 interface CartLineItemProps {
-    item: TCartItem;
-    formatCurrency: (amount: number) => string;
+    lineItem: TCartItem;
     selectedCartItemIds: Set<number>;
     onCheckItem: (itemId: number, checked: boolean) => void;
     onRemoveItem: (cartItemId: number) => Promise<void>;
@@ -177,16 +170,15 @@ interface CartLineItemProps {
 }
 
 const CartLineItem = ({
-    item, formatCurrency, selectedCartItemIds, onCheckItem, onRemoveItem, onQuantityUpdate
+    lineItem, selectedCartItemIds, onCheckItem, onRemoveItem, onQuantityUpdate
 }: CartLineItemProps) => {
-    const [quantity, setQuantity] = useState<number>(item.quantity);
+    const [quantity, setQuantity] = useState<number>(lineItem.quantity);
 
-    const itemPrice = item.discountItem ? item.discountItem.dealPrice : item.sku.retailPrice;
-    const subtotal = itemPrice * quantity;
+    const subtotal = lineItem.price.mainPrice * quantity;
 
-    const productImageUrl = getFileUrl(item.photo, RESOURCES.PRODUCTS.BASE, item.product.id);
+    const productImageUrl = getFileUrl(lineItem.photo, RESOURCES.PRODUCTS.BASE, lineItem.product.id);
 
-    const isItemSelected = selectedCartItemIds.has(item.id);
+    const isItemSelected = selectedCartItemIds.has(lineItem.id);
 
     const onChangeQuantity = async (cartItemId: number, delta: number) => {
         // Optimistic update
@@ -215,13 +207,13 @@ const CartLineItem = ({
             {/* Checkbox of an item*/}
             <div className="flex items-center flex-shrink-0">
                 <Checkbox
-                    id={`select-item-${item.id}`}
+                    id={`select-item-${lineItem.id}`}
                     className="w-4 h-4"
                     checked={isItemSelected}
                     // Sửa lỗi: Kiểm tra kiểu của 'checked'
                     onCheckedChange={(checkedState) => {
                         if (typeof checkedState === 'boolean') {
-                            onCheckItem(item.id, checkedState);
+                            onCheckItem(lineItem.id, checkedState);
                         }
                     }}
                 />
@@ -229,31 +221,34 @@ const CartLineItem = ({
 
             {/* Product - Sku - CartItem */}
             <div className="flex items-center gap-3">
-                <Link href={`/product/${item.product.id}`} className="block flex-shrink-0">
-                    <img src={productImageUrl} alt={item.product.name} className="w-20 h-20 object-cover rounded cursor-pointer" />
+                <Link href={`/product/${lineItem.product.id}`} className="block flex-shrink-0">
+                    <img src={productImageUrl} alt={lineItem.product.name} className="w-20 h-20 object-cover rounded cursor-pointer" />
                 </Link>
                 <div className="">
-                    <Link href={`/product/${item.product.id}`}>
-                        <p className="text-[13px] text-gray-600 line-clamp-2 hover:text-blue-600 cursor-pointer">{item.product.name}</p>
+                    <Link href={`/product/${lineItem.product.id}`}>
+                        <p className="text-[13px] text-gray-600 line-clamp-2 hover:text-blue-600 cursor-pointer">
+                            {lineItem.product.name}
+                        </p>
                     </Link>
-                    <p className="mt-1 text-[13px] inline-flex justify-center items-center text-gray-800 bg-gray-100 rounded-[3px] p-1">{item.sku.tierOptionValue}</p>
-
+                    <p className="mt-1 text-[13px] inline-flex justify-center items-center text-gray-800 bg-gray-100 rounded-[3px] p-1">
+                        {lineItem.sku.tierOptionValue}
+                    </p>
                 </div>
             </div>
 
             {/* Unit price */}
             <div className="text-center text-gray-800">
-                {item.discountItem ? (
-                    <>
-                        <p className="font-semibold text-red-500">{formatCurrency(item.discountItem.dealPrice)}</p>
-                        <p className="text-xs text-gray-400 line-through">{formatCurrency(item.sku.retailPrice)}
-                            <span className='ml-1 inline-flex justify-center items-center text-[11px] text-red-500 bg-red-100 rounded-sm p-0.5'>
-                                {formatPercent(item.discountItem.discountPercent)}
-                            </span>
-                        </p>
-                    </>
-                ) : (
-                    <p className="font-semibold">{formatCurrency(item.sku.retailPrice)}</p>
+                <p className="font-semibold">
+                    {formatCurrency(lineItem.price.mainPrice)}
+                </p>
+
+                {lineItem.price.sidePrice && (
+                    <p className="text-xs text-gray-400 line-through">
+                        {formatCurrency(lineItem.price.sidePrice)}
+                        <span className="ml-1 inline-flex justify-center items-center text-[11px] text-red-500 bg-red-100 rounded-sm p-0.5">
+                            {formatPercent(lineItem.price.discountPercent)}
+                        </span>
+                    </p>
                 )}
             </div>
 
@@ -261,7 +256,7 @@ const CartLineItem = ({
             <div className="text-center">
                 <div className="flex items-center justify-center border border-gray-300 rounded overflow-hidden w-24 mx-auto">
                     <Button
-                        onClick={() => onChangeQuantity(item.id, -1)}
+                        onClick={() => onChangeQuantity(lineItem.id, -1)}
                         variant="ghost" size="sm" className="px-2 py-1 h-auto rounded-none">-</Button>
                     <Input
                         type="text"
@@ -269,7 +264,7 @@ const CartLineItem = ({
                         readOnly
                         className="w-10 text-center border-x-0 focus-visible:ring-0 focus-visible:ring-offset-0 rounded-none h-auto py-1" />
                     <Button
-                        onClick={() => onChangeQuantity(item.id, 1)}
+                        onClick={() => onChangeQuantity(lineItem.id, 1)}
                         variant="ghost" size="sm" className="px-2 py-1 h-auto rounded-none">+</Button>
                 </div>
             </div>
@@ -282,7 +277,7 @@ const CartLineItem = ({
             {/* Actions (remove icon) */}
             <div className="text-center text-sm">
                 <Button
-                    onClick={() => onRemoveItem(item.id)}
+                    onClick={() => onRemoveItem(lineItem.id)}
                     variant="ghost" size="icon" className="text-gray-500 hover:text-red-600">
                     <TrashIcon className="w-5 h-5" />
                 </Button>

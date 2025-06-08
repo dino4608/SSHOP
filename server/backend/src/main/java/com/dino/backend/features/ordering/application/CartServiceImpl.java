@@ -8,7 +8,6 @@ import com.dino.backend.features.ordering.domain.Cart;
 import com.dino.backend.features.ordering.domain.CartItem;
 import com.dino.backend.features.ordering.domain.repository.ICartRepository;
 import com.dino.backend.features.productcatalog.application.ISkuService;
-import com.dino.backend.features.promotion.application.service.IDiscountService;
 import com.dino.backend.features.promotion.application.service.IPricingService;
 import com.dino.backend.features.shop.domain.Shop;
 import com.dino.backend.shared.api.model.CurrentUser;
@@ -34,7 +33,6 @@ public class CartServiceImpl implements ICartService {
     IUserService userService;
     ISkuService skuService;
     IPricingService pricingService;
-    IDiscountService discountService;
     ICartRepository cartRepository;
     ICartMapper cartMapper;
 
@@ -88,7 +86,7 @@ public class CartServiceImpl implements ICartService {
      * createCart.
      */
     private Cart createCart(CurrentUser currentUser) {
-        // check is cart is deleted => to avoid one-to-one cart and buyer
+        // exclude deleted carts
         this.cartRepository.findIsDeletedByBuyerId(currentUser.id())
                 .ifPresent(ignore -> {
                     throw new AppException(ErrorCode.CART__IS_DELETED);

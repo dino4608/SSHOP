@@ -104,6 +104,8 @@ public enum ErrorCode {
     // INVENTORY 1600+ //
     // INVENTORY //
     INVENTORY__NOT_FOUND(1600, "Không tìm thấy kho hàng", HttpStatus.BAD_REQUEST),
+    INVENTORY__STOCKS_UNDER_MIN(1600, "Số lượng tồn kho nên lớn hơn 0", HttpStatus.BAD_REQUEST),
+    INVENTORY__SALES_UNDER_MIN(1600, "Số lượng đã bán nên lớn hơn 0", HttpStatus.BAD_REQUEST),
 
     ;
 

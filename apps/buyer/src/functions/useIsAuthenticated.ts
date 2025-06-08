@@ -1,7 +1,16 @@
+// src/functions/useIsAuthenticated.ts
 import { ACCESS_TOKEN } from '@/lib/constants';
 import clientCookies from '@/lib/storage/cookie.client';
 import { useAppSelector } from '@/store/hooks';
 import { useMemo } from 'react';
+
+export const useIsAuthenticated = () => {
+    const accessToken = useAppSelector(state => state.auth.accessToken);
+
+    return useMemo(() => {
+        return Boolean(accessToken || clientCookies.get(ACCESS_TOKEN));
+    }, [accessToken]);
+};
 
 // export const useIsAuthenticated = () => {
 //     const isAuthRedux = useSelector((state: TRootState) => state.auth.isAuthenticated);
@@ -30,13 +39,5 @@ import { useMemo } from 'react';
 //         return !!token && !!currentUser;
 //     }, [isAuthRedux, token, currentUser]);
 // };
-
-export const useIsAuthenticated = () => {
-    const accessToken = useAppSelector(state => state.auth.accessToken);
-
-    return useMemo(() => {
-        return Boolean(accessToken || clientCookies.get(ACCESS_TOKEN));
-    }, [accessToken]);
-};
 
 

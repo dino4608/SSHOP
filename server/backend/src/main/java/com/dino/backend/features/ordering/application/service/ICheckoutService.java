@@ -13,9 +13,9 @@ public interface ICheckoutService {
 
     // COMMAND //
 
-    InitCheckoutRes startCheckout(InitCheckoutReq request, CurrentUser currentUser);
+    StartCheckoutRes startCheckout(StartCheckoutReq request, CurrentUser currentUser);
 
     ConfirmCheckoutRes confirmCheckout(ConfirmCheckoutReq request, CurrentUser currentUser);
 
-    Deleted cancelCheckout(Duration ttl);
+    Deleted cancelCheckout(Duration orderTtl);
 }

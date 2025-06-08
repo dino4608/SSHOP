@@ -43,7 +43,7 @@ public class OrderItem extends BaseEntity {
     @JoinColumn(name = "order_id", nullable = false, updatable = false)
     Order order;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "sku_id", nullable = false, updatable = false)
     Sku sku;
 
@@ -59,24 +59,27 @@ public class OrderItem extends BaseEntity {
     }
 
     public void setMainPrice(int mainPrice) {
-        if (mainPrice < 1000) // unit VND
+        if (mainPrice < 1000)
             throw new AppException(ErrorCode.ORDER__MAIN_PRICE_INVALID);
 
-        if (this.sidePrice != 0 && mainPrice < this.sidePrice)
+        // if sidePrice != 0, check mainPrice < sidePrice
+        if (this.sidePrice != 0 && mainPrice >= this.sidePrice)
             throw new AppException(ErrorCode.ORDER__MAIN_PRICE_INVALID);
 
         this.mainPrice = mainPrice;
     }
 
     public void setSidePrice(int sidePrice) {
-        if (sidePrice < 0)
+        if (sidePrice != 0 && sidePrice <= 1000)
             throw new AppException(ErrorCode.ORDER__SIDE_PRICE_INVALID);
 
-        if (this.mainPrice != 0 && sidePrice > this.mainPrice)
+        // if sidePrice > 0, check sidePrice > mainPrice
+        if (sidePrice != 0 && this.mainPrice >= sidePrice)
             throw new AppException(ErrorCode.ORDER__SIDE_PRICE_INVALID);
 
         this.sidePrice = sidePrice;
     }
+
 
     // FACTORY //
 
