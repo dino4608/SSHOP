@@ -3,7 +3,9 @@ import { TDiscount } from "./discount.type";
 import { TShop } from "./shop.types";
 import { TSku } from "./sku.types";
 
-export enum ProductStatusType {
+// NESTED TYPES //
+
+export enum TProductStatus {
     DRAFT = 'DRAFT',
     REVIEWING = 'REVIEWING',
     LIVE = 'LIVE',
@@ -29,9 +31,11 @@ export type TProductMeta = {
     isCodEnabled: boolean;
 }
 
+// MAIN TYPES //
+
 export type TProduct = {
-    id: number; // TODO: id string to long
-    status: ProductStatusType;
+    id: number;
+    status: TProductStatus;
     name: string;
     slug: string;
     thumb: string;
@@ -56,6 +60,8 @@ export type TProduct = {
     isDeleted: boolean;
 }
 
+// PICK TYPES //
+
 export type TProductItem = Pick<TProduct,
     'id' | 'name' | 'thumb' | 'meta' | 'retailPrice' | 'dealPrice' | 'discountPercent'>;
 
@@ -76,3 +82,6 @@ export type TProductMedia = Pick<TProduct,
 
 export type TProductDescription = Pick<TProduct,
     'description' | 'specifications'>;
+
+export type TProductLean = Pick<TProduct,
+    'id' | 'name' | 'thumb'>;

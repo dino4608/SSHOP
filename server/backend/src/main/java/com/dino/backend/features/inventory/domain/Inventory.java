@@ -1,6 +1,8 @@
 package com.dino.backend.features.inventory.domain;
 
 import com.dino.backend.features.productcatalog.domain.Sku;
+import com.dino.backend.shared.domain.exception.AppException;
+import com.dino.backend.shared.domain.exception.ErrorCode;
 import com.dino.backend.shared.domain.model.BaseEntity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
@@ -41,4 +43,24 @@ public class Inventory extends BaseEntity {
     @JoinColumn(name = "sku_id", nullable = false, updatable = false)
     @JsonIgnore
     Sku sku;
+
+    // SETTERS //
+
+    public void setStocks(int stocks) {
+        if (stocks < 0)
+            throw new AppException(ErrorCode.INVENTORY__STOCKS_UNDER_MIN);
+        this.stocks = stocks;
+    }
+
+    public void setSales(int sales) {
+        if (sales < 0)
+            throw new AppException(ErrorCode.INVENTORY__SALES_UNDER_MIN);
+        this.sales = sales;
+    }
+
+    // INSTANCE METHODS //
+    public void reverseStock(int quantity) {
+        this.setStocks(this.getStocks() - quantity);
+        this.setSales(this.getSales() + quantity);
+    }
 }

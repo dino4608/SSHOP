@@ -1,6 +1,6 @@
 // app/auth/TokenRefresher.tsx
 'use client';
-import { useIsAuthenticated } from '@/hooks/useIsAuthenticated';
+import { useIsAuthenticated } from '@/functions/useIsAuthenticated';
 import { api } from '@/lib/api';
 import { ACCESS_TOKEN } from '@/lib/constants';
 import { clientFetch } from '@/lib/fetch/fetch.client';

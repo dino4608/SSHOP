@@ -1,28 +1,14 @@
 package com.dino.backend.features.ordering.application.model;
 
-import com.dino.backend.features.promotion.application.model.DiscountItemRes;
-
-import java.util.List;
+import com.dino.backend.features.productcatalog.application.model.ProductLean;
+import com.dino.backend.features.productcatalog.application.model.SkuLean;
+import com.dino.backend.features.promotion.application.model.SkuPrice;
 
 public record CartItemRes(
         Long id,
         int quantity,
         String photo,
-        ProductRes product,
-        SkuRes sku,
-        DiscountItemRes discountItem) {
-
-    public record ProductRes(
-            Long id,
-            String name,
-            String thumb) {
-    }
-
-    public record SkuRes(
-            Long id,
-            String code,
-            List<Integer> tierOptionIndexes,
-            String tierOptionValue,
-            Integer retailPrice) {
-    }
+        ProductLean product,
+        SkuLean sku,
+        SkuPrice price) {
 }

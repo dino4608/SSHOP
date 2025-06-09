@@ -1,7 +1,7 @@
 'use client';
 import { useAppSelector } from "@/store/hooks";
 
-export const CartHeader = () => {
+export function CartHeader() {
     const totalCartItems = useAppSelector(state => state.cart.cart?.total);
 
     return (

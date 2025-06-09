@@ -1,13 +1,18 @@
 import { TInventory } from "./inventory.types";
 
-export enum SkuStatusType {
+// NESTED TYPES //
+
+export enum TSkuStatus {
     LIVE = 'LIVE',
     DEACTIVATED = 'DEACTIVATED',
 }
+
+// MAIN TYPES //
+
 export type TSku = {
     id: number;
     inventory: TInventory;
-    status: SkuStatusType;
+    status: TSkuStatus;
     code: string;
     tierOptionIndexes: number[];
     tierOptionValue: string;
@@ -17,3 +22,8 @@ export type TSku = {
     updatedAt: Date;
     isDeleted: boolean;
 }
+
+// PICK TYPES //
+
+export type TSkuLean = Pick<TSku,
+    'id' | 'code' | 'tierOptionIndexes' | 'tierOptionValue'>;

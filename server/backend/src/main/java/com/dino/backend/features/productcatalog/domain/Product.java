@@ -105,14 +105,4 @@ public class Product extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "shop_id", updatable = false, nullable = false)
     Shop shop;
-
-    // TODO: product props
-
-    // stars => review
-
-    // sales => product metrics
-
-    // weight, unit => parcel weight
-
-    // height + length + width => dimensions
 }

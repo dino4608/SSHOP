@@ -1,24 +1,23 @@
 package com.dino.backend.features.productcatalog.application.impl;
 
-import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Service;
-
 import com.dino.backend.features.productcatalog.application.IProductService;
 import com.dino.backend.features.productcatalog.application.mapper.IProductMapper;
 import com.dino.backend.features.productcatalog.application.model.ProductItemRes;
 import com.dino.backend.features.productcatalog.application.model.ProductRes;
+import com.dino.backend.features.productcatalog.domain.Product;
 import com.dino.backend.features.productcatalog.domain.repository.IProductRepository;
-import com.dino.backend.features.promotion.application.IDiscountService;
+import com.dino.backend.features.promotion.application.service.IDiscountService;
 import com.dino.backend.shared.api.model.CurrentUser;
 import com.dino.backend.shared.application.utils.Id;
 import com.dino.backend.shared.application.utils.PageRes;
 import com.dino.backend.shared.domain.exception.AppException;
 import com.dino.backend.shared.domain.exception.ErrorCode;
-
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
 
 @Service
 @AllArgsConstructor
@@ -41,7 +40,7 @@ public class ProductServiceImpl implements IProductService {
         var products = page.getContent().stream()
                 .map(p -> {
                     var product = this.productMapper.toProductItemRes(p);
-                    var discount = this.discountService.canApply(p.getId(), null);
+                    var discount = this.discountService.canDiscount(Product.builder().id(p.getId()).build());
                     discount.ifPresent(d -> {
                         product.setDealPrice(
                                 d.getDealPrice() != null ? d.getDealPrice() : d.getMinDealPrice());
@@ -63,7 +62,7 @@ public class ProductServiceImpl implements IProductService {
         var product = this.productRepository.findEagerById(id.value())
                 .orElseThrow(() -> new AppException(ErrorCode.PRODUCT__NOT_FOUND));
 
-        var discount = this.discountService.canApply(id.value(), currentUser);
+        var discount = this.discountService.canDiscount(product, currentUser);
 
         var res = this.productMapper.toProductRes(product);
         res.setDiscount(discount.orElse(null));

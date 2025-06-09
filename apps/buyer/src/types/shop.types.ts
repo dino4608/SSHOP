@@ -1,4 +1,6 @@
-export enum ShopStatusType {
+// NESTED TYPES //
+
+export enum TShopStatus {
     LACK_INFO = 'LACK_INFO',
     REVIEWING = 'REVIEWING',
     LIVE = 'LIVE',
@@ -8,23 +10,30 @@ export enum ShopStatusType {
     DELETED = 'DELETED',
 }
 
-export enum ShopBusinessType {
+export enum TShopBusiness {
     INDIVIDUAL = 'INDIVIDUAL',
     HOUSEHOLD = 'HOUSEHOLD',
     ENTERPRISE = 'ENTERPRISE',
 }
 
+// MAIN TYPES //
+
 export type TShop = {
     id: number;
-    status: ShopStatusType;
+    status: TShopStatus;
     code: string;
     name: string;
     photo: string;
     contactEmail: string;
     contactPhone: string | null;
-    businessType: ShopBusinessType;
+    businessType: TShopBusiness;
     sellerType: string | null;
     createdAt: Date;
     updatedAt: Date;
     isDeleted: boolean;
 }
+
+// PICK TYPES //
+
+export type TShopLean = Pick<TShop,
+    'id' | 'name'>;

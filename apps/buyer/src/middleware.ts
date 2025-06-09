@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getIsAuthenticated } from './hooks/getIsAuthenticated';
+import { getIsAuthenticated } from './functions/getIsAuthenticated';
 
 // 1. Specify public routes
 const publicAuthRoutes = ['/auth', '/auth/google']

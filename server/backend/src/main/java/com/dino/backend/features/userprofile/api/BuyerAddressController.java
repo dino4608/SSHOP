@@ -1,6 +1,6 @@
 package com.dino.backend.features.userprofile.api;
 
-import com.dino.backend.features.userprofile.application.IAddressAppService;
+import com.dino.backend.features.userprofile.application.service.IAddressService;
 import com.dino.backend.features.userprofile.domain.Address;
 import com.dino.backend.shared.api.annotation.AuthUser;
 import com.dino.backend.shared.api.model.CurrentUser;
@@ -25,7 +25,7 @@ public class BuyerAddressController {
     @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
     public static class PrivateBuyerAddressController {
 
-        IAddressAppService addressAppService;
+        IAddressService addressAppService;
 
         // QUERY //
 

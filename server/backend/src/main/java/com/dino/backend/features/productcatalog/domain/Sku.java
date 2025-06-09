@@ -4,7 +4,7 @@ import com.dino.backend.features.inventory.domain.Inventory;
 import com.dino.backend.features.ordering.domain.CartItem;
 import com.dino.backend.features.ordering.domain.OrderItem;
 import com.dino.backend.features.productcatalog.domain.model.ProductTierVariation;
-import com.dino.backend.features.promotion.domain.DiscountItem;
+import com.dino.backend.features.promotion.domain.SkuDiscount;
 import com.dino.backend.shared.domain.exception.AppException;
 import com.dino.backend.shared.domain.exception.ErrorCode;
 import com.dino.backend.shared.domain.model.BaseEntity;
@@ -63,7 +63,7 @@ public class Sku extends BaseEntity {
     Product product;
 
     @OneToMany(mappedBy = "sku", fetch = FetchType.LAZY)
-    List<DiscountItem> discountItems;
+    List<SkuDiscount> skuDiscounts;
 
     @OneToMany(mappedBy = "sku", fetch = FetchType.LAZY)
     @JsonIgnore

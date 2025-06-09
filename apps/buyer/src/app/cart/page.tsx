@@ -1,8 +1,8 @@
 // src/app/cart/page.tsx
 import { CartHeader } from "@/components/cart/CartHeader";
 import { CartHydrator } from "@/components/cart/CartHydrator";
-import { getIsAuthenticated } from '@/hooks/getIsAuthenticated';
-import { getCachedUserCart, getDefaultAddress } from '@/hooks/getStore';
+import { getIsAuthenticated } from '@/functions/getIsAuthenticated';
+import { getCachedUserCart, getDefaultAddress } from '@/functions/getStore';
 import { redirect } from 'next/navigation';
 
 export default async function CartPage() {
@@ -15,13 +15,13 @@ export default async function CartPage() {
 
     // Fetch dữ liệu cần thiết cho trang giỏ hàng trên server
     // Đảm bảo các hàm này trả về null nếu có lỗi hoặc không có dữ liệu
-    const [userCart, defaultAddress] = await Promise.all([
+    const [cart, defaultAddress] = await Promise.all([
         getCachedUserCart(),
         getDefaultAddress(),
     ]);
 
     // Nếu không có giỏ hàng hoặc giỏ hàng trống, hiển thị thông báo
-    if (!userCart || userCart.cartGroups.length === 0) {
+    if (!cart || cart.cartGroups.length === 0) {
         return (
             <div className="container mx-auto p-4 flex justify-center items-center min-h-[calc(100vh-150px)]">
                 <div className="text-center text-lg text-gray-600">
@@ -35,7 +35,7 @@ export default async function CartPage() {
         <div className="container mx-auto px-20 py-6">
             <CartHeader />
 
-            <CartHydrator initialCart={userCart} initialDefaultAddress={defaultAddress} />
+            <CartHydrator initialCart={cart} initialDefaultAddress={defaultAddress} />
         </div>
     );
 }

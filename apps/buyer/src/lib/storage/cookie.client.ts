@@ -1,5 +1,3 @@
-import ms from "ms";
-
 const isBrowser = typeof window !== 'undefined';
 
 const clientCookies = {

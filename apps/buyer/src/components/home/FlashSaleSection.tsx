@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import HomeContainer from "./HomeContainer";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import Image from "next/image";
-import useCountdown from "@/hooks/useCountDown";
+import useCountdown from "@/functions/useCountDown";
 
 const flashSaleProducts = [
     {

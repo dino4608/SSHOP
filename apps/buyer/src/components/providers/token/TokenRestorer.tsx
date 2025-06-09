@@ -41,15 +41,26 @@ export function TokenRestorer() {
                 // => TokenGate isAuth F, render children noAuth
             }
         };
-
         tryRefreshToken();
     }, [router, dispatch]);
 
     return (
-        <div>
-            TokenRestorer: {success
-                ? "Đã khôi phục trạng thái xác thực thành công."
-                : "Thất bại khôi phục trạng thái xác thực."}
-        </div>
+        <>
+            {success
+                ? (
+                    <div className="container mx-auto p-4 flex justify-center items-center min-h-[calc(100vh-150px)]">
+                        <div className="text-center text-lg text-gray-600">"Đã khôi phục trạng thái xác thực thành công."</div>
+                    </div>
+                )
+                : (
+                    <div className="container mx-auto p-4 flex justify-center items-center min-h-[calc(100vh-150px)]">
+                        <div className="text-center text-lg text-red-600">
+                            "Thất bại khôi phục trạng thái xác thực."
+                        </div>
+                    </div>
+                )
+            }
+        </>
+
     );
 }

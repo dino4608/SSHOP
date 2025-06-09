@@ -1,0 +1,134 @@
+package com.dino.backend.features.ordering.application;
+
+import com.dino.backend.features.identity.domain.User;
+import com.dino.backend.features.inventory.application.service.IInventoryService;
+import com.dino.backend.features.ordering.application.service.IOrderService;
+import com.dino.backend.features.ordering.domain.CartItem;
+import com.dino.backend.features.ordering.domain.Order;
+import com.dino.backend.features.ordering.domain.OrderItem;
+import com.dino.backend.features.ordering.domain.model.*;
+import com.dino.backend.features.ordering.domain.repository.IOrderRepository;
+import com.dino.backend.features.promotion.application.service.IPricingService;
+import com.dino.backend.features.shop.domain.Shop;
+import com.dino.backend.features.userprofile.application.service.IAddressService;
+import com.dino.backend.shared.api.model.CurrentUser;
+import com.dino.backend.shared.application.utils.Deleted;
+import com.dino.backend.shared.domain.exception.AppException;
+import com.dino.backend.shared.domain.exception.ErrorCode;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.experimental.FieldDefaults;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
+
+import java.time.Duration;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.List;
+
+@Service
+@AllArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@Slf4j
+public class OrderServiceImpl implements IOrderService {
+
+    IInventoryService inventoryService;
+    IPricingService pricingService;
+    IAddressService addressService;
+    IOrderRepository orderRepository;
+
+    // DOMAIN //
+
+    private ShippingDetail createShippingDetail() {
+        var carrier = "Giao hàng tiêu chuẩn";
+        var now = Instant.now();
+        return ShippingDetail.createShippingDetail(
+                carrier,
+                now.plus(3, ChronoUnit.DAYS),
+                now.plus(5, ChronoUnit.DAYS)
+        );
+    }
+
+    private OrderAddress createOrderAddress(User user) {
+        var userAddress = this.addressService.getDefault(user.getId());
+        return OrderAddress.createOrderAddress(userAddress);
+    }
+
+    /*
+     * createOrderItem.
+     */
+    private List<OrderItem> createOrderItems(List<CartItem> cartItems, CurrentUser currentUser) {
+        List<OrderItem> orderItems = new ArrayList<>();
+        for (CartItem cartItem : cartItems) {
+            inventoryService.checkStock(cartItem.getSku().getId(), cartItem.getQuantity());
+
+            var skuPrice = this.pricingService.calculatePrice(cartItem.getSku(), currentUser);
+
+            var order = OrderItem.createOrderItem(cartItem.getSku(), cartItem.getQuantity(),
+                    skuPrice.mainPrice(), skuPrice.sidePrice());
+            orderItems.add(order);
+        }
+        return orderItems;
+    }
+
+    // QUERY //
+
+    @Override
+    public List<Order> getOrdersByIds(List<Long> orderIds, CurrentUser currentUser) {
+        List<Order> orders = this.orderRepository.findByIdIn(orderIds);
+
+        orders.forEach(order -> {
+            if (!order.getBuyer().getId().equals(currentUser.id()))
+                throw new AppException(ErrorCode.ORDER__NOT_FOUND);
+        });
+        return orders;
+    }
+
+    // COMMAND //
+
+    @Override
+    public Order createDraftOrder(List<CartItem> cartItems, Shop shop, CurrentUser currentUser) {
+        // 1. create props
+        var orderItems = this.createOrderItems(cartItems, currentUser);
+        var checkoutSnapshot = this.pricingService.checkoutOrder(orderItems);
+        var shippingDetail = this.createShippingDetail();
+        var buyer = currentUser.toUser();
+
+        // 2. create order
+        Order order = Order.createDraftOrder(orderItems, buyer, shop, checkoutSnapshot, shippingDetail);
+        return orderRepository.save(order);
+    }
+
+    @Override
+    public Order markAsPending(Order order) {
+        // 1. create props
+        var paymentMethod = PaymentMethod.COD;
+        var note = "";
+        var deliveryAddress = this.createOrderAddress(order.getBuyer());
+        var pickupAddress = this.createOrderAddress(order.getShop().getSeller());
+
+        // 2. update order
+        order.markAsPending(paymentMethod, note, deliveryAddress, pickupAddress);
+        return this.orderRepository.save(order);
+    }
+
+    @Override
+    public Deleted cleanupDraftOrders(Duration orderTtl) {
+        List<Order> draftOrders = this.orderRepository.findByStatus(OrderStatus.DRAFT);
+
+        if (draftOrders.isEmpty()) {
+            log.info(">>> No draft orders to clean up.");
+            return Deleted.success();
+        }
+
+        var ordersToDelete = draftOrders.stream()
+                .filter(order -> order.canDelete(orderTtl))
+                .toList();
+
+        this.orderRepository.deleteAll(ordersToDelete);
+
+        log.info(">>> Cleaned up {} draft order.", ordersToDelete.size());
+        return Deleted.success(ordersToDelete.size());
+    }
+}
