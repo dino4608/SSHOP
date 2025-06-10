@@ -1,5 +1,6 @@
 package com.dino.backend.features.productcatalog.application.mapper;
 
+import com.dino.backend.features.productcatalog.domain.model.ProductItemView;
 import org.mapstruct.Mapper;
 import org.mapstruct.ReportingPolicy;
 
@@ -13,4 +14,6 @@ public interface IProductMapper {
     ProductRes toProductRes(Product product);
 
     ProductItemRes toProductItemRes(ProductProjection product);
+
+    ProductItemRes toProductItemRes(ProductItemView product);
 }

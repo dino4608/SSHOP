@@ -1,6 +1,6 @@
-package com.dino.backend.features.file.application.impl;
+package com.dino.backend.features.file.application;
 
-import com.dino.backend.features.file.application.IFileService;
+import com.dino.backend.features.file.application.service.IFileService;
 import com.dino.backend.features.file.application.model.UploadRes;
 import com.dino.backend.features.file.application.provider.IFileProvider;
 

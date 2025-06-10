@@ -1,4 +1,4 @@
-package com.dino.backend.features.productcatalog.application;
+package com.dino.backend.features.productcatalog.application.service;
 
 import org.springframework.data.domain.Pageable;
 
@@ -10,7 +10,7 @@ import com.dino.backend.shared.application.utils.PageRes;
 public interface IProductService {
     // QUERY //
 
-    PageRes<ProductItemRes> list(Pageable pageable);
+    PageRes<ProductItemRes> listProduct(Pageable pageable);
 
-    ProductRes getById(String productId, CurrentUser currentUser);
+    ProductRes getProduct(String productId, CurrentUser currentUser);
 }

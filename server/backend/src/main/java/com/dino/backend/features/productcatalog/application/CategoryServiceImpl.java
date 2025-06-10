@@ -1,7 +1,7 @@
-package com.dino.backend.features.productcatalog.application.impl;
+package com.dino.backend.features.productcatalog.application;
 
 import com.dino.backend.features.productcatalog.domain.model.CategoryProjection;
-import com.dino.backend.features.productcatalog.application.ICategoryService;
+import com.dino.backend.features.productcatalog.application.service.ICategoryService;
 import com.dino.backend.features.productcatalog.domain.Category;
 import com.dino.backend.shared.application.utils.Id;
 import com.dino.backend.shared.domain.exception.AppException;

@@ -1,6 +1,6 @@
-package com.dino.backend.features.productcatalog.application.impl;
+package com.dino.backend.features.productcatalog.application;
 
-import com.dino.backend.features.productcatalog.application.IProductService;
+import com.dino.backend.features.productcatalog.application.service.IProductService;
 import com.dino.backend.features.productcatalog.application.mapper.IProductMapper;
 import com.dino.backend.features.productcatalog.application.model.ProductItemRes;
 import com.dino.backend.features.productcatalog.application.model.ProductRes;
@@ -35,7 +35,8 @@ public class ProductServiceImpl implements IProductService {
 
     // list //
     @Override
-    public PageRes<ProductItemRes> list(Pageable pageable) {
+    public PageRes<ProductItemRes> listProduct(Pageable pageable) {
+
         var page = this.productRepository.findAllProjectedBy(pageable);
         var products = page.getContent().stream()
                 .map(p -> {
@@ -55,7 +56,7 @@ public class ProductServiceImpl implements IProductService {
 
     // getById //
     @Override
-    public ProductRes getById(String productId, CurrentUser currentUser) {
+    public ProductRes getProduct(String productId, CurrentUser currentUser) {
         Id id = Id.from(productId)
                 .orElseThrow(() -> new AppException((ErrorCode.PRODUCT__NOT_FOUND)));
 

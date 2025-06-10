@@ -1,13 +1,13 @@
 package com.dino.backend.features.ordering.application;
 
-import com.dino.backend.features.identity.application.IUserService;
+import com.dino.backend.features.identity.application.service.IUserService;
 import com.dino.backend.features.ordering.application.mapper.ICartMapper;
 import com.dino.backend.features.ordering.application.model.*;
 import com.dino.backend.features.ordering.application.service.ICartService;
 import com.dino.backend.features.ordering.domain.Cart;
 import com.dino.backend.features.ordering.domain.CartItem;
 import com.dino.backend.features.ordering.domain.repository.ICartRepository;
-import com.dino.backend.features.productcatalog.application.ISkuService;
+import com.dino.backend.features.productcatalog.application.service.ISkuService;
 import com.dino.backend.features.promotion.application.service.IPricingService;
 import com.dino.backend.features.shop.domain.Shop;
 import com.dino.backend.shared.api.model.CurrentUser;

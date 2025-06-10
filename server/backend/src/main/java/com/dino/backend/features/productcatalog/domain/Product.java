@@ -1,39 +1,22 @@
 package com.dino.backend.features.productcatalog.domain;
 
-import java.util.List;
-
-import org.hibernate.annotations.DynamicInsert;
-import org.hibernate.annotations.DynamicUpdate;
-import org.hibernate.annotations.SQLDelete;
-import org.hibernate.annotations.SQLRestriction;
-import org.hibernate.annotations.Type;
-
 import com.dino.backend.features.productcatalog.domain.model.ProductMeta;
 import com.dino.backend.features.productcatalog.domain.model.ProductSpecification;
+import com.dino.backend.features.productcatalog.domain.model.ProductStatus;
 import com.dino.backend.features.productcatalog.domain.model.ProductTierVariation;
 import com.dino.backend.features.promotion.domain.Discount;
 import com.dino.backend.features.shop.domain.Shop;
 import com.dino.backend.shared.domain.model.BaseEntity;
-
 import io.hypersistence.utils.hibernate.type.json.JsonType;
+import jakarta.persistence.*;
 import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.SuperBuilder;
+import org.hibernate.annotations.*;
+
+import java.util.List;
 
 @Entity
 @Table(name = "products")
@@ -54,6 +37,8 @@ public class Product extends BaseEntity {
     @Column(name = "product_id")
     Long id;
 
+//    @Enumerated(EnumType.STRING)
+//    ProductStatus status;
     String status;
 
     @Column(nullable = false)
