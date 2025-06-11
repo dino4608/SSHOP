@@ -1,6 +1,6 @@
-package com.dino.backend.features.identity.application.impl;
+package com.dino.backend.features.identity.application;
 
-import com.dino.backend.features.identity.application.IUserService;
+import com.dino.backend.features.identity.application.service.IUserService;
 import com.dino.backend.features.identity.domain.User;
 import com.dino.backend.features.identity.domain.repository.IUserRepository;
 import com.dino.backend.shared.api.model.CurrentUser;

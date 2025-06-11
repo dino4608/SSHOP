@@ -1,4 +1,4 @@
-package com.dino.backend.features.productcatalog.application.impl;
+package com.dino.backend.features.productcatalog.application;
 
 import java.util.ArrayList;
 import java.util.Objects;
@@ -7,7 +7,7 @@ import java.util.Optional;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
-import com.dino.backend.features.productcatalog.application.ISkuService;
+import com.dino.backend.features.productcatalog.application.service.ISkuService;
 import com.dino.backend.features.productcatalog.domain.Sku;
 import com.dino.backend.features.productcatalog.domain.repository.ISkuRepository;
 import com.dino.backend.shared.domain.exception.AppException;

@@ -34,8 +34,8 @@ public class PageRes<T> {
     /**
      * Map PageRes from PageJpa
      *
-     * @param pageJpa
-     * @return PageRes
+     * @param pageJpa: from Spring Data Domain
+     * @return pageRes: dto
      */
     public static <T> PageRes<T> from(Page<T> pageJpa) {
         Pagination pagination = Pagination.builder()

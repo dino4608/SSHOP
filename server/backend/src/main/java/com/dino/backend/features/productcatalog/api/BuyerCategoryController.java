@@ -1,7 +1,7 @@
 package com.dino.backend.features.productcatalog.api;
 
 import com.dino.backend.features.productcatalog.domain.model.CategoryProjection;
-import com.dino.backend.features.productcatalog.application.ICategoryService;
+import com.dino.backend.features.productcatalog.application.service.ICategoryService;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.experimental.FieldDefaults;

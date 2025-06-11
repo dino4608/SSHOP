@@ -1,10 +1,10 @@
-package com.dino.backend.features.identity.application.impl;
+package com.dino.backend.features.identity.application;
 
 import java.time.Instant;
 
 import org.springframework.stereotype.Service;
 
-import com.dino.backend.features.identity.application.ITokenService;
+import com.dino.backend.features.identity.application.service.ITokenService;
 import com.dino.backend.features.identity.domain.Token;
 import com.dino.backend.features.identity.domain.repository.ITokenRepository;
 import com.dino.backend.shared.domain.exception.AppException;

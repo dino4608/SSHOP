@@ -1,4 +1,4 @@
-package com.dino.backend.features.identity.application.impl;
+package com.dino.backend.features.identity.application;
 
 import java.util.Objects;
 import java.util.Optional;
@@ -7,9 +7,9 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
-import com.dino.backend.features.identity.application.IAuthService;
-import com.dino.backend.features.identity.application.ITokenService;
-import com.dino.backend.features.identity.application.IUserService;
+import com.dino.backend.features.identity.application.service.IAuthService;
+import com.dino.backend.features.identity.application.service.ITokenService;
+import com.dino.backend.features.identity.application.service.IUserService;
 import com.dino.backend.features.identity.application.mapper.IUserMapper;
 import com.dino.backend.features.identity.application.model.AuthResponse;
 import com.dino.backend.features.identity.application.model.CurrentUserResponse;

@@ -1,4 +1,4 @@
-package com.dino.backend.features.identity.application;
+package com.dino.backend.features.identity.application.service;
 
 import com.dino.backend.features.identity.domain.User;
 import com.dino.backend.shared.api.model.CurrentUser;

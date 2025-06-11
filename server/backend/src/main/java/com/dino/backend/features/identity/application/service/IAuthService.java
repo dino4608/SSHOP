@@ -1,4 +1,4 @@
-package com.dino.backend.features.identity.application;
+package com.dino.backend.features.identity.application.service;
 
 import org.springframework.http.HttpHeaders;
 

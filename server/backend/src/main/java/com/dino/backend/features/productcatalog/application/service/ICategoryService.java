@@ -1,4 +1,4 @@
-package com.dino.backend.features.productcatalog.application;
+package com.dino.backend.features.productcatalog.application.service;
 
 import com.dino.backend.features.productcatalog.domain.model.CategoryProjection;
 import com.dino.backend.features.productcatalog.domain.Category;
