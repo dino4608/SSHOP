@@ -10,7 +10,7 @@ import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.RedisSerializationContext;
 
 @Configuration
-public class CacheAbstractConfig {
+public class CacheConfig {
 
     @Bean
     public RedisCacheManager cacheManager(
